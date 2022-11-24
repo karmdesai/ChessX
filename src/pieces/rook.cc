@@ -1,6 +1,7 @@
 #include "rook.h"
 
-Rook::Rook(char name, char color) : Piece(5, name, color) {}
+Rook::Rook(char name, char color, bool inStartingPosition)
+    : Piece(5, name, color), inStartingPosition{inStartingPosition} {}
 
 void Rook::getAllPossibleMoves(std::pair<char, int> currentPosition) {
     // clear the vector of previous possible moves
