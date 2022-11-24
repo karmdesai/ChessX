@@ -13,6 +13,8 @@ class Piece {
     // either 'b' or 'w'
     char color;
 
+  public:
+    // Public for testing purposes (for now), in the future make it protected w/ Board as a friend.
     /* Moves are represented by a pair<char, int>, where:
         - the character is a letter ranging from a through h.
         - the integer is a number ranging from 1 to 8.
@@ -24,7 +26,7 @@ class Piece {
   public:
     // Constructor and destructor
     Piece(int value, char name, char color);
-    ~Piece() = default;
+    virtual ~Piece() = default;
 
     int getValue();
     char getName();
