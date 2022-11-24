@@ -3,7 +3,11 @@
 class Piece {
     protected:
         int value;
+
+        // capital letters are white, lowercase are black
         char name;
+
+        // either 'b' or 'w'
         char color;
 
         /* Moves are represented by a pair<char, int>, where: 
@@ -22,6 +26,7 @@ class Piece {
         char getName();
         char getColor();
 
+        // used to check whether or not a move is in the 8x8 bounds
         bool isMoveInBounds(std::pair<char, int> move);
 
         // the Piece class is an abstract class
