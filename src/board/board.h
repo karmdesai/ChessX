@@ -9,9 +9,14 @@ class Board {
 
     public:
         Board();
-        ~Board();
+        ~Board() = default;
 
         int convertAlphaToNum(char alpha);
+
+        bool pieceAtPosition(std::pair<char, int> position);
+
+        void parsePossibleMoves(Piece &piece, std::pair<char, int> position);
+        void parsePossibleMovesKnight(Piece &knight, std::pair<char, int> position);
 };
 
 #endif

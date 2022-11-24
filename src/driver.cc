@@ -24,6 +24,8 @@ int main() {
     char x;
     int y;
 
+    Board *b = new Board();
+
     std::cin >> piece >> x >> y;
 
     if (x < 'a' || x > 'h' || y < 1 || y > 8) {
@@ -53,7 +55,10 @@ int main() {
 
     } else if (piece == 'n') {
         p = new Knight(piece, 'b');
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        std::pair<char, int> position = std::make_pair(x, y);
+
+        p->getAllPossibleMoves(position);
+        b->parsePossibleMoves(*p, position);
 
     } else if (piece == 'b') {
         p = new Bishop(piece, 'b');
@@ -128,4 +133,6 @@ int main() {
 
         delete p;
     }
+
+    delete b;
 }
