@@ -103,7 +103,10 @@ int main() {
 
     } else if (piece == 'N') {
         p = new Knight(piece, 'w');
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        std::pair<char, int> position = std::make_pair(x, y);
+
+        p->getAllPossibleMoves(position);
+        b->parsePossibleMoves(*p, position);
 
     } else if (piece == 'B') {
         p = new Bishop(piece, 'w');
