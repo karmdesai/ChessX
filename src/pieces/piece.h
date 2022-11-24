@@ -1,11 +1,10 @@
 #include <vector>
 
 class Piece {
-    private:
+    protected:
         int value;
         char name;
         char color;
-        bool inStartingPosition;
 
         /* Moves are represented by a pair<char, int>, where: 
             - the character is a letter ranging from a through h.
@@ -17,12 +16,14 @@ class Piece {
 
     public:
         // constructor
-        Piece(int value, char name, char color, bool inStartingPosition);
+        Piece(int value, char name, char color);
 
         int getValue();
         char getName();
         char getColor();
 
+        bool isMoveInBounds(std::pair<char, int> move);
+
         // the Piece class is an abstract class
-        void virtual getAllPossibleMoves() = 0;
+        void virtual getAllPossibleMoves(std::pair<char, int> currentPosition) = 0;
 };
