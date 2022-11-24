@@ -33,23 +33,23 @@ int main() {
             inStartingPosition = false;
         }
 
-        p = new Pawn('p', 'b', inStartingPosition);
+        p = new Pawn(piece, 'b', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'r') {
-        p = new Rook('r', 'b');
+        p = new Rook(piece, 'b');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'n') {
-        p = new Knight('n', 'b');
+        p = new Knight(piece, 'b');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'b') {
-        p = new Bishop('b', 'b');
+        p = new Bishop(piece, 'b');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'q') {
-        p = new Queen('q', 'b');
+        p = new Queen(piece, 'b');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'k') {
@@ -59,7 +59,7 @@ int main() {
             inStartingPosition = false;
         }
 
-        p = new King('K', 'w', inStartingPosition);
+        p = new King(piece, 'b', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'P') {
@@ -69,23 +69,23 @@ int main() {
             inStartingPosition = false;
         }
 
-        p = new Pawn('p', 'b', inStartingPosition);
+        p = new Pawn(piece, 'w', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'R') {
-        p = new Rook('R', 'w');
+        p = new Rook(piece, 'w');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'N') {
-        p = new Knight('N', 'w');
+        p = new Knight(piece, 'w');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'B') {
-        p = new Bishop('B', 'w');
+        p = new Bishop(piece, 'w');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'Q') {
-        p = new Queen('Q', 'w');
+        p = new Queen(piece, 'w');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'K') {
@@ -95,7 +95,7 @@ int main() {
             inStartingPosition = false;
         }
 
-        p = new King('K', 'w', inStartingPosition);
+        p = new King(piece, 'w', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else {
