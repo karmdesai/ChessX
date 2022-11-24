@@ -1,3 +1,6 @@
+#ifndef PIECE_H
+#define PIECE_H
+
 #include <vector>
 
 class Piece {
@@ -33,3 +36,5 @@ class Piece {
     // the Piece class is an abstract class
     void virtual getAllPossibleMoves(std::pair<char, int> currentPosition) = 0;
 };
+
+#endif

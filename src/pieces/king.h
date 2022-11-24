@@ -1,3 +1,6 @@
+#ifndef KING_H
+#define KING_H
+
 #include "piece.h"
 
 class King : public Piece {
@@ -12,3 +15,5 @@ class King : public Piece {
 
     void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 };
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef PAWN_H
+#define PAWN_H
+
 #include "piece.h"
 
 class Pawn : public Piece {
@@ -13,3 +16,5 @@ class Pawn : public Piece {
 
     void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 };
+
+#endif

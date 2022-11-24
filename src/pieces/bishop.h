@@ -1,3 +1,6 @@
+#ifndef BISHOP_H
+#define BISHOP_H
+
 #include "piece.h"
 
 class Bishop : public Piece {
@@ -7,3 +10,5 @@ class Bishop : public Piece {
 
     void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 };
+
+#endif

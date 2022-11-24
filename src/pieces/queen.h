@@ -1,3 +1,6 @@
+#ifndef QUEEN_H
+#define QUEEN_H
+
 #include "piece.h"
 
 class Queen : public Piece {
@@ -7,3 +10,5 @@ class Queen : public Piece {
 
     void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 };
+
+#endif

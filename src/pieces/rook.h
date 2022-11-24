@@ -1,3 +1,6 @@
+#ifndef ROOK_H
+#define ROOK_H
+
 #include "piece.h"
 
 class Rook : public Piece {
@@ -7,3 +10,5 @@ class Rook : public Piece {
 
     void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 };
+
+#endif
