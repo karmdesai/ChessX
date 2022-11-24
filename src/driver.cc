@@ -107,6 +107,8 @@ int main() {
             std::cout << move.first << move.second << ", ";
         }
 
+        std::cout << std::endl;
+
         delete p;
     }
 }
