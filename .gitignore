@@ -36,3 +36,7 @@
 
 # VS Code
 .vscode
+
+# Chess executable
+.src/chess
+.chess
