@@ -16,7 +16,7 @@ class Board {
         Board(bool customSetup);
         ~Board() = default;
 
-        // not sure where we are actually supposed to put this?
+        // overloaded operator<< to print board
         friend std::ostream& operator<<(std::ostream& out, const Board* myBoard);
 
         int convertAlphaToNum(char alpha);
