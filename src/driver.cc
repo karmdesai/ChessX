@@ -18,6 +18,8 @@ int main() {
     std::cout << "e.g. 'R a1' for white rook currently at a1" << std::endl;
     std::cout << "e.g. 'b h4' for black bishop currently at h4" << std::endl;
 
+    Piece *p = nullptr;
+
     char piece;
     char x;
     int y;
@@ -31,50 +33,25 @@ int main() {
             inStartingPosition = false;
         }
 
-        Piece *p = new Pawn('p', 'b', inStartingPosition);
+        p = new Pawn('p', 'b', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
-        for (auto move : p->allPossibleMoves) {
-            std::cout << move.first << move.second << ", ";
-        }
-
-        delete p;
     } else if (piece == 'r') {
-        Piece *p = new Rook('r', 'b');
+        p = new Rook('r', 'b');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
-        for (auto move : p->allPossibleMoves) {
-            std::cout << move.first << move.second << ", ";
-        }
-
-        delete p;
     } else if (piece == 'n') {
-        Piece *p = new Knight('n', 'b');
+        p = new Knight('n', 'b');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
-        for (auto move : p->allPossibleMoves) {
-            std::cout << move.first << move.second << ", ";
-        }
-
-        delete p;
     } else if (piece == 'b') {
-        Piece *p = new Bishop('b', 'b');
+        p = new Bishop('b', 'b');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
-        for (auto move : p->allPossibleMoves) {
-            std::cout << move.first << move.second << ", ";
-        }
-
-        delete p;
     } else if (piece == 'q') {
-        Piece *p = new Queen('q', 'b');
+        p = new Queen('q', 'b');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
-        for (auto move : p->allPossibleMoves) {
-            std::cout << move.first << move.second << ", ";
-        }
-
-        delete p;
     } else if (piece == 'k') {
         bool inStartingPosition = true;
 
@@ -82,14 +59,9 @@ int main() {
             inStartingPosition = false;
         }
 
-        Piece *p = new King('K', 'w', inStartingPosition);
+        p = new King('K', 'w', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
-        for (auto move : p->allPossibleMoves) {
-            std::cout << move.first << move.second << ", ";
-        }
-
-        delete p;
     } else if (piece == 'P') {
         bool inStartingPosition = true;
 
@@ -97,50 +69,25 @@ int main() {
             inStartingPosition = false;
         }
 
-        Piece *p = new Pawn('p', 'b', inStartingPosition);
+        p = new Pawn('p', 'b', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
-        for (auto move : p->allPossibleMoves) {
-            std::cout << move.first << move.second << ", ";
-        }
-
-        delete p;
     } else if (piece == 'R') {
-        Piece *p = new Rook('R', 'w');
+        p = new Rook('R', 'w');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
-        for (auto move : p->allPossibleMoves) {
-            std::cout << move.first << move.second << ", ";
-        }
-
-        delete p;
     } else if (piece == 'N') {
-        Piece *p = new Knight('N', 'w');
+        p = new Knight('N', 'w');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
-        for (auto move : p->allPossibleMoves) {
-            std::cout << move.first << move.second << ", ";
-        }
-
-        delete p;
     } else if (piece == 'B') {
-        Piece *p = new Bishop('B', 'w');
+        p = new Bishop('B', 'w');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
-        for (auto move : p->allPossibleMoves) {
-            std::cout << move.first << move.second << ", ";
-        }
-
-        delete p;
     } else if (piece == 'Q') {
-        Piece *p = new Queen('Q', 'w');
+        p = new Queen('Q', 'w');
         p->getAllPossibleMoves(std::make_pair(x, y));
 
-        for (auto move : p->allPossibleMoves) {
-            std::cout << move.first << move.second << ", ";
-        }
-
-        delete p;
     } else if (piece == 'K') {
         bool inStartingPosition = true;
 
@@ -148,15 +95,18 @@ int main() {
             inStartingPosition = false;
         }
 
-        Piece *p = new King('K', 'w', inStartingPosition);
+        p = new King('K', 'w', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
+    } else {
+        std::cout << "Invalid piece" << std::endl;
+    }
+
+    if (p != nullptr) {
         for (auto move : p->allPossibleMoves) {
             std::cout << move.first << move.second << ", ";
         }
 
         delete p;
-    } else {
-        std::cout << "Invalid piece" << std::endl;
     }
 }
