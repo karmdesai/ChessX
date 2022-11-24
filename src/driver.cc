@@ -37,7 +37,13 @@ int main() {
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'r') {
-        p = new Rook(piece, 'b');
+        bool inStartingPosition = false;
+
+        if (x == 'a' && y == 8 || x == 'h' && y == 8) {
+            inStartingPosition = true;
+        }
+
+        p = new Rook(piece, 'w', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'n') {
@@ -73,7 +79,13 @@ int main() {
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'R') {
-        p = new Rook(piece, 'w');
+        bool inStartingPosition = false;
+
+        if (x == 'a' && y == 1 || x == 'h' && y == 1) {
+            inStartingPosition = true;
+        }
+
+        p = new Rook(piece, 'w', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
     } else if (piece == 'N') {
