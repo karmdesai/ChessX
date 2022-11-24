@@ -2,6 +2,7 @@
 #define BOARD_H
 
 #include "../pieces/piece.h"
+#include <ostream>
 
 class Board {
     private:
