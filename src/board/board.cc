@@ -1,4 +1,5 @@
 #include "board.h"
+#include "../pieces/piece.h"
 
 // convertAlphaToNum() converts a character ranging from a to h
 //  to a number ranging from 0 to 7.
@@ -11,4 +12,7 @@ int Board::convertAlphaToNum(char alpha) {
     } else {
         return -1;
     }
+}
+
+Board::Board() {
 }
