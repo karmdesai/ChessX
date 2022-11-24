@@ -1,4 +1,5 @@
 #include "king.h"
+#include <climits>
 
 // give the King a value of INT_MAX
 King::King(char name, char color, bool inStartingPosition)
