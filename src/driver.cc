@@ -25,13 +25,19 @@ int main() {
     std::cin >> piece >> x >> y;
 
     if (piece == 'p') {
-        Piece *p = new Pawn('p', 'b', true);
+        bool inStartingPosition = true;
+
+        if (y != 7) {
+            inStartingPosition = false;
+        }
+
+        Piece *p = new Pawn('p', 'b', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
         for (auto move : p->allPossibleMoves) {
             std::cout << move.first << move.second << ", ";
         }
-        
+
         delete p;
     } else if (piece == 'r') {
         Piece *p = new Rook('r', 'b');
@@ -70,7 +76,13 @@ int main() {
 
         delete p;
     } else if (piece == 'k') {
-        Piece *p = new King('k', 'b', true);
+        bool inStartingPosition = true;
+
+        if (x != 'e' || y != 8) {
+            inStartingPosition = false;
+        }
+
+        Piece *p = new King('K', 'w', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
         for (auto move : p->allPossibleMoves) {
@@ -79,7 +91,13 @@ int main() {
 
         delete p;
     } else if (piece == 'P') {
-        Piece *p = new Pawn('P', 'w', true);
+        bool inStartingPosition = true;
+
+        if (y != 2) {
+            inStartingPosition = false;
+        }
+
+        Piece *p = new Pawn('p', 'b', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
         for (auto move : p->allPossibleMoves) {
@@ -124,7 +142,13 @@ int main() {
 
         delete p;
     } else if (piece == 'K') {
-        Piece *p = new King('K', 'w', true);
+        bool inStartingPosition = true;
+
+        if (x != 'e' || y != 1) {
+            inStartingPosition = false;
+        }
+
+        Piece *p = new King('K', 'w', inStartingPosition);
         p->getAllPossibleMoves(std::make_pair(x, y));
 
         for (auto move : p->allPossibleMoves) {
