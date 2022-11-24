@@ -13,7 +13,7 @@ void King::getAllPossibleMoves(std::pair<char, int> currentPosition) {
         std::pair<char, int> shortCastle =
             std::make_pair(currentPosition.first + 2, currentPosition.second);
         std::pair<char, int> longCastle =
-            std::make_pair(currentPosition.first - 3, currentPosition.second);
+            std::make_pair(currentPosition.first - 2, currentPosition.second);
 
         // choosing not to check if moves are in bounds
         this->allPossibleMoves.push_back(longCastle);
