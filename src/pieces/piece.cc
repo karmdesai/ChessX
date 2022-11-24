@@ -11,8 +11,8 @@ char Piece::getName() { return name; }
 char Piece::getColor() { return color; }
 
 bool Piece::isMoveInBounds(std::pair<char, int> move) {
-    if (move.first < 'a' || move.first > 'h' || 
-        move.second < 1 || move.second > 8) {
+    if (move.first < 'a' || move.first > 'h' || move.second < 1 ||
+        move.second > 8) {
         return false;
     }
 

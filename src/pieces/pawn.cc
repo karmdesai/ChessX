@@ -8,8 +8,8 @@ void Pawn::getAllPossibleMoves(std::pair<char, int> currentPosition) {
     // clear the vector of previous possible moves
     this->allPossibleMoves.clear();
 
-    /* For the pawn specifically, we have to check whether its black 
-        or white to generate all moves. If its white, we add to the 
+    /* For the pawn specifically, we have to check whether its black
+        or white to generate all moves. If its white, we add to the
         y-coordinate. If its black, we subtract from the y-coordinate. */
 
     // check if the pawn can move two spaces

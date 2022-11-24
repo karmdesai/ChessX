@@ -1,7 +1,6 @@
 #include "bishop.h"
 
-Bishop::Bishop(char name, char color)
-    : Piece(3, name, color) {}
+Bishop::Bishop(char name, char color) : Piece(3, name, color) {}
 
 void Bishop::getAllPossibleMoves(std::pair<char, int> currentPosition) {
     // clear the vector of previous possible moves
@@ -10,7 +9,7 @@ void Bishop::getAllPossibleMoves(std::pair<char, int> currentPosition) {
     // Bishop can move diagonally in all directions.
     int x = currentPosition.first;
     int y = currentPosition.second;
-    
+
     // move diagonally left and down
     while (x > 'a' && y > 1) {
         x -= 1;
