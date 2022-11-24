@@ -26,6 +26,11 @@ int main() {
 
     std::cin >> piece >> x >> y;
 
+    if (x < 'a' || x > 'h' || y < 1 || y > 8) {
+        std::cout << "Invalid position" << std::endl;
+        return 1;
+    }
+
     if (piece == 'p') {
         bool inStartingPosition = true;
 
@@ -39,7 +44,7 @@ int main() {
     } else if (piece == 'r') {
         bool inStartingPosition = false;
 
-        if (x == 'a' && y == 8 || x == 'h' && y == 8) {
+        if ((x == 'a' && y == 8) || (x == 'h' && y == 8)) {
             inStartingPosition = true;
         }
 
@@ -81,7 +86,7 @@ int main() {
     } else if (piece == 'R') {
         bool inStartingPosition = false;
 
-        if (x == 'a' && y == 1 || x == 'h' && y == 1) {
+        if ((x == 'a' && y == 1) || (x == 'h' && y == 1)) {
             inStartingPosition = true;
         }
 

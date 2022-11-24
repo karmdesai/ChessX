@@ -1,8 +1,8 @@
 #include "king.h"
 
-// give the King a value of MAX_INT
+// give the King a value of INT_MAX
 King::King(char name, char color, bool inStartingPosition)
-    : Piece(2147483647, name, color), inStartingPosition(inStartingPosition) {}
+    : Piece(INT_MAX, name, color), inStartingPosition(inStartingPosition) {}
 
 void King::getAllPossibleMoves(std::pair<char, int> currentPosition) {
     // clear the vector of previous possible moves
