@@ -14,9 +14,9 @@
 /* Board class */
 Board::Board(bool customSetup) {
     // initialize board to nullptr
-    for (int j = 0; j < 8; j++) {
-        for (int k = 0; k < 8; k++) {
-            currentBoard[j][k] = nullptr;
+    for (int x = 0; x < 8; x++) {
+        for (int y = 0; y < 8; y++) {
+            currentBoard[x][y] = nullptr;
         }
     }
 
@@ -50,6 +50,39 @@ Board::Board(bool customSetup) {
             currentBoard[i][6] = new Pawn('p', 'b', true);
         }
     }
+}
+
+// Overload the << operator for the Board class
+std::ostream &operator<<(std::ostream &out, const Board *myBoard) {
+    for (int y = 7; y >= 0; y--) {
+        out << y + 1 << " ";
+
+        for (int x = 0; x < 8; x++) {
+            Piece *currentSpace = myBoard->currentBoard[x][y];
+
+            if (currentSpace != nullptr) {
+                out << currentSpace->getName();
+            } else {
+                // a even sum of coordinates is a black square
+                if ((x + y) % 2 == 0) {
+                    out << "_";
+                }
+                // an odd sum of coordinates is a white square
+                else {
+                    out << " ";
+                }
+            }
+        }
+
+        out << std::endl;
+    }
+
+    // print x-axis as letters
+    out << std::endl;
+    out << "  abcdefgh";
+    out << std::endl;
+
+    return out;
 }
 
 // convertAlphaToNum() converts a character ranging from a to h

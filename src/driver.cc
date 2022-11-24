@@ -11,6 +11,11 @@
 #include "pieces/rook.h"
 
 int main() {
+    Board *b = new Board(false);
+
+    std::cout << "**** WELCOME TO CHESS ****" << std::endl;
+    std::cout << b << std::endl;
+
     std::cout
         << "Enter a piece followed by current position to get all possible "
            "moves: "
@@ -23,8 +28,6 @@ int main() {
     char piece;
     char x;
     int y;
-
-    Board *b = new Board();
 
     std::cin >> piece >> x >> y;
 
