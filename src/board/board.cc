@@ -98,9 +98,13 @@ int Board::convertAlphaToNum(char alpha) {
     }
 }
 
-bool Board::pieceAtPosition(std::pair<char, int> position) {
+Piece *Board::pieceAtPosition(std::pair<char, int> position) {
     int x = convertAlphaToNum(position.first);
     int y = position.second;
+
+    // input is always from 1 to 8 but array indexing is from 0 to 7.
+    x -= 1;
+    y -= 1;
 
     /* Check if position is out of bounds first?
 
@@ -109,11 +113,7 @@ bool Board::pieceAtPosition(std::pair<char, int> position) {
     }
     */
 
-    if (currentBoard[x][y] == nullptr) {
-        return false;
-    } else {
-        return true;
-    }
+    return currentBoard[x][y];
 }
 
 void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
@@ -138,8 +138,17 @@ void Board::parsePossibleMovesKnight(Piece &knight,
 
     for (auto move : knight.allPossibleMoves) {
         /* the knight can jump other pieces, so all possible moves are valid as
-         long as they are not occupied. */
-        if (this->pieceAtPosition(move) == false) {
+         long as they are not occupied by a piece of its own color. */
+        Piece *currentSpace = this->pieceAtPosition(move);
+
+        if (currentSpace != nullptr) {
+            std::cout << this->pieceAtPosition(move)->getName();
+
+            if (this->pieceAtPosition(move)->getColor() != knight.getColor()) {
+                tmp.push_back(move);
+            }
+        } else {
+            std::cout << "Empty";
             tmp.push_back(move);
         }
     }

@@ -20,7 +20,7 @@ class Board {
 
         int convertAlphaToNum(char alpha);
 
-        bool pieceAtPosition(std::pair<char, int> position);
+        Piece* pieceAtPosition(std::pair<char, int> position);
 
         void parsePossibleMoves(Piece &piece, std::pair<char, int> position);
         void parsePossibleMovesKnight(Piece &knight, std::pair<char, int> position);
