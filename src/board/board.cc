@@ -102,16 +102,16 @@ Piece *Board::pieceAtPosition(std::pair<char, int> position) {
     int x = convertAlphaToNum(position.first);
     int y = position.second;
 
-    // input is always from 1 to 8 but array indexing is from 0 to 7.
-    x -= 1;
-    y -= 1;
-
     /* Check if position is out of bounds first?
 
     if (x == -1 || y < 1 || y > 8) {
         return false;
     }
     */
+
+    // input is always from 1 to 8 but array indexing is from 0 to 7.
+    x -= 1;
+    y -= 1;
 
     return currentBoard[x][y];
 }
@@ -153,5 +153,8 @@ void Board::parsePossibleMovesKnight(Piece &knight,
         }
     }
 
+    /* this is not good, we should have Piece.allPossibleMoves is a pointer to the
+      vector, and tmp is a pointer to a vector. Then we can just swap the memory
+      of the two vectors for optimal performance. */
     knight.allPossibleMoves = tmp;
 }
