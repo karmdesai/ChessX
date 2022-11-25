@@ -6,6 +6,7 @@
 #include "../pieces/bishop.h"
 #include "../pieces/king.h"
 #include "../pieces/knight.h"
+#include "../pieces/nullPiece.h"
 #include "../pieces/pawn.h"
 #include "../pieces/piece.h"
 #include "../pieces/queen.h"
@@ -13,10 +14,10 @@
 
 /* Board class */
 Board::Board(bool customSetup) {
-  // initialize board to nullptr
+  // start with board of nullpieces
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
-      currentBoard[x][y] = nullptr;
+      currentBoard[x][y] = new NullPiece(' ', ' ');
     }
   }
 
@@ -47,6 +48,15 @@ Board::Board(bool customSetup) {
 
     for (int i = 0; i < 8; i++) {
       currentBoard[i][6] = new Pawn('p', 'b', true);
+    }
+  }
+}
+
+// Destructor
+Board::~Board() {
+  for (int x = 0; x < 8; x++) {
+    for (int y = 0; y < 8; y++) {
+      delete currentBoard[x][y];
     }
   }
 }
@@ -133,27 +143,16 @@ void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
 
 void Board::parsePossibleMovesKnight(Piece &knight,
                                      std::pair<char, int> position) {
-  // initialize iterators
-  auto it = knight.allPossibleMoves.begin();
-  auto end = knight.allPossibleMoves.end();
+  std::vector<std::pair<char, int>> tmp;
 
-  while (it != end) {
-    Piece *currentSpace = this->pieceAtPosition(*it);
-    bool erased = false;
-
-    // if piece is occupied and of same colour, we remove from possible moves
-    if (currentSpace != nullptr) {
-      if (currentSpace->getColor() == knight.getColor()) {
-        it = knight.allPossibleMoves.erase(it);
-        erased = true;
-        if (it == end) {
-          break;
-        }
-      }
-    }
-
-    if (!erased) {
-      ++it;
+  for (auto move : knight.allPossibleMoves) {
+    // as long as the piece at 'move' is not the same color, its a valid move
+    if (this->pieceAtPosition(move)->getColor() != knight.getColor()) {
+      tmp.push_back(move);
     }
   }
+  /* this is not ideal, we should have Piece.allPossibleMoves is a pointer to
+    the vector, and tmp is a pointer to a vector. Then we can just swap the
+    memory of the two vectors for optimal performance. */
+  knight.allPossibleMoves = tmp;
 }

@@ -14,7 +14,7 @@ class Board {
 
     public:
         Board(bool customSetup);
-        ~Board() = default;
+        ~Board();
 
         // overloaded operator<< to print board
         friend std::ostream& operator<<(std::ostream& out, const Board* myBoard);
