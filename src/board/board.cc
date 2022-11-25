@@ -134,27 +134,26 @@ void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
 
 void Board::parsePossibleMovesKnight(Piece &knight,
                                      std::pair<char, int> position) {
-    std::vector<std::pair<char, int>> tmp;
 
-    for (auto move : knight.allPossibleMoves) {
-        /* the knight can jump other pieces, so all possible moves are valid as
-         long as they are not occupied by a piece of its own color. */
-        Piece *currentSpace = this->pieceAtPosition(move);
+	// initialize iterators
+	auto it = knight.allPossibleMoves.begin();
+	auto end = knight.allPossibleMoves.end();
 
-        if (currentSpace != nullptr) {
-            std::cout << this->pieceAtPosition(move)->getName();
+	while (it != end) {
+		Piece *currentSpace = this->pieceAtPosition(*it);
+		bool erased = false;
 
-            if (this->pieceAtPosition(move)->getColor() != knight.getColor()) {
-                tmp.push_back(move);
-            }
-        } else {
-            std::cout << "Empty";
-            tmp.push_back(move);
-        }
-    }
+		// if piece is occupied and of same colour, we remove from possible moves
+		if (currentSpace != nullptr) {
+			if (currentSpace->getColor() == knight.getColor()) {
+				it = knight.allPossibleMoves.erase(it);
+				erased = true;
+				if (it == end) {
+					break;
+				}
+			} 
+		}
 
-    /* this is not good, we should have Piece.allPossibleMoves is a pointer to the
-      vector, and tmp is a pointer to a vector. Then we can just swap the memory
-      of the two vectors for optimal performance. */
-    knight.allPossibleMoves = tmp;
+		if (!erased) { ++it; }
+	}
 }
