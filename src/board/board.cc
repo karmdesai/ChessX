@@ -155,30 +155,4 @@ void Board::parsePossibleMovesKnight(Piece &knight,
     the vector, and tmp is a pointer to a vector. Then we can just swap the
     memory of the two vectors for optimal performance. */
   knight.allPossibleMoves = tmp;
-
-
-
-  // // initialize iterators
-  // auto it = knight.allPossibleMoves.begin();
-  // auto end = knight.allPossibleMoves.end();
-
-  // while (it != end) {
-  //   Piece *currentSpace = this->pieceAtPosition(*it);
-  //   bool erased = false;
-
-  //   // if piece is occupied and of same colour, we remove from possible moves
-  //   if (currentSpace != nullptr) {
-  //     if (currentSpace->getColor() == knight.getColor()) {
-  //       it = knight.allPossibleMoves.erase(it);
-  //       erased = true;
-  //       if (it == end) {
-  //         break;
-  //       }
-  //     }
-  //   }
-
-  //   if (!erased) {
-  //     ++it;
-  //   }
-  // }
 }
