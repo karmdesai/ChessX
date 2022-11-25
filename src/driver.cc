@@ -11,6 +11,11 @@
 #include "pieces/rook.h"
 
 int main() {
+    Board *b = new Board(false);
+
+    std::cout << "**** WELCOME TO CHESS ****" << std::endl;
+    std::cout << b << std::endl;
+
     std::cout
         << "Enter a piece followed by current position to get all possible "
            "moves: "
@@ -53,7 +58,10 @@ int main() {
 
     } else if (piece == 'n') {
         p = new Knight(piece, 'b');
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        std::pair<char, int> position = std::make_pair(x, y);
+
+        p->getAllPossibleMoves(position);
+        b->parsePossibleMoves(*p, position);
 
     } else if (piece == 'b') {
         p = new Bishop(piece, 'b');
@@ -95,7 +103,10 @@ int main() {
 
     } else if (piece == 'N') {
         p = new Knight(piece, 'w');
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        std::pair<char, int> position = std::make_pair(x, y);
+
+        p->getAllPossibleMoves(position);
+        b->parsePossibleMoves(*p, position);
 
     } else if (piece == 'B') {
         p = new Bishop(piece, 'w');
@@ -128,4 +139,6 @@ int main() {
 
         delete p;
     }
+
+    delete b;
 }
