@@ -175,18 +175,18 @@ void Board::parsePossibleMovesKnight(Piece &knight,
     Piece *currentSpace = this->pieceAtPosition(move);
 
     if (currentSpace != nullptr) {
-      std::cout << this->pieceAtPosition(move)->getName();
+      // std::cout << this->pieceAtPosition(move)->getName();
 
       if (this->pieceAtPosition(move)->getColor() != knight.getColor()) {
         tmp.push_back(move);
       }
     } else {
-      std::cout << "Empty";
+      // std::cout << "Empty";
       tmp.push_back(move);
     }
   }
 
-  /* this is not good, we should have Piece.allPossibleMoves is a pointer to the
+  /* this is not ideal, we should have Piece.allPossibleMoves is a pointer to the
     vector, and tmp is a pointer to a vector. Then we can just swap the memory
     of the two vectors for optimal performance. */
   knight.allPossibleMoves = tmp;
