@@ -6,6 +6,7 @@
 #include "../pieces/bishop.h"
 #include "../pieces/king.h"
 #include "../pieces/knight.h"
+#include "../pieces/nullPiece.h"
 #include "../pieces/pawn.h"
 #include "../pieces/piece.h"
 #include "../pieces/queen.h"
@@ -13,10 +14,10 @@
 
 /* Board class */
 Board::Board(bool customSetup) {
-  // initialize board to nullptr
+  // start with board of nullpieces
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
-      currentBoard[x][y] = nullptr;
+      currentBoard[x][y] = new NullPiece(' ', ' ');
     }
   }
 
@@ -47,6 +48,15 @@ Board::Board(bool customSetup) {
 
     for (int i = 0; i < 8; i++) {
       currentBoard[i][6] = new Pawn('p', 'b', true);
+    }
+  }
+}
+
+// Destructor
+Board::~Board() {
+  for (int x = 0; x < 8; x++) {
+    for (int y = 0; y < 8; y++) {
+      delete currentBoard[x][y];
     }
   }
 }
