@@ -153,7 +153,7 @@ Piece* Board::createPiece(char c) {
   } else if (c == 'p') {
     return new Pawn('p', 'b', false);
   } else {
-    return new NullPiece(' ', ' ');
+    return new NullPiece('*', '*');
   }
 }
 

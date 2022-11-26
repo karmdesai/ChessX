@@ -5,7 +5,6 @@
 #include <ostream>
 
 class Board {
-    // have to make this public for now until we fix setup implementation
     private:
         // We have an 8x8 x-y coordinate system.
         // The first index is the x-coordinate (which ranges from 0 to 7).
