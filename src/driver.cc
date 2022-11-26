@@ -276,6 +276,20 @@ int main() {
     std::cout << "Invalid piece" << std::endl;
   }
 
+  // clone board
+  Board *b2 = b->clone();
+
+  // print addresses of each piece in the board
+  for (int i = 0; i < 8; ++i) {
+    for (int j = 0; j < 8; ++j) {
+      if (b->getPieceAtPosition(std::make_pair('a' + j, 8 - i)) == b2->getPieceAtPosition(std::make_pair('a' + j, 8 - i))) {
+        std::cout << "SAME PIECE (THIS IS BAD) " << (char)('a' + j) << 8 - i << std::endl;
+      } else {
+        std::cout << "Different piece at " << (char)('a' + j) << 8 - i << std::endl;
+      }
+    }
+  }
+
   if (p != nullptr) {
     for (auto move : p->allPossibleMoves) {
       std::cout << move.first << move.second << ", ";
