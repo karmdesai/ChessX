@@ -6,7 +6,7 @@
 #include "../pieces/piece.h"
 
 class Board {
-private:
+ private:
   // We have an 8x8 x-y coordinate system.
   // The first index is the x-coordinate (which ranges from 0 to 7).
   //  The first index represents the alphabetical column of the board (a-h).
@@ -15,7 +15,7 @@ private:
 
   char whosTurn;
 
-public:
+ public:
   Board();
   ~Board();
 
@@ -41,6 +41,8 @@ public:
   void parsePossibleMoves(Piece &piece, std::pair<char, int> position);
   void parsePossibleMovesKnight(Piece &knight, std::pair<char, int> position);
   void parsePossibleMovesQueen(Piece &queen, std::pair<char, int> position);
+  void parsePossibleMovesRook(Piece &king, std::pair<char, int> position);
+  void parsePossibleMovesBishop(Piece &king, std::pair<char, int> position);
 
   // Condition managers (check, checkmate, draw, win, etc.)
   bool inCheck(Piece &king);
