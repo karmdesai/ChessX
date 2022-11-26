@@ -28,38 +28,38 @@ Board::Board() {
 Board::~Board() {
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
-      delete currentBoard[x][y];
+      delete this->currentBoard[x][y];
     }
   }
 }
 
 void Board::defaultInitialization() {
   // Initialize white pieces
-  currentBoard[0][0] = new Rook('R', 'w', true);
-  currentBoard[1][0] = new Knight('N', 'w');
-  currentBoard[2][0] = new Bishop('B', 'w');
-  currentBoard[3][0] = new Queen('Q', 'w');
-  currentBoard[4][0] = new King('K', 'w', true);
-  currentBoard[5][0] = new Bishop('B', 'w');
-  currentBoard[6][0] = new Knight('N', 'w');
-  currentBoard[7][0] = new Rook('R', 'w', true);
+  this->currentBoard[0][0] = new Rook('R', 'w', true);
+  this->currentBoard[1][0] = new Knight('N', 'w');
+  this->currentBoard[2][0] = new Bishop('B', 'w');
+  this->currentBoard[3][0] = new Queen('Q', 'w');
+  this->currentBoard[4][0] = new King('K', 'w', true);
+  this->currentBoard[5][0] = new Bishop('B', 'w');
+  this->currentBoard[6][0] = new Knight('N', 'w');
+  this->currentBoard[7][0] = new Rook('R', 'w', true);
 
   for (int i = 0; i < 8; i++) {
-    currentBoard[i][1] = new Pawn('P', 'w', true);
+    this->currentBoard[i][1] = new Pawn('P', 'w', true);
   }
 
   // Initialize black pieces
-  currentBoard[0][7] = new Rook('r', 'b', true);
-  currentBoard[1][7] = new Knight('n', 'b');
-  currentBoard[2][7] = new Bishop('b', 'b');
-  currentBoard[3][7] = new Queen('q', 'b');
-  currentBoard[4][7] = new King('k', 'b', true);
-  currentBoard[5][7] = new Bishop('b', 'b');
-  currentBoard[6][7] = new Knight('n', 'b');
-  currentBoard[7][7] = new Rook('r', 'b', true);
+  this->currentBoard[0][7] = new Rook('r', 'b', true);
+  this->currentBoard[1][7] = new Knight('n', 'b');
+  this->currentBoard[2][7] = new Bishop('b', 'b');
+  this->currentBoard[3][7] = new Queen('q', 'b');
+  this->currentBoard[4][7] = new King('k', 'b', true);
+  this->currentBoard[5][7] = new Bishop('b', 'b');
+  this->currentBoard[6][7] = new Knight('n', 'b');
+  this->currentBoard[7][7] = new Rook('r', 'b', true);
 
   for (int i = 0; i < 8; i++) {
-    currentBoard[i][6] = new Pawn('p', 'b', true);
+    this->currentBoard[i][6] = new Pawn('p', 'b', true);
   }
 }
 
