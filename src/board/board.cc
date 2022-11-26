@@ -152,137 +152,170 @@ void Board::parsePossibleMovesQueen(Piece &queen,
   // possible moves and stop checking in that direction. If it is occupied by a
   // friendly piece, stop checking in that direction.
 
-  // check up direction
-  for (int i = position.second + 1; i < 8; ++i) {
-    Piece *tmpPiece = pieceAtPosition(std::make_pair(position.first, i));
+  /* Bishop movement */
+    int x = position.first;
+    int y = position.second;
 
-    if (tmpPiece->getName() == '*') {
-      tmp.push_back(std::make_pair(position.first, i));
-    } else if (tmpPiece->getColor() != queen.getColor()) {
-      tmp.push_back(std::make_pair(position.first, i));
-      break;
-    } else {
-      break;
-    }
-  }
+    std::pair<char, int> newMove;
 
-  // check down direction
-  for (int i = position.second - 1; i >= 0; --i) {
-    Piece *tmpPiece = pieceAtPosition(std::make_pair(position.first, i));
+    // move diagonally left and down
+    while (x > 'a' && y > 1) {
+        x -= 1;
+        y -= 1;
 
-    if (tmpPiece->getName() == '*') {
-      tmp.push_back(std::make_pair(position.first, i));
-    } else if (tmpPiece->getColor() != queen.getColor()) {
-      tmp.push_back(std::make_pair(position.first, i));
-      break;
-    } else {
-      break;
-    }
-  }
+        newMove = std::make_pair(x, y);
+        Piece *tmpPiece = pieceAtPosition(newMove);
 
-  // check left direction
-  for (int i = convertAlphaToNum(position.first) - 1; i >= 0; --i) {
-    Piece *tmpPiece = pieceAtPosition(std::make_pair(i + 'a', position.second));
-
-    if (tmpPiece->getName() == '*') {
-      tmp.push_back(std::make_pair(i + 'a', position.second));
-    } else if (tmpPiece->getColor() != queen.getColor()) {
-      tmp.push_back(std::make_pair(i + 'a', position.second));
-      break;
-    } else {
-      break;
-    }
-  }
-
-  // check right direction
-  for (int i = convertAlphaToNum(position.first) + 1; i < 8; ++i) {
-    Piece *tmpPiece = pieceAtPosition(std::make_pair(i + 'a', position.second));
-
-    if (tmpPiece->getName() == '*') {
-      tmp.push_back(std::make_pair(i + 'a', position.second));
-    } else if (tmpPiece->getColor() != queen.getColor()) {
-      tmp.push_back(std::make_pair(i + 'a', position.second));
-      break;
-    } else {
-      break;
-    }
-  }
-
-  // check up-left direction
-  for (int i = 1; i < 8; ++i) {
-    if (position.first + i > 'h' || position.second + i > 8) {
-      break;
+        if (tmpPiece->getName() == '*') {
+          tmp.push_back(newMove);
+        } else if (tmpPiece->getColor() != queen.getColor()) {
+          tmp.push_back(newMove);
+          break;
+        } else if (tmpPiece->getColor() == queen.getColor()) {
+          break;
+        }
     }
 
-    Piece *tmpPiece = pieceAtPosition(
-        std::make_pair(position.first + i, position.second + i));
+    x = position.first;
+    y = position.second;
 
-    if (tmpPiece->getName() == '*') {
-      tmp.push_back(std::make_pair(position.first + i, position.second + i));
-    } else if (tmpPiece->getColor() != queen.getColor()) {
-      tmp.push_back(std::make_pair(position.first + i, position.second + i));
-      break;
-    } else {
-      break;
-    }
-  }
+    // move diagonally left and up
+    while (x > 'a' && y < 8) {
+        x -= 1;
+        y += 1;
 
-  // check up-right direction
-  for (int i = 1; i < 8; ++i) {
-    if (position.first - i < 'a' || position.second + i > 8) {
-      break;
-    }
+        newMove = std::make_pair(x, y);
+        Piece *tmpPiece = pieceAtPosition(newMove);
 
-    Piece *tmpPiece = pieceAtPosition(
-        std::make_pair(position.first - i, position.second + i));
-
-    if (tmpPiece->getName() == '*') {
-      tmp.push_back(std::make_pair(position.first - i, position.second + i));
-    } else if (tmpPiece->getColor() != queen.getColor()) {
-      tmp.push_back(std::make_pair(position.first - i, position.second + i));
-      break;
-    } else {
-      break;
-    }
-  }
-
-  // check down-left direction
-  for (int i = 1; i < 8; ++i) {
-    if (position.first - i < 'a' || position.second - i < 0) {
-      break;
+        if (tmpPiece->getName() == '*') {
+          tmp.push_back(newMove);
+        } else if (tmpPiece->getColor() != queen.getColor()) {
+          tmp.push_back(newMove);
+          break;
+        } else if (tmpPiece->getColor() == queen.getColor()) {
+          break;
+        }
     }
 
-    Piece *tmpPiece = pieceAtPosition(
-        std::make_pair(position.first - i, position.second - i));
+    x = position.first;
+    y = position.second;
 
-    if (tmpPiece->getName() == '*') {
-      tmp.push_back(std::make_pair(position.first - i, position.second - i));
-    } else if (tmpPiece->getColor() != queen.getColor()) {
-      tmp.push_back(std::make_pair(position.first - i, position.second - i));
-      break;
-    } else if (tmpPiece->getColor() == queen.getColor()) {
-      break;
+    // move diagonally right and up
+    while (x < 'h' && y < 8) {
+        x += 1;
+        y += 1;
+
+        newMove = std::make_pair(x, y);
+        Piece *tmpPiece = pieceAtPosition(newMove);
+
+        if (tmpPiece->getName() == '*') {
+          tmp.push_back(newMove);
+        } else if (tmpPiece->getColor() != queen.getColor()) {
+          tmp.push_back(newMove);
+          break;
+        } else if (tmpPiece->getColor() == queen.getColor()) {
+          break;
+        }
     }
-  }
 
-  // check down-right direction
-  for (int i = 1; i < 8; ++i) {
-    if (position.first + i > 'h' || position.second - i < 0) {
-      break;
+    x = position.first;
+    y = position.second;
+
+    // move diagonally right and down
+    while (x < 'h' && y > 1) {
+        x += 1;
+        y -= 1;
+
+        newMove = std::make_pair(x, y);
+        Piece *tmpPiece = pieceAtPosition(newMove);
+
+        if (tmpPiece->getName() == '*') {
+          tmp.push_back(newMove);
+        } else if (tmpPiece->getColor() != queen.getColor()) {
+          tmp.push_back(newMove);
+          break;
+        } else if (tmpPiece->getColor() == queen.getColor()) {
+          break;
+        }
     }
 
-    Piece *tmpPiece = pieceAtPosition(
-        std::make_pair(position.first + i, position.second - i));
+    /* Rook movement */
+    x = position.first;
+    y = position.second;
 
-    if (tmpPiece->getName() == '*') {
-      tmp.push_back(std::make_pair(position.first + i, position.second - i));
-    } else if (tmpPiece->getColor() != queen.getColor()) {
-      tmp.push_back(std::make_pair(position.first + i, position.second - i));
-      break;
-    } else {
-      break;
+    // move left
+    while (x > 'a') {
+        x -= 1;
+
+        newMove = std::make_pair(x, y);
+        Piece *tmpPiece = pieceAtPosition(newMove);
+
+        if (tmpPiece->getName() == '*') {
+          tmp.push_back(newMove);
+        } else if (tmpPiece->getColor() != queen.getColor()) {
+          tmp.push_back(newMove);
+          break;
+        } else if (tmpPiece->getColor() == queen.getColor()) {
+          break;
+        }
     }
-  }
+
+    x = position.first;
+
+    // move right
+    while (x < 'h') {
+        x += 1;
+        
+        newMove = std::make_pair(x, y);
+        Piece *tmpPiece = pieceAtPosition(newMove);
+
+        if (tmpPiece->getName() == '*') {
+          tmp.push_back(newMove);
+        } else if (tmpPiece->getColor() != queen.getColor()) {
+          tmp.push_back(newMove);
+          break;
+        } else if (tmpPiece->getColor() == queen.getColor()) {
+          break;
+        }
+    }
+
+    x = position.first;
+
+    // move down
+    while (y > 1) {
+        y -= 1;
+        
+        newMove = std::make_pair(x, y);
+        Piece *tmpPiece = pieceAtPosition(newMove);
+
+        if (tmpPiece->getName() == '*') {
+          tmp.push_back(newMove);
+        } else if (tmpPiece->getColor() != queen.getColor()) {
+          tmp.push_back(newMove);
+          break;
+        } else if (tmpPiece->getColor() == queen.getColor()) {
+          break;
+        }
+    }
+
+    y = position.second;
+
+    // move up
+    while (y < 8) {
+        y += 1;
+        
+        newMove = std::make_pair(x, y);
+        Piece *tmpPiece = pieceAtPosition(newMove);
+
+        if (tmpPiece->getName() == '*') {
+          tmp.push_back(newMove);
+        } else if (tmpPiece->getColor() != queen.getColor()) {
+          tmp.push_back(newMove);
+          break;
+        } else if (tmpPiece->getColor() == queen.getColor()) {
+          break;
+        }
+    }
 
   queen.allPossibleMoves = tmp;
 }
