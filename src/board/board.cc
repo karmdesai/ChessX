@@ -206,7 +206,6 @@ void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
   } else if (piece.getName() == 'b' || piece.getName() == 'B') {
     // Bishop
   } else if (piece.getName() == 'q' || piece.getName() == 'Q') {
-    // Queen
     parsePossibleMovesQueen(piece, position);
   } else if (piece.getName() == 'k' || piece.getName() == 'K') {
     // King
