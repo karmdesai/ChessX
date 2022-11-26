@@ -109,6 +109,19 @@ int Board::convertAlphaToNum(char alpha) {
   }
 }
 
+// convertNumToAlpha() converts a number ranging from 0 to 7
+//  to a character ranging from a to h.
+// requires:
+//  - num is an integer ranging from 0 to 7.
+// time: O(1)
+char Board::convertNumToAlpha(int num) {
+  if (num >= 0 && num <= 7) {
+    return num + 'a';
+  } else {
+    return '*';
+  }
+}
+
 // createPiece(c) takes a character c and creates a new Piece 
 //  of name c. It returns a pointer to the newly created piece.
 // Requires:

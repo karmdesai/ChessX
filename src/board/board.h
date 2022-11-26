@@ -26,6 +26,7 @@ class Board {
 
         // Helpers
         int convertAlphaToNum(char alpha);
+        char convertNumToAlpha(int num);
 
         Piece* createPiece(char);
 

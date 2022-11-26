@@ -34,9 +34,7 @@ int main() {
         std::string setupCommand;
 
         while (std::cin >> setupCommand) {
-            if (setupCommand == "done") {
-                break;
-            } else if (setupCommand == "+") {
+            if (setupCommand == "+") {
                 char piece;
                 char x;
                 int y;
@@ -52,26 +50,17 @@ int main() {
                                  "position."
                               << std::endl;
                 } else {
-                    // no pawns allowed on first/last row.
-                    if ((piece == 'p' || piece == 'P') && (y == 1 || y == 8)) {
-                        std::cout << "You cannot put a pawn on the first or "
-                                     "last rank."
-                                  << std::endl;
-                        std::cout << "Please select a different position."
-                                  << std::endl;
+                    Piece *newPiece = b->createPiece(piece);
+
+                    // if they give an invalid character, just delete the
+                    // returned Piece.
+                    if (newPiece->getName() == '*') {
+                        delete newPiece;
                     } else {
-                        Piece *newPiece = b->createPiece(piece);
-
-                        // if they give an invalid character, just delete the
-                        // returned Piece.
-                        if (newPiece->getName() == '*') {
-                            delete newPiece;
-                        } else {
-                            b->setPieceAtPosition(position, newPiece);
-                        }
-
-                        std::cout << b << std::endl;
+                        b->setPieceAtPosition(position, newPiece);
                     }
+
+                    std::cout << b << std::endl;
                 }
             } else if (setupCommand == "-") {
                 char x;
@@ -92,56 +81,63 @@ int main() {
                 std::cin >> nextPlayer;
 
                 b->setTurn(nextPlayer);
-            }
-        }
+            } else if (setupCommand == "done") {
+                // Check if the Board has a valid setup.
+                std::vector<std::string> errors;
 
-        int whiteKings = 0;
-        int blackKings = 0;
-        std::pair<char, int> position;
+                int whiteKings = 0;
+                int blackKings = 0;
 
-        // Check if the Board has a valid setup.
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
-                // convert 0 to 7 to a to h for x-coordinate
-                position = std::make_pair(x + 'a', y);
+                std::pair<char, int> position;
 
-                Piece* currentPiece = b->getPieceAtPosition(position);
-                
-                if (currentPiece->getName() == 'K') {
-                    // if the King is in check, invalid setup.
-                    if (b->inCheck(*(currentPiece))) {
-                        std::cout << "The King should not be in check."
-                                  << std::endl;
-                        std::cout << "Error, exiting setup and quitting program."
-                                  << std::endl;
+                for (int x = 0; x < 8; x++) {
+                    for (int y = 0; y < 8; y++) {
+                        position = std::make_pair(b->convertNumToAlpha(x), y + 1);
 
-                        return 1;
+                        Piece* currentPiece = b->getPieceAtPosition(position);
+
+                        // no pawns allowed on first/last row.
+                        if ((currentPiece->getName() == 'p' || currentPiece->getName() == 'P') && (y == 0 || y == 7)) {
+                            errors.push_back("You cannot put a pawn on the first or last rank. Please remove the pawn.");
+                        } else if (currentPiece->getName() == 'K') {
+                            // if the King is in check, invalid setup.
+                            if (b->inCheck(*(currentPiece))) {
+                                errors.push_back("The white King should not be in check.");
+                            }
+
+                            whiteKings += 1;
+                        } else if (currentPiece->getName() == 'k') {
+                            // if the King is in check, invalid setup.
+                            if (b->inCheck(*(currentPiece))) {
+                                errors.push_back("The black King should not be in check.");
+                            }
+
+                            blackKings += 1;
+                        }
+                    }
+                }
+
+                if ((blackKings != 1)) {
+                    errors.push_back("There should be exactly 1 black King.");
+                }
+
+                if ((whiteKings != 1)) {
+                    errors.push_back("There should be exactly 1 white King.");
+                }
+
+                if (errors.size() == 0) {
+                    std::cout << "Successfully configured board." << std::endl;
+                    break;
+                } else {
+                    std::cout << "You must fix the following errors before exiting setup mode: " << std::endl;
+
+                    for (auto error : errors) {
+                        std::cout << "  - " << error << std::endl;
                     }
 
-                    whiteKings += 1;
-                } else if (currentPiece->getName() == 'k') {
-                    // if the King is in check, invalid setup.
-                    if (b->inCheck(*(currentPiece))) {
-                        std::cout << "The King should not be in check."
-                                  << std::endl;
-                        std::cout << "Error, exiting setup and quitting program."
-                                  << std::endl;
-
-                        return 1;
-                    }
-
-                    blackKings += 1;
+                    std::cout << std::endl;
                 }
             }
-        }
-
-        if ((blackKings != 1) || (whiteKings != 1)) {
-            std::cout << "There should be exactly 1 white King and 1 black King."
-                      << std::endl;
-            std::cout << "Error, exiting setup and quitting program."
-                      << std::endl;
-
-            return 1;
         }
     } else {
         b->defaultInitialization();
