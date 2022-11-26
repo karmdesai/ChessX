@@ -5,11 +5,11 @@
 
 class NullPiece : public Piece {
 
-  public:
-    NullPiece(char name, char color);
-    ~NullPiece() = default;
+public:
+  NullPiece(char name, char color);
+  ~NullPiece() = default;
 
-    void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
+  void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 };
 
 #endif

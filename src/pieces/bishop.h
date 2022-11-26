@@ -4,11 +4,11 @@
 #include "piece.h"
 
 class Bishop : public Piece {
-  public:
-    Bishop(char name, char color);
-    ~Bishop() = default;
+public:
+  Bishop(char name, char color);
+  ~Bishop() = default;
 
-    void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
+  void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 };
 
 #endif
