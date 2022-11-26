@@ -6,7 +6,7 @@
 
 class Board {
     // have to make this public for now until we fix setup implementation
-    public:
+    private:
         // We have an 8x8 x-y coordinate system.
         // The first index is the x-coordinate (which ranges from 0 to 7).
         //  The first index represents the alphabetical column of the board (a-h).
@@ -21,17 +21,26 @@ class Board {
 
         void defaultInitialization();
 
-        // overloaded operator<< to print board
+        // Overloaded operator<< to print board
         friend std::ostream& operator<<(std::ostream& out, const Board* myBoard);
 
+        // Helpers
         int convertAlphaToNum(char alpha);
+
         Piece* createPiece(char);
 
-        Piece* pieceAtPosition(std::pair<char, int> position);
+        // Getters
+        Piece* getPieceAtPosition(std::pair<char, int> position);
 
+        // Setters
+        void setPieceAtPosition(std::pair<char, int> position, Piece *p);
+        void setTurn(char player);
+
+        // Move parsers/validators
         void parsePossibleMoves(Piece &piece, std::pair<char, int> position);
         void parsePossibleMovesKnight(Piece &knight, std::pair<char, int> position);
 
+        // Condition managers (check, checkmate, draw, win, etc.)
         bool inCheck(Piece &king);
 };
 

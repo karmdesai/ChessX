@@ -144,7 +144,7 @@ Piece* Board::createPiece(char c) {
   }
 }
 
-Piece *Board::pieceAtPosition(std::pair<char, int> position) {
+Piece *Board::getPieceAtPosition(std::pair<char, int> position) {
   int x = convertAlphaToNum(position.first);
   int y = position.second;
 
@@ -158,7 +158,30 @@ Piece *Board::pieceAtPosition(std::pair<char, int> position) {
   // input is always from 1 to 8 but array indexing is from 0 to 7.
   y -= 1;
 
-  return currentBoard[x][y];
+  return this->currentBoard[x][y];
+}
+
+void Board::setPieceAtPosition(std::pair<char, int> position, Piece *p) {
+  int x = convertAlphaToNum(position.first);
+  int y = position.second;
+
+  /* Check if position is out of bounds first?
+
+  if (x == -1 || y < 1 || y > 8) {
+      return false;
+  }
+  */
+
+  // input is always from 1 to 8 but array indexing is from 0 to 7.
+  y -= 1;
+
+  this->currentBoard[x][y] = p;
+}
+
+void Board::setTurn(char player) {
+  if (player == 'w' || player == 'b') {
+    this->whosTurn = player;
+  }
 }
 
 void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
@@ -183,7 +206,7 @@ void Board::parsePossibleMovesKnight(Piece &knight,
 
   for (auto move : knight.allPossibleMoves) {
     // as long as the piece at 'move' is not the same color, its a valid move
-    if (this->pieceAtPosition(move)->getColor() != knight.getColor()) {
+    if (this->getPieceAtPosition(move)->getColor() != knight.getColor()) {
       tmp.push_back(move);
     }
   }

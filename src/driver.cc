@@ -38,19 +38,14 @@ int main() {
                 break;
             } else if (setupCommand == "+") {
                 char piece;
-                char xChar;
+                char x;
                 int y;
 
-                std::cin >> piece >> xChar >> y;
-
-                // convert the input from a-h to 0-7
-                int x = b->convertAlphaToNum(xChar);
-
-                // input is always from 1 to 8 but array indexing is from 0 to 7.
-                y -= 1;
+                std::cin >> piece >> x >> y;
+                std::pair<char, int> position = std::make_pair(x, y);
 
                 // if there's already a piece, they need to remove it first.
-                if (b->currentBoard[x][y]->getName() != '*') {
+                if (b->getPieceAtPosition(position)->getName() != '*') {
                     std::cout << "There is already a piece at this position."
                               << std::endl;
                     std::cout << "Remove the piece first or select a different "
@@ -69,30 +64,25 @@ int main() {
 
                         // if they give an invalid character, just delete the
                         // returned Piece.
-                        if (newPiece->getName() == ' ') {
+                        if (newPiece->getName() == '*') {
                             delete newPiece;
                         } else {
-                            b->currentBoard[x][y] = newPiece;
+                            b->setPieceAtPosition(position, newPiece);
                         }
 
                         std::cout << b << std::endl;
                     }
                 }
             } else if (setupCommand == "-") {
-                char xChar;
+                char x;
                 int y;
 
-                std::cin >> xChar >> y;
+                std::cin >> x >> y;
+                std::pair<char, int> position = std::make_pair(x, y);
 
-                // convert the input from a-h to 0-7
-                int x = b->convertAlphaToNum(xChar);
-
-                // input is always from 1 to 8 but array indexing is from 0 to 7.
-                y -= 1;
-
-                if (b->currentBoard[x][y]->getName() != ' ') {
-                    delete b->currentBoard[x][y];
-                    b->currentBoard[x][y] = new NullPiece('*', '*');
+                if (b->getPieceAtPosition(position)->getName() != '*') {
+                    delete b->getPieceAtPosition(position);
+                    b->setPieceAtPosition(position, new NullPiece('*', '*'));
 
                     std::cout << b << std::endl;
                 }
@@ -101,21 +91,25 @@ int main() {
 
                 std::cin >> nextPlayer;
 
-                if (nextPlayer == 'w' || nextPlayer == 'b') {
-                    b->whosTurn = nextPlayer;
-                }
+                b->setTurn(nextPlayer);
             }
         }
 
         int whiteKings = 0;
         int blackKings = 0;
+        std::pair<char, int> position;
 
         // Check if the Board has a valid setup.
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
-                if (b->currentBoard[x][y]->getName() == 'K') {
+                // convert 0 to 7 to a to h for x-coordinate
+                position = std::make_pair(x + 'a', y);
+
+                Piece* currentPiece = b->getPieceAtPosition(position);
+                
+                if (currentPiece->getName() == 'K') {
                     // if the King is in check, invalid setup.
-                    if (b->inCheck(*(b->currentBoard[x][y]))) {
+                    if (b->inCheck(*(currentPiece))) {
                         std::cout << "The King should not be in check."
                                   << std::endl;
                         std::cout << "Error, exiting setup and quitting program."
@@ -125,9 +119,9 @@ int main() {
                     }
 
                     whiteKings += 1;
-                } else if (b->currentBoard[x][y]->getName() == 'k') {
+                } else if (currentPiece->getName() == 'k') {
                     // if the King is in check, invalid setup.
-                    if (b->inCheck(*(b->currentBoard[x][y]))) {
+                    if (b->inCheck(*(currentPiece))) {
                         std::cout << "The King should not be in check."
                                   << std::endl;
                         std::cout << "Error, exiting setup and quitting program."
@@ -154,8 +148,8 @@ int main() {
     }
 
     std::cout << b << std::endl;
-
     /* End Board Setup */
+
     std::cout
         << "Enter a piece followed by current position to get all possible "
            "moves: "
