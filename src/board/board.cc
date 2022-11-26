@@ -171,7 +171,6 @@ Board *Board::clone() {
   return newBoard;
 }
 
-
 Piece *Board::getPieceAtPosition(std::pair<char, int> position) {
   int x = convertAlphaToNum(position.first);
   int y = position.second;
@@ -557,7 +556,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
   }
 
   x = position.first;
-  
+
   // move right
   while (x < 'h') {
     x += 1;
