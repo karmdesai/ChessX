@@ -122,12 +122,12 @@ char Board::convertNumToAlpha(int num) {
   }
 }
 
-// createPiece(c) takes a character c and creates a new Piece 
+// createPiece(c) takes a character c and creates a new Piece
 //  of name c. It returns a pointer to the newly created piece.
 // Requires:
 //  - c is a valid character
 // Time: O(1)
-Piece* Board::createPiece(char c) {
+Piece *Board::createPiece(char c) {
   if (c == 'R') {
     return new Rook('R', 'w', false);
   } else if (c == 'N') {
@@ -225,169 +225,169 @@ void Board::parsePossibleMovesQueen(Piece &queen,
   // friendly piece, stop checking in that direction.
 
   /* Bishop movement */
-    int x = position.first;
-    int y = position.second;
+  int x = position.first;
+  int y = position.second;
 
-    std::pair<char, int> newMove;
+  std::pair<char, int> newMove;
 
-    // move diagonally left and down
-    while (x > 'a' && y > 1) {
-        x -= 1;
-        y -= 1;
+  // move diagonally left and down
+  while (x > 'a' && y > 1) {
+    x -= 1;
+    y -= 1;
 
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
 
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
     }
+  }
 
-    x = position.first;
-    y = position.second;
+  x = position.first;
+  y = position.second;
 
-    // move diagonally left and up
-    while (x > 'a' && y < 8) {
-        x -= 1;
-        y += 1;
+  // move diagonally left and up
+  while (x > 'a' && y < 8) {
+    x -= 1;
+    y += 1;
 
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
 
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
     }
+  }
 
-    x = position.first;
-    y = position.second;
+  x = position.first;
+  y = position.second;
 
-    // move diagonally right and up
-    while (x < 'h' && y < 8) {
-        x += 1;
-        y += 1;
+  // move diagonally right and up
+  while (x < 'h' && y < 8) {
+    x += 1;
+    y += 1;
 
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
 
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
     }
+  }
 
-    x = position.first;
-    y = position.second;
+  x = position.first;
+  y = position.second;
 
-    // move diagonally right and down
-    while (x < 'h' && y > 1) {
-        x += 1;
-        y -= 1;
+  // move diagonally right and down
+  while (x < 'h' && y > 1) {
+    x += 1;
+    y -= 1;
 
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
 
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
     }
+  }
 
-    /* Rook movement */
-    x = position.first;
-    y = position.second;
+  /* Rook movement */
+  x = position.first;
+  y = position.second;
 
-    // move left
-    while (x > 'a') {
-        x -= 1;
+  // move left
+  while (x > 'a') {
+    x -= 1;
 
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
 
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
     }
+  }
 
-    x = position.first;
+  x = position.first;
 
-    // move right
-    while (x < 'h') {
-        x += 1;
-        
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
+  // move right
+  while (x < 'h') {
+    x += 1;
 
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
     }
+  }
 
-    x = position.first;
+  x = position.first;
 
-    // move down
-    while (y > 1) {
-        y -= 1;
-        
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
+  // move down
+  while (y > 1) {
+    y -= 1;
 
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
     }
+  }
 
-    y = position.second;
+  y = position.second;
 
-    // move up
-    while (y < 8) {
-        y += 1;
-        
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
+  // move up
+  while (y < 8) {
+    y += 1;
 
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
     }
+  }
 
   queen.allPossibleMoves = tmp;
 }
