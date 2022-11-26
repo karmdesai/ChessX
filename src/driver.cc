@@ -45,7 +45,8 @@ int main() {
 
         // if there's already a piece, they need to remove it first.
         if (b->getPieceAtPosition(position)->getName() != '*') {
-          std::cout << "There is already a piece at this position." << std::endl;
+          std::cout << "There is already a piece at this position."
+                    << std::endl;
           std::cout << "Remove the piece first or select a different "
                        "position."
                     << std::endl;
@@ -100,8 +101,9 @@ int main() {
             if ((currentPiece->getName() == 'p' ||
                  currentPiece->getName() == 'P') &&
                 (y == 0 || y == 7)) {
-              errors.push_back("You cannot put a pawn on the first or last "
-                               "rank. Please remove the pawn.");
+              errors.push_back(
+                  "You cannot put a pawn on the first or last "
+                  "rank. Please remove the pawn.");
             } else if (currentPiece->getName() == 'K') {
               // if the King is in check, invalid setup.
               if (b->inCheck(*(currentPiece))) {
@@ -282,10 +284,13 @@ int main() {
   // print addresses of each piece in the board
   for (int i = 0; i < 8; ++i) {
     for (int j = 0; j < 8; ++j) {
-      if (b->getPieceAtPosition(std::make_pair('a' + j, 8 - i)) == b2->getPieceAtPosition(std::make_pair('a' + j, 8 - i))) {
-        std::cout << "SAME PIECE (THIS IS BAD) " << (char)('a' + j) << 8 - i << std::endl;
+      if (b->getPieceAtPosition(std::make_pair('a' + j, 8 - i)) ==
+          b2->getPieceAtPosition(std::make_pair('a' + j, 8 - i))) {
+        std::cout << "SAME PIECE (THIS IS BAD) " << (char)('a' + j) << 8 - i
+                  << std::endl;
       } else {
-        std::cout << "Different piece at " << (char)('a' + j) << 8 - i << std::endl;
+        std::cout << "Different piece at " << (char)('a' + j) << 8 - i
+                  << std::endl;
       }
     }
   }
