@@ -9,6 +9,9 @@ public:
   NullPiece(char name, char color);
   ~NullPiece() = default;
 
+  // clone function
+  NullPiece *clone() override { return new NullPiece{*this}; }
+
   void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 };
 

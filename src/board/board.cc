@@ -157,6 +157,20 @@ Piece *Board::createPiece(char c) {
   }
 }
 
+// clone() creates a new Board that is a deep copy of the current Board.
+Board *Board::clone() {
+  Board *newBoard = new Board();
+
+  for (int x = 0; x < 8; ++x) {
+    for (int y = 0; y < 8; ++y) {
+      newBoard->currentBoard[x][y] = this->currentBoard[x][y]->clone();
+    }
+  }
+
+  newBoard->whosTurn = this->whosTurn;
+  return newBoard;
+}
+
 Piece *Board::getPieceAtPosition(std::pair<char, int> position) {
   int x = convertAlphaToNum(position.first);
   int y = position.second;
@@ -567,7 +581,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
   }
 
   x = position.first;
-  
+
   // move right
   while (x < 'h') {
     x += 1;

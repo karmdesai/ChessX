@@ -29,6 +29,9 @@ public:
   Piece(int value, char name, char color);
   virtual ~Piece() = default;
 
+  // To deep copy a piece
+  virtual Piece* clone() = 0;
+
   int getValue();
   char getName();
   char getColor();

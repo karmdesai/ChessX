@@ -6,7 +6,7 @@
 #include "../pieces/piece.h"
 
 class Board {
-private:
+ private:
   // We have an 8x8 x-y coordinate system.
   // The first index is the x-coordinate (which ranges from 0 to 7).
   //  The first index represents the alphabetical column of the board (a-h).
@@ -15,11 +15,14 @@ private:
 
   char whosTurn;
 
-public:
+ public:
   Board();
   ~Board();
 
   void defaultInitialization();
+
+  // To deep copy the board
+  Board *clone();
 
   // Overloaded operator<< to print board
   friend std::ostream &operator<<(std::ostream &out, const Board *myBoard);

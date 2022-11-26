@@ -13,6 +13,9 @@ public:
   King(char name, char color, bool inStartingPosition);
   ~King() = default;
 
+  // clone function
+  King *clone() override { return new King{*this}; }
+
   void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 };
 

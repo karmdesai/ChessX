@@ -13,6 +13,9 @@ public:
   Rook(char name, char color, bool inStartingPosition);
   ~Rook() = default;
 
+  // clone function
+  Rook *clone() override { return new Rook{*this}; }
+
   void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 };
 
