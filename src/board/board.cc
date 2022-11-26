@@ -428,14 +428,14 @@ void Board::parsePossibleMovesPawn(Piece &pawn,
       // if the square is not empty and it is the opponents piece, its a valid move.
 
       // Here we will also need to check if moving the pawn causes check to its own king.
-      if (this->pieceAtPosition(move)->getColor() != pawn.getColor() && 
-          this->pieceAtPosition(move)->getColor() != '*') {
+      if (this->getPieceAtPosition(move)->getColor() != pawn.getColor() && 
+          this->getPieceAtPosition(move)->getColor() != '*') {
             tmp.push_back(move);
       }
     } // forward moves only have a diff. y coordinate
     else if (move.second != position.second) {
       // if the square is empty then only we can move
-      if (this->pieceAtPosition(move)->getColor() == '*') {
+      if (this->getPieceAtPosition(move)->getColor() == '*') {
         tmp.push_back(move);
       }
     }
