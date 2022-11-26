@@ -1,6 +1,5 @@
 #include "board.h"
 
-#include <algorithm>
 #include <iostream>
 #include <vector>
 
@@ -285,7 +284,6 @@ void Board::parsePossibleMovesQueen(Piece &queen,
     }
   }
 
-  std::sort(tmp.begin(), tmp.end());
   queen.allPossibleMoves = tmp;
 }
 
@@ -302,6 +300,5 @@ void Board::parsePossibleMovesKnight(Piece &knight,
   /* this is not ideal, we should have Piece.allPossibleMoves is a pointer to
     the vector, and tmp is a pointer to a vector. Then we can just swap the
     memory of the two vectors for optimal performance. */
-  std::sort(tmp.begin(), tmp.end());
   knight.allPossibleMoves = tmp;
 }
