@@ -236,7 +236,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
         y -= 1;
 
         newMove = std::make_pair(x, y);
-        Piece *tmpPiece = pieceAtPosition(newMove);
+        Piece *tmpPiece = getPieceAtPosition(newMove);
 
         if (tmpPiece->getName() == '*') {
           tmp.push_back(newMove);
@@ -257,7 +257,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
         y += 1;
 
         newMove = std::make_pair(x, y);
-        Piece *tmpPiece = pieceAtPosition(newMove);
+        Piece *tmpPiece = getPieceAtPosition(newMove);
 
         if (tmpPiece->getName() == '*') {
           tmp.push_back(newMove);
@@ -278,7 +278,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
         y += 1;
 
         newMove = std::make_pair(x, y);
-        Piece *tmpPiece = pieceAtPosition(newMove);
+        Piece *tmpPiece = getPieceAtPosition(newMove);
 
         if (tmpPiece->getName() == '*') {
           tmp.push_back(newMove);
@@ -299,7 +299,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
         y -= 1;
 
         newMove = std::make_pair(x, y);
-        Piece *tmpPiece = pieceAtPosition(newMove);
+        Piece *tmpPiece = getPieceAtPosition(newMove);
 
         if (tmpPiece->getName() == '*') {
           tmp.push_back(newMove);
@@ -320,7 +320,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
         x -= 1;
 
         newMove = std::make_pair(x, y);
-        Piece *tmpPiece = pieceAtPosition(newMove);
+        Piece *tmpPiece = getPieceAtPosition(newMove);
 
         if (tmpPiece->getName() == '*') {
           tmp.push_back(newMove);
@@ -339,7 +339,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
         x += 1;
         
         newMove = std::make_pair(x, y);
-        Piece *tmpPiece = pieceAtPosition(newMove);
+        Piece *tmpPiece = getPieceAtPosition(newMove);
 
         if (tmpPiece->getName() == '*') {
           tmp.push_back(newMove);
@@ -358,7 +358,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
         y -= 1;
         
         newMove = std::make_pair(x, y);
-        Piece *tmpPiece = pieceAtPosition(newMove);
+        Piece *tmpPiece = getPieceAtPosition(newMove);
 
         if (tmpPiece->getName() == '*') {
           tmp.push_back(newMove);
@@ -377,7 +377,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
         y += 1;
         
         newMove = std::make_pair(x, y);
-        Piece *tmpPiece = pieceAtPosition(newMove);
+        Piece *tmpPiece = getPieceAtPosition(newMove);
 
         if (tmpPiece->getName() == '*') {
           tmp.push_back(newMove);
