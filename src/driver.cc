@@ -5,6 +5,7 @@
 #include "pieces/bishop.h"
 #include "pieces/king.h"
 #include "pieces/knight.h"
+#include "pieces/nullPiece.h"
 #include "pieces/pawn.h"
 #include "pieces/piece.h"
 #include "pieces/queen.h"
@@ -26,7 +27,10 @@ int main() {
 
     Board *b = new Board();
 
+    /* Start Board Setup */
     if (firstCommand == "setup") {
+        std::cout << b << std::endl;
+
         std::string setupCommand;
 
         while (std::cin >> setupCommand) {
@@ -46,7 +50,7 @@ int main() {
                 y -= 1;
 
                 // if there's already a piece, they need to remove it first.
-                if (b->currentBoard[x][y]->getName() != ' ') {
+                if (b->currentBoard[x][y]->getName() != '*') {
                     std::cout << "There is already a piece at this position."
                               << std::endl;
                     std::cout << "Remove the piece first or select a different "
@@ -70,12 +74,37 @@ int main() {
                         } else {
                             b->currentBoard[x][y] = newPiece;
                         }
+
+                        std::cout << b << std::endl;
                     }
                 }
-            }
+            } else if (setupCommand == "-") {
+                char xChar;
+                int y;
 
-            // print out the board after each move is inputted.
-            std::cout << b << std::endl;
+                std::cin >> xChar >> y;
+
+                // convert the input from a-h to 0-7
+                int x = b->convertAlphaToNum(xChar);
+
+                // input is always from 1 to 8 but array indexing is from 0 to 7.
+                y -= 1;
+
+                if (b->currentBoard[x][y]->getName() != ' ') {
+                    delete b->currentBoard[x][y];
+                    b->currentBoard[x][y] = new NullPiece('*', '*');
+
+                    std::cout << b << std::endl;
+                }
+            } else if (setupCommand == "=") {
+                char nextPlayer;
+
+                std::cin >> nextPlayer;
+
+                if (nextPlayer == 'w' || nextPlayer == 'b') {
+                    b->whosTurn = nextPlayer;
+                }
+            }
         }
 
         int whiteKings = 0;
@@ -126,7 +155,7 @@ int main() {
 
     std::cout << b << std::endl;
 
-    /*
+    /* End Board Setup */
     std::cout
         << "Enter a piece followed by current position to get all possible "
            "moves: "
@@ -250,7 +279,6 @@ int main() {
 
         delete p;
     }
-    */
 
     delete b;
 }
