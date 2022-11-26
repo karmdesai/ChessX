@@ -25,7 +25,7 @@ class Board {
         friend std::ostream& operator<<(std::ostream& out, const Board* myBoard);
 
         int convertAlphaToNum(char alpha);
-        Piece* charToPiece(char);
+        Piece* createPiece(char);
 
         Piece* pieceAtPosition(std::pair<char, int> position);
 

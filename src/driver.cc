@@ -65,7 +65,7 @@ int main() {
                         std::cout << "Please select a different position."
                                   << std::endl;
                     } else {
-                        Piece *newPiece = b->charToPiece(piece);
+                        Piece *newPiece = b->createPiece(piece);
 
                         // if they give an invalid character, just delete the
                         // returned Piece.

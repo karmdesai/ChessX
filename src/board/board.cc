@@ -24,6 +24,15 @@ Board::Board() {
   this->whosTurn = 'w';
 }
 
+// Destructor
+Board::~Board() {
+  for (int x = 0; x < 8; x++) {
+    for (int y = 0; y < 8; y++) {
+      delete currentBoard[x][y];
+    }
+  }
+}
+
 void Board::defaultInitialization() {
   // Initialize white pieces
   currentBoard[0][0] = new Rook('R', 'w', true);
@@ -51,15 +60,6 @@ void Board::defaultInitialization() {
 
   for (int i = 0; i < 8; i++) {
     currentBoard[i][6] = new Pawn('p', 'b', true);
-  }
-}
-
-// Destructor
-Board::~Board() {
-  for (int x = 0; x < 8; x++) {
-    for (int y = 0; y < 8; y++) {
-      delete currentBoard[x][y];
-    }
   }
 }
 
@@ -109,12 +109,12 @@ int Board::convertAlphaToNum(char alpha) {
   }
 }
 
-// charToPiece(c) takes a character c and creates a new Piece 
+// createPiece(c) takes a character c and creates a new Piece 
 //  of name c. It returns a pointer to the newly created piece.
 // Requires:
 //  - c is a valid character
 // Time: O(1)
-Piece* Board::charToPiece(char c) {
+Piece* Board::createPiece(char c) {
   if (c == 'R') {
     return new Rook('R', 'w', false);
   } else if (c == 'N') {
