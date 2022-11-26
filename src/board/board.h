@@ -12,19 +12,36 @@ class Board {
         // The second index is the y-coordinate (which ranges from 0 to 7).
         Piece* currentBoard[8][8];
 
+        char whosTurn;
+
     public:
-        Board(bool customSetup);
+        Board();
         ~Board();
 
-        // overloaded operator<< to print board
+        void defaultInitialization();
+
+        // Overloaded operator<< to print board
         friend std::ostream& operator<<(std::ostream& out, const Board* myBoard);
 
+        // Helpers
         int convertAlphaToNum(char alpha);
+        char convertNumToAlpha(int num);
 
-        Piece* pieceAtPosition(std::pair<char, int> position);
+        Piece* createPiece(char);
 
+        // Getters
+        Piece* getPieceAtPosition(std::pair<char, int> position);
+
+        // Setters
+        void setPieceAtPosition(std::pair<char, int> position, Piece *p);
+        void setTurn(char player);
+
+        // Move parsers/validators
         void parsePossibleMoves(Piece &piece, std::pair<char, int> position);
         void parsePossibleMovesKnight(Piece &knight, std::pair<char, int> position);
+
+        // Condition managers (check, checkmate, draw, win, etc.)
+        bool inCheck(Piece &king);
 };
 
 #endif
