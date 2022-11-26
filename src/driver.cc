@@ -53,7 +53,7 @@ int main() {
                               << std::endl;
                 } else {
                     // no pawns allowed on first/last row.
-                    if ((piece == 'p' || piece == 'P') && (y == 0 || y == 7)) {
+                    if ((piece == 'p' || piece == 'P') && (y == 1 || y == 8)) {
                         std::cout << "You cannot put a pawn on the first or "
                                      "last rank."
                                   << std::endl;
