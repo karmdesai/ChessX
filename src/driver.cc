@@ -290,6 +290,12 @@ int main() {
     }
   }
 
+  if (b == b2) {
+    std::cout << "SAME BOARD (THIS IS BAD)" << std::endl;
+  } else {
+    std::cout << "Different board" << std::endl;
+  }
+
   if (p != nullptr) {
     for (auto move : p->allPossibleMoves) {
       std::cout << move.first << move.second << ", ";
