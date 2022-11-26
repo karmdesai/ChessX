@@ -120,7 +120,6 @@ Piece *Board::pieceAtPosition(std::pair<char, int> position) {
   */
 
   // input is always from 1 to 8 but array indexing is from 0 to 7.
-  x -= 1;
   y -= 1;
 
   return currentBoard[x][y];
@@ -128,7 +127,7 @@ Piece *Board::pieceAtPosition(std::pair<char, int> position) {
 
 void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
   if (piece.getName() == 'p' || piece.getName() == 'P') {
-    // Pawn
+    parsePossibleMovesPawn(piece, position);
   } else if (piece.getName() == 'r' || piece.getName() == 'R') {
     // Rook
   } else if (piece.getName() == 'n' || piece.getName() == 'N') {
@@ -156,4 +155,33 @@ void Board::parsePossibleMovesKnight(Piece &knight,
     the vector, and tmp is a pointer to a vector. Then we can just swap the
     memory of the two vectors for optimal performance. */
   knight.allPossibleMoves = tmp;
+}
+
+void Board::parsePossibleMovesPawn(Piece &pawn,
+                                     std::pair<char, int> position) {
+  std::vector<std::pair<char, int>> tmp;
+
+  for (auto move : pawn.allPossibleMoves) {
+    // diagonal moves have a diff. x coordinate and a diff. y coordinate
+    if ((move.first != position.first) && (move.second != position.second)) {
+      // if the square is not empty and it is the opponents piece, its a valid move.
+
+      // Here we will also need to check if moving the pawn causes check to its own king.
+      if (this->pieceAtPosition(move)->getColor() != pawn.getColor() && 
+          this->pieceAtPosition(move)->getColor() != '*') {
+            tmp.push_back(move);
+      }
+    } // forward moves only have a diff. y coordinate
+    else if (move.second != position.second) {
+      // if the square is empty then only we can move
+      if (this->pieceAtPosition(move)->getColor() == '*') {
+        tmp.push_back(move);
+      }
+    }
+  }
+
+  /* this is not ideal, we should have Piece.allPossibleMoves is a pointer to
+    the vector, and tmp is a pointer to a vector. Then we can just swap the
+    memory of the two vectors for optimal performance. */
+  pawn.allPossibleMoves = tmp;
 }

@@ -36,6 +36,8 @@ int main() {
         return 1;
     }
 
+    std::pair<char, int> position = std::make_pair(x, y);
+
     if (piece == 'p') {
         bool inStartingPosition = true;
 
@@ -44,7 +46,8 @@ int main() {
         }
 
         p = new Pawn(piece, 'b', inStartingPosition);
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        p->getAllPossibleMoves(position);
+        b->parsePossibleMoves(*p, position);
 
     } else if (piece == 'r') {
         bool inStartingPosition = false;
@@ -54,22 +57,21 @@ int main() {
         }
 
         p = new Rook(piece, 'w', inStartingPosition);
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        p->getAllPossibleMoves(position);
 
     } else if (piece == 'n') {
         p = new Knight(piece, 'b');
-        std::pair<char, int> position = std::make_pair(x, y);
 
         p->getAllPossibleMoves(position);
         b->parsePossibleMoves(*p, position);
 
     } else if (piece == 'b') {
         p = new Bishop(piece, 'b');
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        p->getAllPossibleMoves(position);
 
     } else if (piece == 'q') {
         p = new Queen(piece, 'b');
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        p->getAllPossibleMoves(position);
 
     } else if (piece == 'k') {
         bool inStartingPosition = true;
@@ -79,7 +81,7 @@ int main() {
         }
 
         p = new King(piece, 'b', inStartingPosition);
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        p->getAllPossibleMoves(position);
 
     } else if (piece == 'P') {
         bool inStartingPosition = true;
@@ -89,7 +91,8 @@ int main() {
         }
 
         p = new Pawn(piece, 'w', inStartingPosition);
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        p->getAllPossibleMoves(position);
+        b->parsePossibleMoves(*p, position);
 
     } else if (piece == 'R') {
         bool inStartingPosition = false;
@@ -99,22 +102,21 @@ int main() {
         }
 
         p = new Rook(piece, 'w', inStartingPosition);
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        p->getAllPossibleMoves(position);
 
     } else if (piece == 'N') {
         p = new Knight(piece, 'w');
-        std::pair<char, int> position = std::make_pair(x, y);
 
         p->getAllPossibleMoves(position);
         b->parsePossibleMoves(*p, position);
 
     } else if (piece == 'B') {
         p = new Bishop(piece, 'w');
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        p->getAllPossibleMoves(position);
 
     } else if (piece == 'Q') {
         p = new Queen(piece, 'w');
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        p->getAllPossibleMoves(position);
 
     } else if (piece == 'K') {
         bool inStartingPosition = true;
@@ -124,7 +126,7 @@ int main() {
         }
 
         p = new King(piece, 'w', inStartingPosition);
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        p->getAllPossibleMoves(position);
 
     } else {
         std::cout << "Invalid piece" << std::endl;
