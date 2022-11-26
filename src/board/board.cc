@@ -17,9 +17,11 @@ Board::Board() {
   // start with board of nullpieces
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
-      currentBoard[x][y] = new NullPiece(' ', ' ');
+      this->currentBoard[x][y] = new NullPiece('*', '*');
     }
   }
+
+  this->whosTurn = 'w';
 }
 
 void Board::defaultInitialization() {
@@ -69,7 +71,7 @@ std::ostream &operator<<(std::ostream &out, const Board *myBoard) {
     for (int x = 0; x < 8; x++) {
       Piece *currentSpace = myBoard->currentBoard[x][y];
 
-      if (currentSpace != nullptr) {
+      if (currentSpace->getName() != '*') {
         out << currentSpace->getName();
       } else {
         // a even sum of coordinates is a black square
@@ -195,7 +197,7 @@ bool Board::inCheck(Piece &king) {
   if ((king.getName() != 'k') && (king.getName() != 'K')) {
     return false;
   } else {
-    // always in check for now.
-    return true;
+    // never in check for now.
+    return false;
   }
 }

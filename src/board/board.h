@@ -13,6 +13,8 @@ class Board {
         // The second index is the y-coordinate (which ranges from 0 to 7).
         Piece* currentBoard[8][8];
 
+        char whosTurn;
+
     public:
         Board();
         ~Board();
