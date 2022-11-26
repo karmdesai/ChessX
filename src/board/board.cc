@@ -13,42 +13,42 @@
 #include "../pieces/rook.h"
 
 /* Board class */
-Board::Board(bool customSetup) {
+Board::Board() {
   // start with board of nullpieces
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
       currentBoard[x][y] = new NullPiece(' ', ' ');
     }
   }
+}
 
-  if (customSetup == false) {
-    // Initialize white pieces
-    currentBoard[0][0] = new Rook('R', 'w', true);
-    currentBoard[1][0] = new Knight('N', 'w');
-    currentBoard[2][0] = new Bishop('B', 'w');
-    currentBoard[3][0] = new Queen('Q', 'w');
-    currentBoard[4][0] = new King('K', 'w', true);
-    currentBoard[5][0] = new Bishop('B', 'w');
-    currentBoard[6][0] = new Knight('N', 'w');
-    currentBoard[7][0] = new Rook('R', 'w', true);
+void Board::defaultInitialization() {
+  // Initialize white pieces
+  currentBoard[0][0] = new Rook('R', 'w', true);
+  currentBoard[1][0] = new Knight('N', 'w');
+  currentBoard[2][0] = new Bishop('B', 'w');
+  currentBoard[3][0] = new Queen('Q', 'w');
+  currentBoard[4][0] = new King('K', 'w', true);
+  currentBoard[5][0] = new Bishop('B', 'w');
+  currentBoard[6][0] = new Knight('N', 'w');
+  currentBoard[7][0] = new Rook('R', 'w', true);
 
-    for (int i = 0; i < 8; i++) {
-      currentBoard[i][1] = new Pawn('P', 'w', true);
-    }
+  for (int i = 0; i < 8; i++) {
+    currentBoard[i][1] = new Pawn('P', 'w', true);
+  }
 
-    // Initialize black pieces
-    currentBoard[0][7] = new Rook('r', 'b', true);
-    currentBoard[1][7] = new Knight('n', 'b');
-    currentBoard[2][7] = new Bishop('b', 'b');
-    currentBoard[3][7] = new Queen('q', 'b');
-    currentBoard[4][7] = new King('k', 'b', true);
-    currentBoard[5][7] = new Bishop('b', 'b');
-    currentBoard[6][7] = new Knight('n', 'b');
-    currentBoard[7][7] = new Rook('r', 'b', true);
+  // Initialize black pieces
+  currentBoard[0][7] = new Rook('r', 'b', true);
+  currentBoard[1][7] = new Knight('n', 'b');
+  currentBoard[2][7] = new Bishop('b', 'b');
+  currentBoard[3][7] = new Queen('q', 'b');
+  currentBoard[4][7] = new King('k', 'b', true);
+  currentBoard[5][7] = new Bishop('b', 'b');
+  currentBoard[6][7] = new Knight('n', 'b');
+  currentBoard[7][7] = new Rook('r', 'b', true);
 
-    for (int i = 0; i < 8; i++) {
-      currentBoard[i][6] = new Pawn('p', 'b', true);
-    }
+  for (int i = 0; i < 8; i++) {
+    currentBoard[i][6] = new Pawn('p', 'b', true);
   }
 }
 
@@ -107,6 +107,41 @@ int Board::convertAlphaToNum(char alpha) {
   }
 }
 
+// charToPiece(c) takes a character c and creates a new Piece 
+//  of name c. It returns a pointer to the newly created piece.
+// Requires:
+//  - c is a valid character
+// Time: O(1)
+Piece* Board::charToPiece(char c) {
+  if (c == 'R') {
+    return new Rook('R', 'w', false);
+  } else if (c == 'N') {
+    return new Knight('N', 'w');
+  } else if (c == 'B') {
+    return new Bishop('B', 'w');
+  } else if (c == 'Q') {
+    return new Queen('Q', 'w');
+  } else if (c == 'K') {
+    return new King('K', 'w', false);
+  } else if (c == 'P') {
+    return new Pawn('P', 'w', false);
+  } else if (c == 'r') {
+    return new Rook('r', 'b', false);
+  } else if (c == 'n') {
+    return new Knight('n', 'b');
+  } else if (c == 'b') {
+    return new Bishop('b', 'b');
+  } else if (c == 'q') {
+    return new Queen('q', 'b');
+  } else if (c == 'k') {
+    return new King('k', 'b', false);
+  } else if (c == 'p') {
+    return new Pawn('p', 'b', false);
+  } else {
+    return new NullPiece(' ', ' ');
+  }
+}
+
 Piece *Board::pieceAtPosition(std::pair<char, int> position) {
   int x = convertAlphaToNum(position.first);
   int y = position.second;
@@ -119,7 +154,6 @@ Piece *Board::pieceAtPosition(std::pair<char, int> position) {
   */
 
   // input is always from 1 to 8 but array indexing is from 0 to 7.
-  x -= 1;
   y -= 1;
 
   return currentBoard[x][y];
@@ -155,4 +189,13 @@ void Board::parsePossibleMovesKnight(Piece &knight,
     the vector, and tmp is a pointer to a vector. Then we can just swap the
     memory of the two vectors for optimal performance. */
   knight.allPossibleMoves = tmp;
+}
+
+bool Board::inCheck(Piece &king) {
+  if ((king.getName() != 'k') && (king.getName() != 'K')) {
+    return false;
+  } else {
+    // always in check for now.
+    return true;
+  }
 }

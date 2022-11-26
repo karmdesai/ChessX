@@ -5,7 +5,8 @@
 #include <ostream>
 
 class Board {
-    private:
+    // have to make this public for now until we fix setup implementation
+    public:
         // We have an 8x8 x-y coordinate system.
         // The first index is the x-coordinate (which ranges from 0 to 7).
         //  The first index represents the alphabetical column of the board (a-h).
@@ -13,18 +14,23 @@ class Board {
         Piece* currentBoard[8][8];
 
     public:
-        Board(bool customSetup);
+        Board();
         ~Board();
+
+        void defaultInitialization();
 
         // overloaded operator<< to print board
         friend std::ostream& operator<<(std::ostream& out, const Board* myBoard);
 
         int convertAlphaToNum(char alpha);
+        Piece* charToPiece(char);
 
         Piece* pieceAtPosition(std::pair<char, int> position);
 
         void parsePossibleMoves(Piece &piece, std::pair<char, int> position);
         void parsePossibleMovesKnight(Piece &knight, std::pair<char, int> position);
+
+        bool inCheck(Piece &king);
 };
 
 #endif
