@@ -28,38 +28,38 @@ Board::Board() {
 Board::~Board() {
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
-      delete currentBoard[x][y];
+      delete this->currentBoard[x][y];
     }
   }
 }
 
 void Board::defaultInitialization() {
   // Initialize white pieces
-  currentBoard[0][0] = new Rook('R', 'w', true);
-  currentBoard[1][0] = new Knight('N', 'w');
-  currentBoard[2][0] = new Bishop('B', 'w');
-  currentBoard[3][0] = new Queen('Q', 'w');
-  currentBoard[4][0] = new King('K', 'w', true);
-  currentBoard[5][0] = new Bishop('B', 'w');
-  currentBoard[6][0] = new Knight('N', 'w');
-  currentBoard[7][0] = new Rook('R', 'w', true);
+  this->currentBoard[0][0] = new Rook('R', 'w', true);
+  this->currentBoard[1][0] = new Knight('N', 'w');
+  this->currentBoard[2][0] = new Bishop('B', 'w');
+  this->currentBoard[3][0] = new Queen('Q', 'w');
+  this->currentBoard[4][0] = new King('K', 'w', true);
+  this->currentBoard[5][0] = new Bishop('B', 'w');
+  this->currentBoard[6][0] = new Knight('N', 'w');
+  this->currentBoard[7][0] = new Rook('R', 'w', true);
 
   for (int i = 0; i < 8; i++) {
-    currentBoard[i][1] = new Pawn('P', 'w', true);
+    this->currentBoard[i][1] = new Pawn('P', 'w', true);
   }
 
   // Initialize black pieces
-  currentBoard[0][7] = new Rook('r', 'b', true);
-  currentBoard[1][7] = new Knight('n', 'b');
-  currentBoard[2][7] = new Bishop('b', 'b');
-  currentBoard[3][7] = new Queen('q', 'b');
-  currentBoard[4][7] = new King('k', 'b', true);
-  currentBoard[5][7] = new Bishop('b', 'b');
-  currentBoard[6][7] = new Knight('n', 'b');
-  currentBoard[7][7] = new Rook('r', 'b', true);
+  this->currentBoard[0][7] = new Rook('r', 'b', true);
+  this->currentBoard[1][7] = new Knight('n', 'b');
+  this->currentBoard[2][7] = new Bishop('b', 'b');
+  this->currentBoard[3][7] = new Queen('q', 'b');
+  this->currentBoard[4][7] = new King('k', 'b', true);
+  this->currentBoard[5][7] = new Bishop('b', 'b');
+  this->currentBoard[6][7] = new Knight('n', 'b');
+  this->currentBoard[7][7] = new Rook('r', 'b', true);
 
   for (int i = 0; i < 8; i++) {
-    currentBoard[i][6] = new Pawn('p', 'b', true);
+    this->currentBoard[i][6] = new Pawn('p', 'b', true);
   }
 }
 
@@ -122,12 +122,12 @@ char Board::convertNumToAlpha(int num) {
   }
 }
 
-// createPiece(c) takes a character c and creates a new Piece 
+// createPiece(c) takes a character c and creates a new Piece
 //  of name c. It returns a pointer to the newly created piece.
 // Requires:
 //  - c is a valid character
 // Time: O(1)
-Piece* Board::createPiece(char c) {
+Piece *Board::createPiece(char c) {
   if (c == 'R') {
     return new Rook('R', 'w', false);
   } else if (c == 'N') {
@@ -213,185 +213,6 @@ void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
   }
 }
 
-// queen move parser
-void Board::parsePossibleMovesQueen(Piece &queen,
-                                    std::pair<char, int> position) {
-  std::vector<std::pair<char, int>> tmp;
-
-  // for each direction within the bounds of the board, check if the space is
-  // empty or occupied by an enemy piece. If it is empty, add it to the list of
-  // possible moves. If it is occupied by an enemy piece, add it to the list of
-  // possible moves and stop checking in that direction. If it is occupied by a
-  // friendly piece, stop checking in that direction.
-
-  /* Bishop movement */
-    int x = position.first;
-    int y = position.second;
-
-    std::pair<char, int> newMove;
-
-    // move diagonally left and down
-    while (x > 'a' && y > 1) {
-        x -= 1;
-        y -= 1;
-
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
-
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
-    }
-
-    x = position.first;
-    y = position.second;
-
-    // move diagonally left and up
-    while (x > 'a' && y < 8) {
-        x -= 1;
-        y += 1;
-
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
-
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
-    }
-
-    x = position.first;
-    y = position.second;
-
-    // move diagonally right and up
-    while (x < 'h' && y < 8) {
-        x += 1;
-        y += 1;
-
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
-
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
-    }
-
-    x = position.first;
-    y = position.second;
-
-    // move diagonally right and down
-    while (x < 'h' && y > 1) {
-        x += 1;
-        y -= 1;
-
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
-
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
-    }
-
-    /* Rook movement */
-    x = position.first;
-    y = position.second;
-
-    // move left
-    while (x > 'a') {
-        x -= 1;
-
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
-
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
-    }
-
-    x = position.first;
-
-    // move right
-    while (x < 'h') {
-        x += 1;
-        
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
-
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
-    }
-
-    x = position.first;
-
-    // move down
-    while (y > 1) {
-        y -= 1;
-        
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
-
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
-    }
-
-    y = position.second;
-
-    // move up
-    while (y < 8) {
-        y += 1;
-        
-        newMove = std::make_pair(x, y);
-        Piece *tmpPiece = getPieceAtPosition(newMove);
-
-        if (tmpPiece->getName() == '*') {
-          tmp.push_back(newMove);
-        } else if (tmpPiece->getColor() != queen.getColor()) {
-          tmp.push_back(newMove);
-          break;
-        } else if (tmpPiece->getColor() == queen.getColor()) {
-          break;
-        }
-    }
-
-  queen.allPossibleMoves = tmp;
-}
-
 void Board::parsePossibleMovesKnight(Piece &knight,
                                      std::pair<char, int> position) {
   std::vector<std::pair<char, int>> tmp;
@@ -406,6 +227,185 @@ void Board::parsePossibleMovesKnight(Piece &knight,
     the vector, and tmp is a pointer to a vector. Then we can just swap the
     memory of the two vectors for optimal performance. */
   knight.allPossibleMoves = tmp;
+}
+
+// queen move parser
+void Board::parsePossibleMovesQueen(Piece &queen,
+                                    std::pair<char, int> position) {
+  std::vector<std::pair<char, int>> tmp;
+
+  // for each direction within the bounds of the board, check if the space is
+  // empty or occupied by an enemy piece. If it is empty, add it to the list of
+  // possible moves. If it is occupied by an enemy piece, add it to the list of
+  // possible moves and stop checking in that direction. If it is occupied by a
+  // friendly piece, stop checking in that direction.
+
+  /* Bishop movement */
+  int x = position.first;
+  int y = position.second;
+
+  std::pair<char, int> newMove;
+
+  // move diagonally left and down
+  while (x > 'a' && y > 1) {
+    x -= 1;
+    y -= 1;
+
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
+    }
+  }
+
+  x = position.first;
+  y = position.second;
+
+  // move diagonally left and up
+  while (x > 'a' && y < 8) {
+    x -= 1;
+    y += 1;
+
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
+    }
+  }
+
+  x = position.first;
+  y = position.second;
+
+  // move diagonally right and up
+  while (x < 'h' && y < 8) {
+    x += 1;
+    y += 1;
+
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
+    }
+  }
+
+  x = position.first;
+  y = position.second;
+
+  // move diagonally right and down
+  while (x < 'h' && y > 1) {
+    x += 1;
+    y -= 1;
+
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
+    }
+  }
+
+  /* Rook movement */
+  x = position.first;
+  y = position.second;
+
+  // move left
+  while (x > 'a') {
+    x -= 1;
+
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
+    }
+  }
+
+  x = position.first;
+
+  // move right
+  while (x < 'h') {
+    x += 1;
+
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
+    }
+  }
+
+  x = position.first;
+
+  // move down
+  while (y > 1) {
+    y -= 1;
+
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
+    }
+  }
+
+  y = position.second;
+
+  // move up
+  while (y < 8) {
+    y += 1;
+
+    newMove = std::make_pair(x, y);
+    Piece *tmpPiece = getPieceAtPosition(newMove);
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(newMove);
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(newMove);
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
+    }
+  }
+
+  queen.allPossibleMoves = tmp;
 }
 
 bool Board::inCheck(Piece &king) {
