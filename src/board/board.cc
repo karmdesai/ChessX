@@ -1,5 +1,6 @@
 #include "board.h"
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
 
@@ -67,7 +68,6 @@ std::ostream &operator<<(std::ostream &out, const Board *myBoard) {
     out << y + 1 << " ";
 
     for (int x = 0; x < 8; x++) {
-
       Piece *currentSpace = myBoard->currentBoard[x][y];
 
       if (currentSpace->getName() != '*') {
@@ -111,7 +111,6 @@ int Board::convertAlphaToNum(char alpha) {
 Piece *Board::pieceAtPosition(std::pair<char, int> position) {
   int x = convertAlphaToNum(position.first);
   int y = position.second;
-
   /* Check if position is out of bounds first?
 
   if (x == -1 || y < 1 || y > 8) {
@@ -120,7 +119,7 @@ Piece *Board::pieceAtPosition(std::pair<char, int> position) {
   */
 
   // input is always from 1 to 8 but array indexing is from 0 to 7.
-  x -= 1;
+  // x -= 1;
   y -= 1;
 
   return currentBoard[x][y];
@@ -146,102 +145,147 @@ void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
 // queen move parser
 void Board::parsePossibleMovesQueen(Piece &queen,
                                     std::pair<char, int> position) {
-  
-  // new list of possible moves
   std::vector<std::pair<char, int>> tmp;
 
-  int x = convertAlphaToNum(position.first);
-  int y = position.second;
+  // for each direction within the bounds of the board, check if the space is
+  // empty or occupied by an enemy piece. If it is empty, add it to the list of
+  // possible moves. If it is occupied by an enemy piece, add it to the list of
+  // possible moves and stop checking in that direction. If it is occupied by a
+  // friendly piece, stop checking in that direction.
 
-  // check up moves, stop when piece is found
-  for (int i = y + 1; i <= 8; ++i) {
-    Piece *currentPiece = pieceAtPosition(std::make_pair(x, i));
+  // check up direction
+  for (int i = position.second + 1; i < 8; ++i) {
+    Piece *tmpPiece = pieceAtPosition(std::make_pair(position.first, i));
 
-    if (currentPiece->getName() != '*') {
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(std::make_pair(position.first, i));
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(std::make_pair(position.first, i));
       break;
     } else {
-      tmp.push_back(std::make_pair(x, i));
+      break;
     }
   }
 
-  // check down moves, stop when piece is found
-  for (int i = y - 1; i >= 1; --i) {
-    Piece *currentPiece = pieceAtPosition(std::make_pair(x, i));
+  // check down direction
+  for (int i = position.second - 1; i >= 0; --i) {
+    Piece *tmpPiece = pieceAtPosition(std::make_pair(position.first, i));
 
-    if (currentPiece->getName() != '*') {
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(std::make_pair(position.first, i));
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(std::make_pair(position.first, i));
       break;
     } else {
-      tmp.push_back(std::make_pair(x, i));
+      break;
     }
   }
 
-  // check left moves, stop when piece is found
-  for (int i = x - 1; i >= 1; --i) {
-    Piece *currentPiece = pieceAtPosition(std::make_pair(i, y));
+  // check left direction
+  for (int i = convertAlphaToNum(position.first) - 1; i >= 0; --i) {
+    Piece *tmpPiece = pieceAtPosition(std::make_pair(i + 'a', position.second));
 
-    if (currentPiece->getName() != '*') {
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(std::make_pair(i + 'a', position.second));
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(std::make_pair(i + 'a', position.second));
       break;
     } else {
-      tmp.push_back(std::make_pair(i, y));
+      break;
     }
   }
 
-  // check right moves, stop when piece is found
-  for (int i = x + 1; i <= 8; ++i) {
-    Piece *currentPiece = pieceAtPosition(std::make_pair(i, y));
+  // check right direction
+  for (int i = convertAlphaToNum(position.first) + 1; i < 8; ++i) {
+    Piece *tmpPiece = pieceAtPosition(std::make_pair(i + 'a', position.second));
 
-    if (currentPiece->getName() != '*') {
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(std::make_pair(i + 'a', position.second));
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(std::make_pair(i + 'a', position.second));
       break;
     } else {
-      tmp.push_back(std::make_pair(i, y));
+      break;
     }
   }
 
-  // check diagonally up and to the right
-  for (int i = 1; i <= 8; ++i) {
-    Piece *currentPiece = pieceAtPosition(std::make_pair(x + i, y + i));
+  // check up-left direction
+  for (int i = 1; i < 8; ++i) {
+    if (position.first + i > 'h' || position.second + i > 8) {
+      break;
+    }
 
-    if (currentPiece->getName() != '*') {
+    Piece *tmpPiece = pieceAtPosition(
+        std::make_pair(position.first + i, position.second + i));
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(std::make_pair(position.first + i, position.second + i));
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(std::make_pair(position.first + i, position.second + i));
       break;
     } else {
-      tmp.push_back(std::make_pair(x + i, y + i));
+      break;
     }
   }
 
-  // check diagonally up and to the left
-  for (int i = 1; i <= 8; ++i) {
-    Piece *currentPiece = pieceAtPosition(std::make_pair(x - i, y + i));
+  // check up-right direction
+  for (int i = 1; i < 8; ++i) {
+    if (position.first - i < 'a' || position.second + i > 8) {
+      break;
+    }
 
-    if (currentPiece->getName() != '*') {
+    Piece *tmpPiece = pieceAtPosition(
+        std::make_pair(position.first - i, position.second + i));
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(std::make_pair(position.first - i, position.second + i));
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(std::make_pair(position.first - i, position.second + i));
       break;
     } else {
-      tmp.push_back(std::make_pair(x - i, y + i));
+      break;
     }
   }
 
-  // check diagonally down and to the right
-  for (int i = 1; i <= 8; ++i) {
-    Piece *currentPiece = pieceAtPosition(std::make_pair(x + i, y - i));
-
-    if (currentPiece->getName() != '*') {
+  // check down-left direction
+  for (int i = 1; i < 8; ++i) {
+    if (position.first - i < 'a' || position.second - i < 0) {
       break;
-    } else {
-      tmp.push_back(std::make_pair(x + i, y - i));
+    }
+
+    Piece *tmpPiece = pieceAtPosition(
+        std::make_pair(position.first - i, position.second - i));
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(std::make_pair(position.first - i, position.second - i));
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(std::make_pair(position.first - i, position.second - i));
+      break;
+    } else if (tmpPiece->getColor() == queen.getColor()) {
+      break;
     }
   }
 
-  // check diagonally down and to the left
-  for (int i = 1; i <= 8; ++i) {
-    Piece *currentPiece = pieceAtPosition(std::make_pair(x - i, y - i));
+  // check down-right direction
+  for (int i = 1; i < 8; ++i) {
+    if (position.first + i > 'h' || position.second - i < 0) {
+      break;
+    }
 
-    if (currentPiece->getName() != '*') {
+    Piece *tmpPiece = pieceAtPosition(
+        std::make_pair(position.first + i, position.second - i));
+
+    if (tmpPiece->getName() == '*') {
+      tmp.push_back(std::make_pair(position.first + i, position.second - i));
+    } else if (tmpPiece->getColor() != queen.getColor()) {
+      tmp.push_back(std::make_pair(position.first + i, position.second - i));
       break;
     } else {
-      tmp.push_back(std::make_pair(x - i, y - i));
+      break;
     }
   }
 
-  // update possible moves
+  std::sort(tmp.begin(), tmp.end());
   queen.allPossibleMoves = tmp;
 }
 
@@ -258,5 +302,6 @@ void Board::parsePossibleMovesKnight(Piece &knight,
   /* this is not ideal, we should have Piece.allPossibleMoves is a pointer to
     the vector, and tmp is a pointer to a vector. Then we can just swap the
     memory of the two vectors for optimal performance. */
+  std::sort(tmp.begin(), tmp.end());
   knight.allPossibleMoves = tmp;
 }
