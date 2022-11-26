@@ -69,6 +69,7 @@ std::ostream &operator<<(std::ostream &out, const Board *myBoard) {
     out << y + 1 << " ";
 
     for (int x = 0; x < 8; x++) {
+
       Piece *currentSpace = myBoard->currentBoard[x][y];
 
       if (currentSpace->getName() != '*') {
