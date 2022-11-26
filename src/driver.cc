@@ -181,6 +181,7 @@ int main() {
 
     p = new Pawn(piece, 'b', inStartingPosition);
     p->getAllPossibleMoves(position);
+    b->parsePossibleMoves(*p, position);
 
   } else if (piece == 'r') {
     bool inStartingPosition = false;
@@ -211,7 +212,7 @@ int main() {
 
     p->getAllPossibleMoves(position);
     b->parsePossibleMoves(*p, position);
-
+    
   } else if (piece == 'k') {
     bool inStartingPosition = true;
 
@@ -231,6 +232,7 @@ int main() {
 
     p = new Pawn(piece, 'w', inStartingPosition);
     p->getAllPossibleMoves(position);
+    b->parsePossibleMoves(*p, position);
 
   } else if (piece == 'R') {
     bool inStartingPosition = false;

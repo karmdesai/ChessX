@@ -43,6 +43,7 @@ public:
   void parsePossibleMovesQueen(Piece &queen, std::pair<char, int> position);
   void parsePossibleMovesRook(Piece &rook, std::pair<char, int> position);
   void parsePossibleMovesBishop(Piece &bishop, std::pair<char, int> position);
+  void parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position);
 
   // Condition managers (check, checkmate, draw, win, etc.)
   bool inCheck(Piece &king);
