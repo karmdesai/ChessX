@@ -1,8 +1,9 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include "../pieces/piece.h"
 #include <ostream>
+
+#include "../pieces/piece.h"
 
 class Board {
 private:
