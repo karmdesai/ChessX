@@ -3,95 +3,95 @@
 Queen::Queen(char name, char color) : Piece(9, name, color) {}
 
 void Queen::getAllPossibleMoves(std::pair<char, int> currentPosition) {
-    // clear the vector of previous possible moves
-    this->allPossibleMoves.clear();
+  // clear the vector of previous possible moves
+  this->allPossibleMoves.clear();
 
-    // Queen can move horizontally, vertically and diagonally in all directions.
+  // Queen can move horizontally, vertically and diagonally in all directions.
 
-    /* Bishop movement */
-    int x = currentPosition.first;
-    int y = currentPosition.second;
+  /* Bishop movement */
+  int x = currentPosition.first;
+  int y = currentPosition.second;
 
-    // move diagonally left and down
-    while (x > 'a' && y > 1) {
-        x -= 1;
-        y -= 1;
+  // move diagonally left and down
+  while (x > 'a' && y > 1) {
+    x -= 1;
+    y -= 1;
 
-        std::pair<char, int> newMove = std::make_pair(x, y);
-        this->allPossibleMoves.push_back(newMove);
-    }
+    std::pair<char, int> newMove = std::make_pair(x, y);
+    this->allPossibleMoves.push_back(newMove);
+  }
 
-    x = currentPosition.first;
-    y = currentPosition.second;
+  x = currentPosition.first;
+  y = currentPosition.second;
 
-    // move diagonally left and up
-    while (x > 'a' && y < 8) {
-        x -= 1;
-        y += 1;
+  // move diagonally left and up
+  while (x > 'a' && y < 8) {
+    x -= 1;
+    y += 1;
 
-        std::pair<char, int> newMove = std::make_pair(x, y);
-        this->allPossibleMoves.push_back(newMove);
-    }
+    std::pair<char, int> newMove = std::make_pair(x, y);
+    this->allPossibleMoves.push_back(newMove);
+  }
 
-    x = currentPosition.first;
-    y = currentPosition.second;
+  x = currentPosition.first;
+  y = currentPosition.second;
 
-    // move diagonally right and up
-    while (x < 'h' && y < 8) {
-        x += 1;
-        y += 1;
+  // move diagonally right and up
+  while (x < 'h' && y < 8) {
+    x += 1;
+    y += 1;
 
-        std::pair<char, int> newMove = std::make_pair(x, y);
-        this->allPossibleMoves.push_back(newMove);
-    }
+    std::pair<char, int> newMove = std::make_pair(x, y);
+    this->allPossibleMoves.push_back(newMove);
+  }
 
-    x = currentPosition.first;
-    y = currentPosition.second;
+  x = currentPosition.first;
+  y = currentPosition.second;
 
-    // move diagonally right and down
-    while (x < 'h' && y > 1) {
-        x += 1;
-        y -= 1;
+  // move diagonally right and down
+  while (x < 'h' && y > 1) {
+    x += 1;
+    y -= 1;
 
-        std::pair<char, int> newMove = std::make_pair(x, y);
-        this->allPossibleMoves.push_back(newMove);
-    }
+    std::pair<char, int> newMove = std::make_pair(x, y);
+    this->allPossibleMoves.push_back(newMove);
+  }
 
-    /* Rook movement */
-    x = currentPosition.first;
-    y = currentPosition.second;
+  /* Rook movement */
+  x = currentPosition.first;
+  y = currentPosition.second;
 
-    // move left
-    while (x > 'a') {
-        x -= 1;
-        std::pair<char, int> newMove = std::make_pair(x, y);
-        this->allPossibleMoves.push_back(newMove);
-    }
+  // move left
+  while (x > 'a') {
+    x -= 1;
+    std::pair<char, int> newMove = std::make_pair(x, y);
+    this->allPossibleMoves.push_back(newMove);
+  }
 
-    x = currentPosition.first;
+  x = currentPosition.first;
 
-    // move right
-    while (x < 'h') {
-        x += 1;
-        std::pair<char, int> newMove = std::make_pair(x, y);
-        this->allPossibleMoves.push_back(newMove);
-    }
+  // move right
+  while (x < 'h') {
+    x += 1;
+    std::pair<char, int> newMove = std::make_pair(x, y);
+    this->allPossibleMoves.push_back(newMove);
+  }
 
-    x = currentPosition.first;
+  x = currentPosition.first;
 
-    // move down
-    while (y > 1) {
-        y -= 1;
-        std::pair<char, int> newMove = std::make_pair(x, y);
-        this->allPossibleMoves.push_back(newMove);
-    }
+  // move down
+  while (y > 1) {
+    y -= 1;
+    std::pair<char, int> newMove = std::make_pair(x, y);
+    this->allPossibleMoves.push_back(newMove);
+  }
 
-    y = currentPosition.second;
+  y = currentPosition.second;
 
-    // move up
-    while (y < 8) {
-        y += 1;
-        std::pair<char, int> newMove = std::make_pair(x, y);
-        this->allPossibleMoves.push_back(newMove);
-    }
+  // move up
+  while (y < 8) {
+    y += 1;
+    std::pair<char, int> newMove = std::make_pair(x, y);
+    this->allPossibleMoves.push_back(newMove);
+  }
 }

@@ -4,11 +4,11 @@
 #include "piece.h"
 
 class Queen : public Piece {
-  public:
-    Queen(char name, char color);
-    ~Queen() = default;
+public:
+  Queen(char name, char color);
+  ~Queen() = default;
 
-    void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
+  void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 };
 
 #endif

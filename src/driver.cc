@@ -45,8 +45,7 @@ int main() {
 
         // if there's already a piece, they need to remove it first.
         if (b->getPieceAtPosition(position)->getName() != '*') {
-          std::cout << "There is already a piece at this position."
-                    << std::endl;
+          std::cout << "There is already a piece at this position." << std::endl;
           std::cout << "Remove the piece first or select a different "
                        "position."
                     << std::endl;
@@ -101,9 +100,8 @@ int main() {
             if ((currentPiece->getName() == 'p' ||
                  currentPiece->getName() == 'P') &&
                 (y == 0 || y == 7)) {
-              errors.push_back(
-                  "You cannot put a pawn on the first or last rank. Please "
-                  "remove the pawn.");
+              errors.push_back("You cannot put a pawn on the first or last "
+                               "rank. Please remove the pawn.");
             } else if (currentPiece->getName() == 'K') {
               // if the King is in check, invalid setup.
               if (b->inCheck(*(currentPiece))) {
@@ -134,9 +132,9 @@ int main() {
           std::cout << "Successfully configured board." << std::endl;
           break;
         } else {
-          std::cout
-              << "You must fix the following errors before exiting setup mode: "
-              << std::endl;
+          std::cout << "You must fix the following errors before "
+                       "exiting setup mode: "
+                    << std::endl;
 
           for (auto error : errors) {
             std::cout << "  - " << error << std::endl;
@@ -189,11 +187,8 @@ int main() {
       inStartingPosition = true;
     }
 
-    p = new Rook(piece, 'b', inStartingPosition);
-    std::pair<char, int> position = std::make_pair(x, y);
-
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
+    p = new Rook(piece, 'w', inStartingPosition);
+    p->getAllPossibleMoves(std::make_pair(x, y));
 
   } else if (piece == 'n') {
     p = new Knight(piece, 'b');
@@ -204,10 +199,7 @@ int main() {
 
   } else if (piece == 'b') {
     p = new Bishop(piece, 'b');
-    std::pair<char, int> position = std::make_pair(x, y);
-
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
+    p->getAllPossibleMoves(std::make_pair(x, y));
 
   } else if (piece == 'q') {
     p = new Queen(piece, 'b');
@@ -244,10 +236,7 @@ int main() {
     }
 
     p = new Rook(piece, 'w', inStartingPosition);
-    std::pair<char, int> position = std::make_pair(x, y);
-
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
+    p->getAllPossibleMoves(std::make_pair(x, y));
 
   } else if (piece == 'N') {
     p = new Knight(piece, 'w');
@@ -258,10 +247,7 @@ int main() {
 
   } else if (piece == 'B') {
     p = new Bishop(piece, 'w');
-    std::pair<char, int> position = std::make_pair(x, y);
-
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
+    p->getAllPossibleMoves(std::make_pair(x, y));
 
   } else if (piece == 'Q') {
     p = new Queen(piece, 'w');
