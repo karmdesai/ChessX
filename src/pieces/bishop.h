@@ -8,6 +8,9 @@ public:
   Bishop(char name, char color);
   ~Bishop() = default;
 
+  // clone function
+  Bishop *clone() override { return new Bishop{*this}; }
+
   void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 };
 

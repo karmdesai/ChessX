@@ -14,6 +14,9 @@ public:
   Pawn(char name, char color, bool inStartingPosition);
   ~Pawn() = default;
 
+  // clone function
+  Pawn *clone() override { return new Pawn{*this}; }
+
   void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 };
 

@@ -21,6 +21,9 @@ class Board {
 
   void defaultInitialization();
 
+  // To deep copy the board
+  Board *clone();
+
   // Overloaded operator<< to print board
   friend std::ostream &operator<<(std::ostream &out, const Board *myBoard);
 
