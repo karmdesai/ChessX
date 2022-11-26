@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 #include "board/board.h"
 #include "computer/computer.h"
@@ -199,7 +200,10 @@ int main() {
 
     } else if (piece == 'q') {
         p = new Queen(piece, 'b');
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        std::pair<char, int> position = std::make_pair(x, y);
+
+        p->getAllPossibleMoves(position);
+        b->parsePossibleMoves(*p, position);
 
     } else if (piece == 'k') {
         bool inStartingPosition = true;
@@ -244,7 +248,10 @@ int main() {
 
     } else if (piece == 'Q') {
         p = new Queen(piece, 'w');
-        p->getAllPossibleMoves(std::make_pair(x, y));
+        std::pair<char, int> position = std::make_pair(x, y);
+
+        p->getAllPossibleMoves(position);
+        b->parsePossibleMoves(*p, position);
 
     } else if (piece == 'K') {
         bool inStartingPosition = true;

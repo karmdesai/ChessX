@@ -39,6 +39,7 @@ class Board {
         // Move parsers/validators
         void parsePossibleMoves(Piece &piece, std::pair<char, int> position);
         void parsePossibleMovesKnight(Piece &knight, std::pair<char, int> position);
+        void parsePossibleMovesQueen(Piece &knight, std::pair<char, int> position);
 
         // Condition managers (check, checkmate, draw, win, etc.)
         bool inCheck(Piece &king);
