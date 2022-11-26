@@ -136,9 +136,112 @@ void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
     // Bishop
   } else if (piece.getName() == 'q' || piece.getName() == 'Q') {
     // Queen
+    parsePossibleMovesQueen(piece, position);
   } else if (piece.getName() == 'k' || piece.getName() == 'K') {
     // King
   }
+}
+
+// queen move parser
+void Board::parsePossibleMovesQueen(Piece &queen,
+                                    std::pair<char, int> position) {
+  
+  // new list of possible moves
+  std::vector<std::pair<char, int>> tmp;
+
+  int x = convertAlphaToNum(position.first);
+  int y = position.second;
+
+  // check up moves, stop when piece is found
+  for (int i = y + 1; i <= 8; ++i) {
+    Piece *currentPiece = pieceAtPosition(std::make_pair(x, i));
+
+    if (currentPiece->getName() != '*') {
+      break;
+    } else {
+      tmp.push_back(std::make_pair(x, i));
+    }
+  }
+
+  // check down moves, stop when piece is found
+  for (int i = y - 1; i >= 1; --i) {
+    Piece *currentPiece = pieceAtPosition(std::make_pair(x, i));
+
+    if (currentPiece->getName() != '*') {
+      break;
+    } else {
+      tmp.push_back(std::make_pair(x, i));
+    }
+  }
+
+  // check left moves, stop when piece is found
+  for (int i = x - 1; i >= 1; --i) {
+    Piece *currentPiece = pieceAtPosition(std::make_pair(i, y));
+
+    if (currentPiece->getName() != '*') {
+      break;
+    } else {
+      tmp.push_back(std::make_pair(i, y));
+    }
+  }
+
+  // check right moves, stop when piece is found
+  for (int i = x + 1; i <= 8; ++i) {
+    Piece *currentPiece = pieceAtPosition(std::make_pair(i, y));
+
+    if (currentPiece->getName() != '*') {
+      break;
+    } else {
+      tmp.push_back(std::make_pair(i, y));
+    }
+  }
+
+  // check diagonally up and to the right
+  for (int i = 1; i <= 8; ++i) {
+    Piece *currentPiece = pieceAtPosition(std::make_pair(x + i, y + i));
+
+    if (currentPiece->getName() != '*') {
+      break;
+    } else {
+      tmp.push_back(std::make_pair(x + i, y + i));
+    }
+  }
+
+  // check diagonally up and to the left
+  for (int i = 1; i <= 8; ++i) {
+    Piece *currentPiece = pieceAtPosition(std::make_pair(x - i, y + i));
+
+    if (currentPiece->getName() != '*') {
+      break;
+    } else {
+      tmp.push_back(std::make_pair(x - i, y + i));
+    }
+  }
+
+  // check diagonally down and to the right
+  for (int i = 1; i <= 8; ++i) {
+    Piece *currentPiece = pieceAtPosition(std::make_pair(x + i, y - i));
+
+    if (currentPiece->getName() != '*') {
+      break;
+    } else {
+      tmp.push_back(std::make_pair(x + i, y - i));
+    }
+  }
+
+  // check diagonally down and to the left
+  for (int i = 1; i <= 8; ++i) {
+    Piece *currentPiece = pieceAtPosition(std::make_pair(x - i, y - i));
+
+    if (currentPiece->getName() != '*') {
+      break;
+    } else {
+      tmp.push_back(std::make_pair(x - i, y - i));
+    }
+  }
+
+  // update possible moves
+  queen.allPossibleMoves = tmp;
 }
 
 void Board::parsePossibleMovesKnight(Piece &knight,

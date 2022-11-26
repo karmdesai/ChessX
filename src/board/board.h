@@ -25,6 +25,7 @@ class Board {
 
         void parsePossibleMoves(Piece &piece, std::pair<char, int> position);
         void parsePossibleMovesKnight(Piece &knight, std::pair<char, int> position);
+        void parsePossibleMovesQueen(Piece &knight, std::pair<char, int> position);
 };
 
 #endif
