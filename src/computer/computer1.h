@@ -1,8 +1,9 @@
 #ifndef COMPUTER_ONE_H
 #define COMPUTER_ONE_H
 
-#include "abstractPlayer.h"
 #include <vector>
+
+#include "abstractPlayer.h"
 
 class Computer1 : public AbstractPlayer {
  public:
@@ -10,7 +11,8 @@ class Computer1 : public AbstractPlayer {
   ~Computer1() = default;
 
   // calculate the next move, returns a pair of moves
-  std::pair<std::pair<char, int>, std::pair<char, int>> calculateNextMove() override;
+  std::pair<std::pair<char, int>, std::pair<char, int>> calculateNextMove()
+      override;
 };
 
 #endif
