@@ -340,6 +340,13 @@ int main() {
 
       std::cout << std::endl;
     } else if (command == "tester") {
+      // move white king to d5
+      b->movePiece(std::make_pair('e', 2), std::make_pair('e', 4));
+      b->movePiece(std::make_pair('e', 1), std::make_pair('e', 2));
+      b->movePiece(std::make_pair('e', 2), std::make_pair('e', 3));
+      b->movePiece(std::make_pair('e', 3), std::make_pair('d', 4));
+      b->movePiece(std::make_pair('d', 4), std::make_pair('d', 5));
+
       std:: cout << "ORIGINAL: " << std::endl;
       std::cout << b << std::endl;
 
@@ -348,12 +355,6 @@ int main() {
       std::cout << "CLONE: " << std::endl;
       std::cout << newBoard << std::endl;
 
-      // switch the kings
-      newBoard->movePiece(std::make_pair('e', 2), std::make_pair('e', 4));
-      newBoard->movePiece(std::make_pair('e', 1), std::make_pair('e', 2));
-      newBoard->movePiece(std::make_pair('e', 2), std::make_pair('e', 3));
-      newBoard->movePiece(std::make_pair('e', 3), std::make_pair('d', 4));
-      newBoard->movePiece(std::make_pair('d', 4), std::make_pair('d', 5));
       newBoard->movePiece(std::make_pair('d', 5), std::make_pair('d', 6));
 
       std:: cout << "ORIGINAL: " << std::endl;
@@ -366,7 +367,16 @@ int main() {
         std::cout << "The White King is in check!" << std::endl;
       } else if (newBoard->inCheck(*(newBoard->getBlackKing()), newBoard->getBlackKingPosition())) {
         std::cout << "The Black King is in check!" << std::endl;
+      } else {
+        b->movePiece(std::make_pair('d', 5), std::make_pair('d', 6));
       }
+
+      std:: cout << "ORIGINAL: " << std::endl;
+      std::cout << b << std::endl;
+
+      std::cout << "CLONE: " << std::endl;
+      std::cout << newBoard << std::endl;
+
     } else {
         break;
     }
