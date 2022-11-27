@@ -40,7 +40,8 @@ void Board::defaultInitialization() {
   this->currentBoard[2][0] = new Bishop('B', 'w');
   this->currentBoard[3][0] = new Queen('Q', 'w');
 
-  Piece *newWhiteKing = new King('K', 'w', true);
+  // don't deal with castling for now
+  Piece *newWhiteKing = new King('K', 'w', false);
   this->whiteKing = newWhiteKing;
   this->currentBoard[4][0] = newWhiteKing;
   this->whiteKingPosition = std::make_pair('e', 1);
@@ -59,7 +60,8 @@ void Board::defaultInitialization() {
   this->currentBoard[2][7] = new Bishop('b', 'b');
   this->currentBoard[3][7] = new Queen('q', 'b');
 
-  Piece *newBlackKing = new King('k', 'b', true);
+  // don't deal with castling for now
+  Piece *newBlackKing = new King('k', 'b', false);
   this->blackKing = newBlackKing;
   this->currentBoard[4][7] = newBlackKing;
   this->blackKingPosition = std::make_pair('e', 8);
