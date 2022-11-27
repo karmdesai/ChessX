@@ -12,6 +12,7 @@ public:
   Knight *clone() override { return new Knight{*this}; }
   
   void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
+  void setPieceAsMoved() override {}
 };
 
 #endif

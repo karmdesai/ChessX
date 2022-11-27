@@ -12,6 +12,7 @@ public:
   Queen *clone() override { return new Queen{*this}; }
 
   void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
+  void setPieceAsMoved() override {}
 };
 
 #endif

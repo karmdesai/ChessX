@@ -10,9 +10,11 @@
 Computer1::Computer1(char playerColor, Board *board)
     : AbstractPlayer{playerColor, board} {}
 
-// return random number between x and y using the Mercenne-Twister generator
-// source:
-// https://stackoverflow.com/questions/5008804/generating-a-random-integer-from-a-range
+/*
+ * return random number between x and y using the Mercenne-Twister generator
+ * source:
+ * https://stackoverflow.com/questions/5008804/generating-a-random-integer-from-a-range
+ */
 int randomNumber(int x, int y) {
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -26,7 +28,7 @@ Computer1::calculateNextMove() {
   /*
   Steps:
     - Save ALL possible moves for our color to a list
-    - Randomly choose one (for level 1)
+    - Randomly choose one (for level 1) using the random number generator
   */
 
   // list to keep track of moves, using a vector of pairs of pairs
@@ -36,23 +38,20 @@ Computer1::calculateNextMove() {
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 8; j++) {
       // get the piece at the current position
-      auto currentPos = std::make_pair(char('a' + i), j + 1);
+      std::pair<char, int> currentPos = std::make_pair(char('a' + i), j + 1);
       Piece *p = board->getPieceAtPosition(currentPos);
 
-      // if the piece is not null and it is our color
-      if (p->getName() != '*' && p->getName() != 'k' && p->getName() != 'K' && p->getColor() == this->playerColor) {
+      // if the piece is not nullPiece and it is our color
+      // For now WE DON'T SUPPORT King moves as kingParser is not implemented
+      if (p->getName() != '*' && p->getName() != 'k' && p->getName() != 'K' &&
+          p->getColor() == this->playerColor) {
         // get all possible moves for the piece
         p->getAllPossibleMoves(std::make_pair(char(i + 'a'), j + 1));
         board->parsePossibleMoves(*p, currentPos);
 
-        // loop through all possible moves
+        // add moves to the list
         for (auto move : p->allPossibleMoves) {
-          // add the move to the list
           auto theMove = std::make_pair(currentPos, move);
-          // print the move
-          std::cout << "move: " << theMove.first.first << theMove.first.second
-                    << " to " << theMove.second.first << theMove.second.second
-                    << std::endl;
           moves.push_back(theMove);
         }
       }
