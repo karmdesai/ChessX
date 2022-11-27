@@ -285,6 +285,8 @@ void Board::setBlackKingPosition(std::pair<char, int> position) {
 }
 /* End Setters */
 
+char Board::getTurn() { return this->whosTurn; }
+
 void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
   // pawn
   if (piece.getName() == 'p' || piece.getName() == 'P') {
