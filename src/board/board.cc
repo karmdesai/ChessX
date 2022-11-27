@@ -283,6 +283,8 @@ void Board::setBlackKingPosition(std::pair<char, int> position) {
 }
 /* End Setters */
 
+char Board::getTurn() { return this->whosTurn; }
+
 void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
   // pawn
   if (piece.getName() == 'p' || piece.getName() == 'P') {
@@ -523,7 +525,7 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
           this->getPieceAtPosition(move)->getColor() != '*') {
         tmp.push_back(move);
       }
-    } // forward moves only have a diff. y coordinate
+    }  // forward moves only have a diff. y coordinate
     else if (move.second != position.second) {
       // if the square is empty then only we can move
       if (this->getPieceAtPosition(move)->getColor() == '*') {
