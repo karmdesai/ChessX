@@ -45,8 +45,7 @@ int main() {
 
         // if there's already a piece, they need to remove it first.
         if (b->getPieceAtPosition(position)->getName() != '*') {
-          std::cout << "There is already a piece at this position."
-                    << std::endl;
+          std::cout << "There is already a piece at this position." << std::endl;
           std::cout << "Remove the piece first or select a different "
                        "position."
                     << std::endl;
@@ -101,21 +100,26 @@ int main() {
             if ((currentPiece->getName() == 'p' ||
                  currentPiece->getName() == 'P') &&
                 (y == 0 || y == 7)) {
-              errors.push_back(
-                  "You cannot put a pawn on the first or last "
-                  "rank. Please remove the pawn.");
+              errors.push_back("You cannot put a pawn on the first or last "
+                               "rank. Please remove the pawn.");
             } else if (currentPiece->getName() == 'K') {
               // if the King is in check, invalid setup.
-              if (b->inCheck(*(currentPiece))) {
+              if (b->inCheck(*(currentPiece), position)) {
                 errors.push_back("The white King should not be in check.");
               }
+
+              b->setWhiteKing(currentPiece);
+              b->setWhiteKingPosition(position);
 
               whiteKings += 1;
             } else if (currentPiece->getName() == 'k') {
               // if the King is in check, invalid setup.
-              if (b->inCheck(*(currentPiece))) {
+              if (b->inCheck(*(currentPiece), position)) {
                 errors.push_back("The black King should not be in check.");
               }
+
+              b->setBlackKing(currentPiece);
+              b->setBlackKingPosition(position);
 
               blackKings += 1;
             }
@@ -146,6 +150,8 @@ int main() {
         }
       }
     }
+
+    b->generateCompleteMoves();
   } else {
     b->defaultInitialization();
   }
@@ -153,6 +159,8 @@ int main() {
   std::cout << b << std::endl;
   /* End Board Setup */
 
+  /* Start Moves Parser Testing */
+  /*
   std::cout << "Enter a piece followed by current position to get all possible "
                "moves: "
             << std::endl;
@@ -214,7 +222,7 @@ int main() {
 
     p->getAllPossibleMoves(position);
     b->parsePossibleMoves(*p, position);
-    
+
   } else if (piece == 'k') {
     bool inStartingPosition = true;
 
@@ -224,6 +232,7 @@ int main() {
 
     p = new King(piece, 'b', inStartingPosition);
     p->getAllPossibleMoves(position);
+    b->parsePossibleMoves(*p, position);
 
   } else if (piece == 'P') {
     bool inStartingPosition = true;
@@ -275,32 +284,10 @@ int main() {
 
     p = new King(piece, 'w', inStartingPosition);
     p->getAllPossibleMoves(position);
+    b->parsePossibleMoves(*p, position);
 
   } else {
     std::cout << "Invalid piece" << std::endl;
-  }
-
-  // clone board
-  Board *b2 = b->clone();
-
-  // print addresses of each piece in the board
-  for (int i = 0; i < 8; ++i) {
-    for (int j = 0; j < 8; ++j) {
-      if (b->getPieceAtPosition(std::make_pair('a' + j, 8 - i)) ==
-          b2->getPieceAtPosition(std::make_pair('a' + j, 8 - i))) {
-        std::cout << "SAME PIECE (THIS IS BAD) " << (char)('a' + j) << 8 - i
-                  << std::endl;
-      } else {
-        std::cout << "Different piece at " << (char)('a' + j) << 8 - i
-                  << std::endl;
-      }
-    }
-  }
-
-  if (b == b2) {
-    std::cout << "SAME BOARD (THIS IS BAD)" << std::endl;
-  } else {
-    std::cout << "Different board" << std::endl;
   }
 
   if (p != nullptr) {
@@ -312,6 +299,40 @@ int main() {
 
     delete p;
   }
+  */
+  /* End Moves Parser Testing */
+
+  /* Start Game Testing */
+  std::string command;
+  std::pair<char, int> position;
+
+  while (std::cin >> command) {
+
+    if (command == "move") {
+      char oldX;
+      int oldY;
+
+      char newX;
+      int newY;
+
+      std::cin >> oldX >> oldY >> newX >> newY;
+      std::pair<char, int> oldPosition = std::make_pair(oldX, oldY);
+      std::pair<char, int> newPosition = std::make_pair(newX, newY);
+
+      b->movePiece(oldPosition, newPosition);
+
+      std::cout << b << std::endl;
+
+      if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
+        std::cout << "The Black King is in check!" << std::endl;
+      } else if (b->inCheck(*(b->getWhiteKing()), b->getWhiteKingPosition())) {
+        std::cout << "The White King is in check!" << std::endl;
+      }
+    } else {
+      break;
+    }
+  }
+  /* End Game Testing */
 
   delete b;
 }

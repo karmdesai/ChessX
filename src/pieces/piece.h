@@ -32,6 +32,7 @@ public:
   // To deep copy a piece
   virtual Piece* clone() = 0;
 
+  // Getters
   int getValue();
   char getName();
   char getColor();

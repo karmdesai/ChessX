@@ -39,7 +39,12 @@ void Board::defaultInitialization() {
   this->currentBoard[1][0] = new Knight('N', 'w');
   this->currentBoard[2][0] = new Bishop('B', 'w');
   this->currentBoard[3][0] = new Queen('Q', 'w');
-  this->currentBoard[4][0] = new King('K', 'w', true);
+
+  Piece *newWhiteKing = new King('K', 'w', true);
+  this->whiteKing = newWhiteKing;
+  this->currentBoard[4][0] = newWhiteKing;
+  this->whiteKingPosition = std::make_pair('e', 1);
+
   this->currentBoard[5][0] = new Bishop('B', 'w');
   this->currentBoard[6][0] = new Knight('N', 'w');
   this->currentBoard[7][0] = new Rook('R', 'w', true);
@@ -53,7 +58,12 @@ void Board::defaultInitialization() {
   this->currentBoard[1][7] = new Knight('n', 'b');
   this->currentBoard[2][7] = new Bishop('b', 'b');
   this->currentBoard[3][7] = new Queen('q', 'b');
-  this->currentBoard[4][7] = new King('k', 'b', true);
+
+  Piece *newBlackKing = new King('k', 'b', true);
+  this->blackKing = newBlackKing;
+  this->currentBoard[4][7] = newBlackKing;
+  this->blackKingPosition = std::make_pair('e', 8);
+
   this->currentBoard[5][7] = new Bishop('b', 'b');
   this->currentBoard[6][7] = new Knight('n', 'b');
   this->currentBoard[7][7] = new Rook('r', 'b', true);
@@ -61,6 +71,8 @@ void Board::defaultInitialization() {
   for (int i = 0; i < 8; i++) {
     this->currentBoard[i][6] = new Pawn('p', 'b', true);
   }
+
+  generateCompleteMoves();
 }
 
 // Overload the << operator for the Board class
@@ -171,6 +183,7 @@ Board *Board::clone() {
   return newBoard;
 }
 
+/* Start Getters */
 Piece *Board::getPieceAtPosition(std::pair<char, int> position) {
   int x = convertAlphaToNum(position.first);
   int y = position.second;
@@ -188,6 +201,20 @@ Piece *Board::getPieceAtPosition(std::pair<char, int> position) {
   return this->currentBoard[x][y];
 }
 
+Piece *Board::getWhiteKing() { return this->whiteKing; }
+
+Piece *Board::getBlackKing() { return this->blackKing; }
+
+std::pair<char, int> Board::getWhiteKingPosition() {
+  return this->whiteKingPosition;
+}
+
+std::pair<char, int> Board::getBlackKingPosition() {
+  return this->blackKingPosition;
+}
+/* End Getters */
+
+/* Start Setters */
 void Board::setPieceAtPosition(std::pair<char, int> position, Piece *p) {
   int x = convertAlphaToNum(position.first);
   int y = position.second;
@@ -209,6 +236,19 @@ void Board::setTurn(char player) {
     this->whosTurn = player;
   }
 }
+
+void Board::setWhiteKing(Piece *wk) { this->whiteKing = wk; }
+
+void Board::setBlackKing(Piece *bk) { this->blackKing = bk; }
+
+void Board::setWhiteKingPosition(std::pair<char, int> position) {
+  this->whiteKingPosition = position;
+}
+
+void Board::setBlackKingPosition(std::pair<char, int> position) {
+  this->blackKingPosition = position;
+}
+/* End Setters */
 
 void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
   // pawn
@@ -432,19 +472,20 @@ void Board::parsePossibleMovesKnight(Piece &knight,
   knight.allPossibleMoves = tmp;
 }
 
-void Board::parsePossibleMovesPawn(Piece &pawn,
-                                     std::pair<char, int> position) {
+void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
   std::vector<std::pair<char, int>> tmp;
 
   for (auto move : pawn.allPossibleMoves) {
     // diagonal moves have a diff. x coordinate and a diff. y coordinate
     if ((move.first != position.first) && (move.second != position.second)) {
-      // if the square is not empty and it is the opponents piece, its a valid move.
+      // if the square is not empty and it is the opponents piece, its a valid
+      // move.
 
-      // Here we will also need to check if moving the pawn causes check to its own king.
-      if (this->getPieceAtPosition(move)->getColor() != pawn.getColor() && 
+      // Here we will also need to check if moving the pawn causes check to its
+      // own king.
+      if (this->getPieceAtPosition(move)->getColor() != pawn.getColor() &&
           this->getPieceAtPosition(move)->getColor() != '*') {
-            tmp.push_back(move);
+        tmp.push_back(move);
       }
     } // forward moves only have a diff. y coordinate
     else if (move.second != position.second) {
@@ -459,6 +500,22 @@ void Board::parsePossibleMovesPawn(Piece &pawn,
     the vector, and tmp is a pointer to a vector. Then we can just swap the
     memory of the two vectors for optimal performance. */
   pawn.allPossibleMoves = tmp;
+}
+
+void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
+  std::vector<std::pair<char, int>> tmp;
+
+  for (auto move : king.allPossibleMoves) {
+    // if the piece at 'move' is not the same color (or is empty)...
+    if (this->getPieceAtPosition(move)->getColor() != king.getColor()) {
+      /* we take the following steps to determine whether or not the King
+          would be in check by taking a move */
+
+      tmp.push_back(move);
+    }
+  }
+
+  king.allPossibleMoves = tmp;
 }
 
 // queen move parser
@@ -640,11 +697,94 @@ void Board::parsePossibleMovesQueen(Piece &queen,
   queen.allPossibleMoves = tmp;
 }
 
-bool Board::inCheck(Piece &king) {
+// Brutally inefficient, there are better ways to do this and
+//  usually you only need to re-calculate the parsed move list for certain
+//  pieces.
+void Board::generateCompleteMoves() {
+  std::pair<int, char> position;
+
+  for (int x = 0; x < 8; x++) {
+    for (int y = 0; y < 8; y++) {
+      position = std::make_pair(this->convertNumToAlpha(x), y + 1);
+
+      // get all moves and then parse.
+      this->getPieceAtPosition(position)->getAllPossibleMoves(position);
+      this->parsePossibleMoves(*(this->currentBoard[x][y]), position);
+    }
+  }
+}
+
+bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
   if ((king.getName() != 'k') && (king.getName() != 'K')) {
     return false;
   } else {
-    // never in check for now.
-    return false;
+    // O(n^3) efficiency 💀 let's think of some optimization later.
+    for (int x = 0; x < 8; x++) {
+      for (int y = 0; y < 8; y++) {
+        if (this->currentBoard[x][y]->getColor() != king.getColor() &&
+            this->currentBoard[x][y]->getColor() != '*') {
+          for (auto move : this->currentBoard[x][y]->allPossibleMoves) {
+            if (move == currentPosition) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
+void Board::movePiece(std::pair<char, int> oldPosition,
+                      std::pair<char, int> newPosition) {
+  // doing no checks right now, so there could be memory issues.
+  int oldX = convertAlphaToNum(oldPosition.first);
+  int oldY = oldPosition.second - 1;
+
+  int newX = convertAlphaToNum(newPosition.first);
+  int newY = newPosition.second - 1;
+
+  Piece *oldPiece = this->getPieceAtPosition(oldPosition);
+  Piece *newPiece = this->getPieceAtPosition(newPosition);
+
+  // if the Piece to move isn't an empty square...
+  if (oldPiece->getName() != '*') {
+
+    // if the new position is in valid moves...
+    for (auto move : oldPiece->allPossibleMoves) {
+      if (move == newPosition) {
+        // and if the square to move is not empty and not of the same colour...
+        if (newPiece->getName() != '*' &&
+            newPiece->getName() != oldPiece->getName()) {
+
+          // capture the piece.
+          delete newPiece;
+
+          // and replace with an empty square.
+          this->setPieceAtPosition(newPosition, this->createPiece('*'));
+        }
+
+        // We need this, cause it doesn't work if we just swap oldPiece and
+        // newPiece
+
+        // swap the empty square with the current Piece.
+        std::swap(this->currentBoard[oldX][oldY],
+                  this->currentBoard[newX][newY]);
+
+        if (this->currentBoard[newX][newY]->getName() == 'k') {
+          this->setBlackKingPosition(newPosition);
+        } else if (this->currentBoard[newX][newY]->getName() == 'K') {
+          this->setBlackKingPosition(newPosition);
+        }
+
+        // Here we should set inStartingPosition to false.
+        // We should have a setter for startingPosition in the Piece class.
+
+        generateCompleteMoves();
+
+        return;
+      }
+    }
   }
 }
