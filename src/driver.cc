@@ -299,14 +299,27 @@ int main() {
     std::cout << "Invalid piece" << std::endl;
   }
 
+  if (p != nullptr) {
+    for (auto move : p->allPossibleMoves) {
+      std::cout << move.first << move.second << ", ";
+    }
+
+    std::cout << std::endl;
+  }
+
   /*
   Driver code for testing moving with the computer:
     * Takes input in the form "move <old position> <new position>".
     * For example, "move a2 a4" moves the piece at a2 to a4.
   */
 
+  // create a human player and a level-1 computer player
+  AbstractPlayer *human = new Human{'w', b};         // human is white
+  AbstractPlayer *opponent = new Computer1{'b', b};  // computer is black
+
   b->setTurn('w');
   while (true) {
+    // print who's turn it is
     if (b->getTurn() == 'w') {
       std::cout << "White's turn: " << std::endl;
     } else {
@@ -336,17 +349,21 @@ int main() {
 
       // move should be fine
     } else {
-      b->setPieceAtPosition(newPos, b->getPieceAtPosition(oldPos));
-      Piece *newPiece = new NullPiece('*', '*');
-      b->setPieceAtPosition(oldPos, newPiece);
-      std::cout << b << std::endl;
-
-      // set turn to color
-      if (b->getTurn() == 'w') {
-        b->setTurn('b');
+      // if its a human's turn, move the piece
+      if (b->getTurn() == human->getPlayerColor()) {
+        b->setPieceAtPosition(newPos, pieceAtPosition);
+        b->setPieceAtPosition(oldPos, new NullPiece{'*', '*'});
+        b->setTurn(opponent->getPlayerColor());
       } else {
-        b->setTurn('w');
+        auto move = opponent->calculateNextMove();
+        Piece *computerChoicePiece = b->getPieceAtPosition(move.first);
+        b->setPieceAtPosition(move.second, computerChoicePiece);
+        b->setPieceAtPosition(move.first, new NullPiece{'*', '*'});
+        b->setTurn(human->getPlayerColor());
       }
+
+      // print the board
+      std::cout << b << std::endl;
     }
   }
 
@@ -373,16 +390,17 @@ int main() {
   // } else {
   //   std::cout << "Different board" << std::endl;
   // }
+  // delete b2;
 
-  if (p != nullptr) {
-    for (auto move : p->allPossibleMoves) {
-      std::cout << move.first << move.second << ", ";
-    }
+  // if (p != nullptr) {
+  //   for (auto move : p->allPossibleMoves) {
+  //     std::cout << move.first << move.second << ", ";
+  //   }
 
-    std::cout << std::endl;
+  //   std::cout << std::endl;
 
-    delete p;
-  }
+  //   delete p;
+  // }
   */
   /* End Moves Parser Testing */
 
