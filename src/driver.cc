@@ -103,23 +103,23 @@ int main() {
               errors.push_back("You cannot put a pawn on the first or last "
                                "rank. Please remove the pawn.");
             } else if (currentPiece->getName() == 'K') {
+              b->setWhiteKing(currentPiece);
+              b->setWhiteKingPosition(position);
+
               // if the King is in check, invalid setup.
               if (b->inCheck(*(currentPiece), position)) {
                 errors.push_back("The white King should not be in check.");
               }
 
-              b->setWhiteKing(currentPiece);
-              b->setWhiteKingPosition(position);
-
               whiteKings += 1;
             } else if (currentPiece->getName() == 'k') {
+              b->setBlackKing(currentPiece);
+              b->setBlackKingPosition(position);
+
               // if the King is in check, invalid setup.
               if (b->inCheck(*(currentPiece), position)) {
                 errors.push_back("The black King should not be in check.");
               }
-
-              b->setBlackKing(currentPiece);
-              b->setBlackKingPosition(position);
 
               blackKings += 1;
             }
@@ -150,14 +150,13 @@ int main() {
         }
       }
     }
-
-    b->generateCompleteMoves();
   } else {
     b->defaultInitialization();
   }
 
+  std::cout << std::endl;
+  std::cout << "Start the Game!" << std::endl;
   std::cout << b << std::endl;
-  /* End Board Setup */
 
   /* Start Moves Parser Testing */
   /*
@@ -328,6 +327,17 @@ int main() {
       } else if (b->inCheck(*(b->getWhiteKing()), b->getWhiteKingPosition())) {
         std::cout << "The White King is in check!" << std::endl;
       }
+    } else if (command == "movelist") {
+      char x;
+      int y;
+
+      std::cin >> x >> y;
+
+      for (auto move : b->getPieceAtPosition(std::make_pair(x, y))->allPossibleMoves) {
+        std::cout << move.first << move.second << ",";
+      }
+
+      std::cout << std::endl;
     } else {
       break;
     }

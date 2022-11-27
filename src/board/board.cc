@@ -175,11 +175,22 @@ Board *Board::clone() {
 
   for (int x = 0; x < 8; ++x) {
     for (int y = 0; y < 8; ++y) {
+
       newBoard->currentBoard[x][y] = this->currentBoard[x][y]->clone();
+
+      // set BlackKing and WhiteKing fields.
+      if (newBoard->currentBoard[x][y]->getName() == 'k') {
+        newBoard->blackKing = newBoard->currentBoard[x][y];
+      } else if (newBoard->currentBoard[x][y]->getName() == 'K') {
+        newBoard->whiteKing = newBoard->currentBoard[x][y];
+      }
     }
   }
 
   newBoard->whosTurn = this->whosTurn;
+  newBoard->whiteKingPosition = this->whiteKingPosition;
+  newBoard->blackKingPosition = this->blackKingPosition;
+
   return newBoard;
 }
 
@@ -273,6 +284,7 @@ void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
   }
   // king
   else if (piece.getName() == 'k' || piece.getName() == 'K') {
+    parsePossibleMovesKing(piece, position);
   }
 }
 
@@ -511,7 +523,25 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
       /* we take the following steps to determine whether or not the King
           would be in check by taking a move */
 
-      tmp.push_back(move);
+      // create a temporary board
+      Board *tmpBoard = this->clone();
+
+      // move the King to this potential position
+      tmpBoard->movePiece(position, move);
+
+      if (king.getColor() == 'b') {
+        if (inCheck(*(tmpBoard->getBlackKing()),
+                    tmpBoard->getBlackKingPosition()) == false) {
+          tmp.push_back(move);
+        }
+      } else if (king.getColor() == 'w') {
+        if (inCheck(*(tmpBoard->getWhiteKing()),
+                    tmpBoard->getWhiteKingPosition()) == false) {
+          tmp.push_back(move);
+        }
+      }
+
+      delete tmpBoard;
     }
   }
 
@@ -715,9 +745,22 @@ void Board::generateCompleteMoves() {
 }
 
 bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
+  //this->generateCompleteMoves();
+
   if ((king.getName() != 'k') && (king.getName() != 'K')) {
     return false;
   } else {
+    /*
+    // get list of moves for King last
+    if (king.getName() == 'k') {
+      this->blackKing->getAllPossibleMoves(this->getBlackKingPosition());
+      this->parsePossibleMoves(*(this->blackKing), this->getBlackKingPosition());
+    } else {
+      this->whiteKing->getAllPossibleMoves(this->getWhiteKingPosition());
+      this->parsePossibleMoves(*(this->whiteKing), this->getWhiteKingPosition());
+    }
+    */
+
     // O(n^3) efficiency 💀 let's think of some optimization later.
     for (int x = 0; x < 8; x++) {
       for (int y = 0; y < 8; y++) {
@@ -765,10 +808,9 @@ void Board::movePiece(std::pair<char, int> oldPosition,
           this->setPieceAtPosition(newPosition, this->createPiece('*'));
         }
 
-        // We need this, cause it doesn't work if we just swap oldPiece and
-        // newPiece
-
-        // swap the empty square with the current Piece.
+        // Swap the empty square with the current Piece.
+        // We need the coordinates, cause it doesn't work if we just swap
+        //  oldPiece and newPiece.
         std::swap(this->currentBoard[oldX][oldY],
                   this->currentBoard[newX][newY]);
 
