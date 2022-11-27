@@ -301,7 +301,7 @@ int main() {
 
   // create a human player and a level-1 computer player
   AbstractPlayer *human = new Human{'w', b};         // human is white
-  AbstractPlayer *opponent = new Computer1{'b', b};  // computer is black
+  AbstractPlayer *opponent = new Computer2{'b', b};  // computer is black
 
   b->setTurn('w');
   while (true) {
@@ -324,25 +324,40 @@ int main() {
     if (pieceAtPosition->getName() == '*') {
       std::cout << "No piece at that position" << std::endl;
       continue;
+    } else {
+      pieceAtPosition->getAllPossibleMoves(oldPos);
+      b->parsePossibleMoves(*pieceAtPosition, oldPos);
     }
 
     // if the piece is not the right color or move is out of bounds
-    else if (ask != "move" || oldPosX < 'a' || oldPosX > 'h' || oldPosY < '1' ||
+    if (ask != "move" || oldPosX < 'a' || oldPosX > 'h' || oldPosY < '1' ||
              oldPosY > '8' || newPosX < 'a' || newPosX > 'h' || newPosY < '1' ||
              newPosY > '8' || b->getTurn() != pieceAtPosition->getColor()) {
       std::cout << "Invalid command" << std::endl;
       continue;
 
+      // if move isnt in possible moves of the piece
+    } else if (std::find(pieceAtPosition->allPossibleMoves.begin(),
+                         pieceAtPosition->allPossibleMoves.end(),
+                         newPos) == pieceAtPosition->allPossibleMoves.end()) {
+      std::cout << "Invalid move" << std::endl;
+      continue;
       // move should be fine
-    } else {
+    }
+
+    else {
       // if its a human's turn, move the piece
       if (b->getTurn() == human->getPlayerColor()) {
+        // delete b->getPieceAtPosition(newPos);
+        pieceAtPosition->setPieceAsMoved();
         b->setPieceAtPosition(newPos, pieceAtPosition);
         b->setPieceAtPosition(oldPos, new NullPiece{'*', '*'});
         b->setTurn(opponent->getPlayerColor());
       } else {
         auto move = opponent->calculateNextMove();
+        // delete b->getPieceAtPosition(newPos);
         Piece *computerChoicePiece = b->getPieceAtPosition(move.first);
+        computerChoicePiece->setPieceAsMoved();
         b->setPieceAtPosition(move.second, computerChoicePiece);
         b->setPieceAtPosition(move.first, new NullPiece{'*', '*'});
         b->setTurn(human->getPlayerColor());
@@ -357,26 +372,26 @@ int main() {
   Testing whether clone works or not
   */
 
-  // // clone board
-  // Board *b2 = b->clone();
+  // clone board
+  Board *b2 = b->clone();
 
-  // // print addresses of each piece in the board
-  // for (int i = 0; i < 8; ++i) {
-  //   for (int j = 0; j < 8; ++j) {
-  //     if (b->getPieceAtPosition(std::make_pair('a' + j, 8 - i)) ==
-  //         b2->getPieceAtPosition(std::make_pair('a' + j, 8 - i))) {
-  //       std::cout << "SAME PIECE (THIS IS BAD) " << (char)('a' + j) << 8 - i
-  //                 << std::endl;
-  //     }
-  //   }
-  // }
+  // print addresses of each piece in the board
+  for (int i = 0; i < 8; ++i) {
+    for (int j = 0; j < 8; ++j) {
+      if (b->getPieceAtPosition(std::make_pair('a' + j, 8 - i)) ==
+          b2->getPieceAtPosition(std::make_pair('a' + j, 8 - i))) {
+        std::cout << "SAME PIECE (THIS IS BAD) " << (char)('a' + j) << 8 - i
+                  << std::endl;
+      }
+    }
+  }
 
-  // if (b == b2) {
-  //   std::cout << "SAME BOARD (THIS IS BAD)" << std::endl;
-  // } else {
-  //   std::cout << "Different board" << std::endl;
-  // }
-  // delete b2;
+  if (b == b2) {
+    std::cout << "SAME BOARD (THIS IS BAD)" << std::endl;
+  } else {
+    std::cout << "Different board" << std::endl;
+  }
+  delete b2;
 
   // if (p != nullptr) {
   //   for (auto move : p->allPossibleMoves) {
