@@ -6,7 +6,7 @@
 #include "computer/computer1.h"
 #include "computer/computer2.h"
 #include "computer/computer3.h"
-#include "computer/computer4+.h"
+#include "computer/computer4.h"
 #include "computer/human.h"
 #include "pieces/bishop.h"
 #include "pieces/king.h"
