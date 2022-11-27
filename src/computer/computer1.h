@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "abstractPlayer.h"
-#include <vector>
 
 class Computer1 : public AbstractPlayer {
  public:
