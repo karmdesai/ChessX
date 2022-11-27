@@ -523,9 +523,11 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
       /* we take the following steps to determine whether or not the King
           would be in check by taking a move */
 
+      
       // create a temporary board
       Board *tmpBoard = this->clone();
 
+      /*
       // move the King to this potential position
       tmpBoard->movePiece(position, move);
 
@@ -540,6 +542,7 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
           tmp.push_back(move);
         }
       }
+      */
 
       delete tmpBoard;
     }
@@ -731,7 +734,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
 //  usually you only need to re-calculate the parsed move list for certain
 //  pieces.
 void Board::generateCompleteMoves() {
-  std::pair<int, char> position;
+  std::pair<char, int> position;
 
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
@@ -745,7 +748,7 @@ void Board::generateCompleteMoves() {
 }
 
 bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
-  //this->generateCompleteMoves();
+  // this->generateCompleteMoves();
 
   if ((king.getName() != 'k') && (king.getName() != 'K')) {
     return false;
@@ -765,7 +768,8 @@ bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
     for (int x = 0; x < 8; x++) {
       for (int y = 0; y < 8; y++) {
         if (this->currentBoard[x][y]->getColor() != king.getColor() &&
-            this->currentBoard[x][y]->getColor() != '*') {
+            this->currentBoard[x][y]->getColor() != '*' &&
+            this->currentBoard[x][y] != &king) {
           for (auto move : this->currentBoard[x][y]->allPossibleMoves) {
             if (move == currentPosition) {
               return true;

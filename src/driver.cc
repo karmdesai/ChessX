@@ -82,6 +82,7 @@ int main() {
 
         b->setTurn(nextPlayer);
       } else if (setupCommand == "done") {
+        b->generateCompleteMoves();
         // Check if the Board has a valid setup.
         std::vector<std::string> errors;
 
