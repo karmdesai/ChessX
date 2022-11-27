@@ -545,6 +545,8 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
       */
 
       delete tmpBoard;
+
+      tmp.push_back(move);
     }
   }
 
@@ -741,7 +743,7 @@ void Board::generateCompleteMoves() {
       position = std::make_pair(this->convertNumToAlpha(x), y + 1);
 
       // get all moves and then parse.
-      this->getPieceAtPosition(position)->getAllPossibleMoves(position);
+      this->currentBoard[x][y]->getAllPossibleMoves(position);
       this->parsePossibleMoves(*(this->currentBoard[x][y]), position);
     }
   }
@@ -821,7 +823,7 @@ void Board::movePiece(std::pair<char, int> oldPosition,
         if (this->currentBoard[newX][newY]->getName() == 'k') {
           this->setBlackKingPosition(newPosition);
         } else if (this->currentBoard[newX][newY]->getName() == 'K') {
-          this->setBlackKingPosition(newPosition);
+          this->setWhiteKingPosition(newPosition);
         }
 
         // Here we should set inStartingPosition to false.
