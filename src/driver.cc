@@ -285,28 +285,80 @@ int main() {
     std::cout << "Invalid piece" << std::endl;
   }
 
-  // clone board
-  Board *b2 = b->clone();
+  /*
+  Driver code for testing moving with the computer:
+    * Takes input in the form "move <old position> <new position>".
+    * For example, "move a2 a4" moves the piece at a2 to a4.
+  */
 
-  // print addresses of each piece in the board
-  for (int i = 0; i < 8; ++i) {
-    for (int j = 0; j < 8; ++j) {
-      if (b->getPieceAtPosition(std::make_pair('a' + j, 8 - i)) ==
-          b2->getPieceAtPosition(std::make_pair('a' + j, 8 - i))) {
-        std::cout << "SAME PIECE (THIS IS BAD) " << (char)('a' + j) << 8 - i
-                  << std::endl;
+  b->setTurn('w');
+  while (true) {
+    if (b->getTurn() == 'w') {
+      std::cout << "White's turn: " << std::endl;
+    } else {
+      std::cout << "Black's turn: " << std::endl;
+    }
+    // read in stuff
+    std::string ask;
+    char oldPosX, oldPosY, newPosX, newPosY;
+    std::cin >> ask >> oldPosX >> oldPosY >> newPosX >> newPosY;
+
+    std::pair<char, int> oldPos = std::make_pair(oldPosX, oldPosY - '0');
+    std::pair<char, int> newPos = std::make_pair(newPosX, newPosY - '0');
+
+    // if there's no piece there
+    Piece *pieceAtPosition = b->getPieceAtPosition(oldPos);
+    if (pieceAtPosition->getName() == '*') {
+      std::cout << "No piece at that position" << std::endl;
+      continue;
+    }
+
+    // if the piece is not the right color or move is out of bounds
+    else if (ask != "move" || oldPosX < 'a' || oldPosX > 'h' || oldPosY < '1' ||
+             oldPosY > '8' || newPosX < 'a' || newPosX > 'h' || newPosY < '1' ||
+             newPosY > '8' || b->getTurn() != pieceAtPosition->getColor()) {
+      std::cout << "Invalid command" << std::endl;
+      continue;
+
+      // move should be fine
+    } else {
+      b->setPieceAtPosition(newPos, b->getPieceAtPosition(oldPos));
+      Piece *newPiece = new NullPiece('*', '*');
+      b->setPieceAtPosition(oldPos, newPiece);
+      std::cout << b << std::endl;
+
+      // set turn to color
+      if (b->getTurn() == 'w') {
+        b->setTurn('b');
       } else {
-        std::cout << "Different piece at " << (char)('a' + j) << 8 - i
-                  << std::endl;
+        b->setTurn('w');
       }
     }
   }
 
-  if (b == b2) {
-    std::cout << "SAME BOARD (THIS IS BAD)" << std::endl;
-  } else {
-    std::cout << "Different board" << std::endl;
-  }
+  /*
+  Testing whether clone works or not
+  */
+
+  // // clone board
+  // Board *b2 = b->clone();
+
+  // // print addresses of each piece in the board
+  // for (int i = 0; i < 8; ++i) {
+  //   for (int j = 0; j < 8; ++j) {
+  //     if (b->getPieceAtPosition(std::make_pair('a' + j, 8 - i)) ==
+  //         b2->getPieceAtPosition(std::make_pair('a' + j, 8 - i))) {
+  //       std::cout << "SAME PIECE (THIS IS BAD) " << (char)('a' + j) << 8 - i
+  //                 << std::endl;
+  //     }
+  //   }
+  // }
+
+  // if (b == b2) {
+  //   std::cout << "SAME BOARD (THIS IS BAD)" << std::endl;
+  // } else {
+  //   std::cout << "Different board" << std::endl;
+  // }
 
   if (p != nullptr) {
     for (auto move : p->allPossibleMoves) {

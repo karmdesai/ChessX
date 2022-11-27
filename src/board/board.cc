@@ -210,6 +210,8 @@ void Board::setTurn(char player) {
   }
 }
 
+char Board::getTurn() { return this->whosTurn; }
+
 void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
   // pawn
   if (piece.getName() == 'p' || piece.getName() == 'P') {
@@ -432,21 +434,22 @@ void Board::parsePossibleMovesKnight(Piece &knight,
   knight.allPossibleMoves = tmp;
 }
 
-void Board::parsePossibleMovesPawn(Piece &pawn,
-                                     std::pair<char, int> position) {
+void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
   std::vector<std::pair<char, int>> tmp;
 
   for (auto move : pawn.allPossibleMoves) {
     // diagonal moves have a diff. x coordinate and a diff. y coordinate
     if ((move.first != position.first) && (move.second != position.second)) {
-      // if the square is not empty and it is the opponents piece, its a valid move.
+      // if the square is not empty and it is the opponents piece, its a valid
+      // move.
 
-      // Here we will also need to check if moving the pawn causes check to its own king.
-      if (this->getPieceAtPosition(move)->getColor() != pawn.getColor() && 
+      // Here we will also need to check if moving the pawn causes check to its
+      // own king.
+      if (this->getPieceAtPosition(move)->getColor() != pawn.getColor() &&
           this->getPieceAtPosition(move)->getColor() != '*') {
-            tmp.push_back(move);
+        tmp.push_back(move);
       }
-    } // forward moves only have a diff. y coordinate
+    }  // forward moves only have a diff. y coordinate
     else if (move.second != position.second) {
       // if the square is empty then only we can move
       if (this->getPieceAtPosition(move)->getColor() == '*') {

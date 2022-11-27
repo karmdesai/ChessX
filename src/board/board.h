@@ -35,6 +35,7 @@ class Board {
 
   // Getters
   Piece *getPieceAtPosition(std::pair<char, int> position);
+  char getTurn();
 
   // Setters
   void setPieceAtPosition(std::pair<char, int> position, Piece *p);
