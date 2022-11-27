@@ -744,8 +744,26 @@ void Board::generateCompleteMoves() {
 
       // get all moves and then parse.
       this->currentBoard[x][y]->getAllPossibleMoves(position);
-      this->parsePossibleMoves(*(this->currentBoard[x][y]), position);
+
+      if (this->currentBoard[x][y]->getName() != 'k' &&
+          this->currentBoard[x][y]->getName() != 'K') {
+        this->parsePossibleMoves(*(this->currentBoard[x][y]), position);
+      } else {
+        if (this->currentBoard[x][y]->getColor() == 'w') {
+          this->whiteKingPosition = position;
+        } else {
+          this->blackKingPosition = position;
+        }
+      }
     }
+  }
+
+  if (this->blackKing) {
+    this->parsePossibleMoves(*(this->blackKing), this->blackKingPosition);
+  }
+
+  if (this->whiteKing) {
+    this->parsePossibleMoves(*(this->whiteKing), this->whiteKingPosition);
   }
 }
 

@@ -1,6 +1,7 @@
 done
-move e2 e4
+move e2 e3
 move e1 e2
-move f7 f5
-move f5 f4
-move f4 f3
+move e2 f3
+move f3 f4
+move f4 e5
+movelist e5
