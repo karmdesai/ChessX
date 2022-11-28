@@ -79,10 +79,12 @@ Computer3::calculateNextMove() {
   check. If they are, add the move to the list. The function will also need to
   make sure that the move does not put the computer itself in check. */
 
-  // Step 4: filter out the moves that don't avoid capture
-  // for each move, check if the destination can be captured by the opponent
-  // if it can, don't add it to the list
-  // if it can't for all opponent pieces, add it to the list
+  /*
+  Step 4: filter out the moves that don't avoid capture
+    * for each move, check if the destination can be captured by the opponent
+    * if it can, don't add it to the list
+    * if it can't for all opponent pieces, add it to the list
+  */
 
   for (auto move : moves) {
     // get the piece at the destination

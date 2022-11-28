@@ -310,7 +310,7 @@ int main(int argc, char *argv[]) {
 
   // create a human player and a level-1 computer player
   AbstractPlayer *human = new Human{'w', b};         // human is white
-  AbstractPlayer *opponent = new Computer2{'b', b};  // computer is black
+  AbstractPlayer *opponent = new Computer3{'b', b};  // computer is black
 
   b->setTurn('w');
   while (true) {
