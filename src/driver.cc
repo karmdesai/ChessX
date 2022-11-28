@@ -17,7 +17,7 @@
 #include "pieces/queen.h"
 #include "pieces/rook.h"
 
-int main() {
+int main(int argc, char *argv[]) {
   std::cout << "**** WELCOME TO CHESS ****" << std::endl;
 
   std::cout << "Please enter the setup command immediately if you would like "
@@ -27,14 +27,24 @@ int main() {
             << std::endl;
   std::cout << std::endl;
 
+  // check for whether user wants default setup or custom setup through
+  // commandline flag
+  bool customSetup = false;
+  if (argc > 1) {
+    std::string flag = argv[1];
+    if (flag == "-c") {
+      customSetup = true;
+    }
+  }
+
   // you can only setup on the very first command for now.
-  std::string firstCommand;
-  std::cin >> firstCommand;
+  // std::string firstCommand;
+  // std::cin >> firstCommand;
 
   Board *b = new Board();
 
   /* Start Board Setup */
-  if (firstCommand == "setup") {
+  if (customSetup) {
     std::cout << b << std::endl;
 
     std::string setupCommand;
@@ -48,11 +58,12 @@ int main() {
         std::cin >> piece >> x >> y;
         std::pair<char, int> position = std::make_pair(x, y);
 
-        Piece* pieceCurrent = b->getPieceAtPosition(position);
+        Piece *pieceCurrent = b->getPieceAtPosition(position);
 
         // if there's already a piece, they need to remove it first.
         if (pieceCurrent->getName() != '*') {
-          std::cout << "There is already a piece at this position." << std::endl;
+          std::cout << "There is already a piece at this position."
+                    << std::endl;
           std::cout << "Remove the piece first or select a different "
                        "position."
                     << std::endl;
@@ -64,7 +75,8 @@ int main() {
           if (newPiece->getName() == '*') {
             delete newPiece;
           } else {
-            // since the piece is a NullPiece, we must delete before placing a new one.
+            // since the piece is a NullPiece, we must delete before placing a
+            // new one.
             delete b->getPieceAtPosition(position);
             b->setPieceAtPosition(position, newPiece);
           }
@@ -110,8 +122,9 @@ int main() {
             if ((currentPiece->getName() == 'p' ||
                  currentPiece->getName() == 'P') &&
                 (y == 0 || y == 7)) {
-              errors.push_back("You cannot put a pawn on the first or last "
-                               "rank. Please remove the pawn.");
+              errors.push_back(
+                  "You cannot put a pawn on the first or last "
+                  "rank. Please remove the pawn.");
             } else if (currentPiece->getName() == 'K') {
               b->setWhiteKing(currentPiece);
               b->setWhiteKingPosition(position);
@@ -170,142 +183,143 @@ int main() {
 
   /* Start Moves Parser Testing */
   /*
-  std::cout << "Enter a piece followed by current position to get all possible "
-               "moves: "
-            << std::endl;
-  std::cout << "e.g. 'R a1' for white rook currently at a1" << std::endl;
-  std::cout << "e.g. 'b h4' for black bishop currently at h4" << std::endl;
+  // std::cout << "Enter a piece followed by current position to get all
+  possible "
+  //              "moves: "
+  //           << std::endl;
+  // std::cout << "e.g. 'R a1' for white rook currently at a1" << std::endl;
+  // std::cout << "e.g. 'b h4' for black bishop currently at h4" << std::endl;
 
-  Piece *p = nullptr;
+  // Piece *p = nullptr;
 
-  char piece;
-  char x;
-  int y;
+  // char piece;
+  // char x;
+  // int y;
 
-  std::cin >> piece >> x >> y;
+  // std::cin >> piece >> x >> y;
 
-  if (x < 'a' || x > 'h' || y < 1 || y > 8) {
-    std::cout << "Invalid position" << std::endl;
-    return 1;
-  }
+  // if (x < 'a' || x > 'h' || y < 1 || y > 8) {
+  //   std::cout << "Invalid position" << std::endl;
+  //   return 1;
+  // }
 
-  std::pair<char, int> position = std::make_pair(x, y);
+  // std::pair<char, int> position = std::make_pair(x, y);
 
-  if (piece == 'p') {
-    bool inStartingPosition = true;
+  // if (piece == 'p') {
+  //   bool inStartingPosition = true;
 
-    if (y != 7) {
-      inStartingPosition = false;
-    }
+  //   if (y != 7) {
+  //     inStartingPosition = false;
+  //   }
 
-    p = new Pawn(piece, 'b', inStartingPosition);
-    p->getAllPossibleMoves(position);
+  //   p = new Pawn(piece, 'b', inStartingPosition);
+  //   p->getAllPossibleMoves(position);
+  //   b->parsePossibleMoves(*p, position);
+
+  // } else if (piece == 'r') {
+  //   bool inStartingPosition = false;
+
+  //   if ((x == 'a' && y == 8) || (x == 'h' && y == 8)) {
+  //     inStartingPosition = true;
+  //   }
+
+  //   p = new Rook(piece, 'w', inStartingPosition);
+
+  //   p->getAllPossibleMoves(position);
+  //   b->parsePossibleMoves(*p, position);
+
+  // } else if (piece == 'n') {
+  //   p = new Knight(piece, 'b');
+
+  //   p->getAllPossibleMoves(position);
+  //   b->parsePossibleMoves(*p, position);
+
+  // } else if (piece == 'b') {
+  //   p = new Bishop(piece, 'b');
+
+  //   p->getAllPossibleMoves(position);
+  //   b->parsePossibleMoves(*p, position);
+
+  // } else if (piece == 'q') {
+  //   p = new Queen(piece, 'b');
+
+  //   p->getAllPossibleMoves(position);
+  //   b->parsePossibleMoves(*p, position);
+
+  // } else if (piece == 'k') {
+  //   bool inStartingPosition = true;
+
+  //   if (x != 'e' || y != 8) {
+  //     inStartingPosition = false;
+  //   }
+
+  //   p = new King(piece, 'b', inStartingPosition);
+  //   p->getAllPossibleMoves(position);
     b->parsePossibleMoves(*p, position);
 
-  } else if (piece == 'r') {
-    bool inStartingPosition = false;
+  // } else if (piece == 'P') {
+  //   bool inStartingPosition = true;
 
-    if ((x == 'a' && y == 8) || (x == 'h' && y == 8)) {
-      inStartingPosition = true;
-    }
+  //   if (y != 2) {
+  //     inStartingPosition = false;
+  //   }
 
-    p = new Rook(piece, 'w', inStartingPosition);
+  //   p = new Pawn(piece, 'w', inStartingPosition);
+  //   p->getAllPossibleMoves(position);
+  //   b->parsePossibleMoves(*p, position);
 
-    p->getAllPossibleMoves(position);
+  // } else if (piece == 'R') {
+  //   bool inStartingPosition = false;
+
+  //   if ((x == 'a' && y == 1) || (x == 'h' && y == 1)) {
+  //     inStartingPosition = true;
+  //   }
+
+  //   p = new Rook(piece, 'w', inStartingPosition);
+
+  //   p->getAllPossibleMoves(position);
+  //   b->parsePossibleMoves(*p, position);
+
+  // } else if (piece == 'N') {
+  //   p = new Knight(piece, 'w');
+
+  //   p->getAllPossibleMoves(position);
+  //   b->parsePossibleMoves(*p, position);
+
+  // } else if (piece == 'B') {
+  //   p = new Bishop(piece, 'w');
+
+  //   p->getAllPossibleMoves(position);
+  //   b->parsePossibleMoves(*p, position);
+
+  // } else if (piece == 'Q') {
+  //   p = new Queen(piece, 'w');
+
+  //   p->getAllPossibleMoves(position);
+  //   b->parsePossibleMoves(*p, position);
+
+  // } else if (piece == 'K') {
+  //   bool inStartingPosition = true;
+
+  //   if (x != 'e' || y != 1) {
+  //     inStartingPosition = false;
+  //   }
+
+  //   p = new King(piece, 'w', inStartingPosition);
+  //   p->getAllPossibleMoves(position);
     b->parsePossibleMoves(*p, position);
 
-  } else if (piece == 'n') {
-    p = new Knight(piece, 'b');
+  // } else {
+  //   std::cout << "Invalid piece" << std::endl;
+  // }
 
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
+  // if (p != nullptr) {
+  //   for (auto move : p->allPossibleMoves) {
+  //     std::cout << move.first << move.second << ", ";
+  //   }
 
-  } else if (piece == 'b') {
-    p = new Bishop(piece, 'b');
-
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
-
-  } else if (piece == 'q') {
-    p = new Queen(piece, 'b');
-
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
-
-  } else if (piece == 'k') {
-    bool inStartingPosition = true;
-
-    if (x != 'e' || y != 8) {
-      inStartingPosition = false;
-    }
-
-    p = new King(piece, 'b', inStartingPosition);
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
-
-  } else if (piece == 'P') {
-    bool inStartingPosition = true;
-
-    if (y != 2) {
-      inStartingPosition = false;
-    }
-
-    p = new Pawn(piece, 'w', inStartingPosition);
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
-
-  } else if (piece == 'R') {
-    bool inStartingPosition = false;
-
-    if ((x == 'a' && y == 1) || (x == 'h' && y == 1)) {
-      inStartingPosition = true;
-    }
-
-    p = new Rook(piece, 'w', inStartingPosition);
-
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
-
-  } else if (piece == 'N') {
-    p = new Knight(piece, 'w');
-
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
-
-  } else if (piece == 'B') {
-    p = new Bishop(piece, 'w');
-
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
-
-  } else if (piece == 'Q') {
-    p = new Queen(piece, 'w');
-
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
-
-  } else if (piece == 'K') {
-    bool inStartingPosition = true;
-
-    if (x != 'e' || y != 1) {
-      inStartingPosition = false;
-    }
-
-    p = new King(piece, 'w', inStartingPosition);
-    p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
-
-  } else {
-    std::cout << "Invalid piece" << std::endl;
-  }
-
-  if (p != nullptr) {
-    for (auto move : p->allPossibleMoves) {
-      std::cout << move.first << move.second << ", ";
-    }
-
-    std::cout << std::endl;
-  }
+  //   std::cout << std::endl;
+  // }
 
   /*
   Driver code for testing moving with the computer:
@@ -331,6 +345,8 @@ int main() {
       b->setPieceAtPosition(move.second, computerChoicePiece);
       b->setPieceAtPosition(move.first, new NullPiece{'*', '*'});
       b->setTurn(human->getPlayerColor());
+      std::cout << b << std::endl;
+      continue;
     }
     // read in stuff
     std::string ask;
@@ -427,11 +443,11 @@ int main() {
 
   //   delete p;
   // }
-  */
-  /* End Moves Parser Testing */
+  * /
+      /* End Moves Parser Testing */
 
-  /* Start Game Testing */
-  std::string command;
+      /* Start Game Testing */
+      std::string command;
   std::pair<char, int> position;
 
   while (std::cin >> command) {
@@ -463,7 +479,8 @@ int main() {
 
       std::cin >> x >> y;
 
-      for (auto move : b->getPieceAtPosition(std::make_pair(x, y))->allPossibleMoves) {
+      for (auto move :
+           b->getPieceAtPosition(std::make_pair(x, y))->allPossibleMoves) {
         std::cout << move.first << move.second << ",";
       }
 
@@ -476,7 +493,7 @@ int main() {
       b->movePiece(std::make_pair('e', 3), std::make_pair('d', 4));
       b->movePiece(std::make_pair('d', 4), std::make_pair('d', 5));
 
-      std:: cout << "ORIGINAL: " << std::endl;
+      std::cout << "ORIGINAL: " << std::endl;
       std::cout << b << std::endl;
 
       Board *newBoard = b->clone();
@@ -486,21 +503,23 @@ int main() {
 
       newBoard->movePiece(std::make_pair('d', 5), std::make_pair('d', 6));
 
-      std:: cout << "ORIGINAL: " << std::endl;
+      std::cout << "ORIGINAL: " << std::endl;
       std::cout << b << std::endl;
 
       std::cout << "CLONE: " << std::endl;
       std::cout << newBoard << std::endl;
 
-      if (newBoard->inCheck(*(newBoard->getWhiteKing()), newBoard->getWhiteKingPosition())) {
+      if (newBoard->inCheck(*(newBoard->getWhiteKing()),
+                            newBoard->getWhiteKingPosition())) {
         std::cout << "The White King is in check!" << std::endl;
-      } else if (newBoard->inCheck(*(newBoard->getBlackKing()), newBoard->getBlackKingPosition())) {
+      } else if (newBoard->inCheck(*(newBoard->getBlackKing()),
+                                   newBoard->getBlackKingPosition())) {
         std::cout << "The Black King is in check!" << std::endl;
       } else {
         b->movePiece(std::make_pair('d', 5), std::make_pair('d', 6));
       }
 
-      std:: cout << "ORIGINAL: " << std::endl;
+      std::cout << "ORIGINAL: " << std::endl;
       std::cout << b << std::endl;
 
       std::cout << "CLONE: " << std::endl;
@@ -509,7 +528,7 @@ int main() {
       delete newBoard;
 
     } else {
-        break;
+      break;
     }
   }
   /* End Game Testing */
