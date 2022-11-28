@@ -206,6 +206,8 @@ int main(int argc, char *argv[]) {
       b->setPieceAtPosition(move.second, computerChoicePiece);
       b->setPieceAtPosition(move.first, new NullPiece{'*', '*'});
       b->setTurn(human->getPlayerColor());
+      std::cout << b << std::endl;
+      continue;
     }
 
     std::cin >> command;
