@@ -925,6 +925,21 @@ void Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
         }
       }
 
+void Board::makeMove(std::pair<char, int> &from, std::pair<char, int> &to) {
+  Piece *fromPiece = getPieceAtPosition(from);
+  Piece *toPiece = getPieceAtPosition(to);
+
+  if (toPiece->getName() != '*') {
+    // remove the piece from the board
+    delete toPiece;
+  }
+  // move the piece
+  currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+
+  // set old position to a new null piece
+  currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+}
+
       delete tmpBoard;
 
       return;
