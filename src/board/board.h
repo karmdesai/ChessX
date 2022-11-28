@@ -51,6 +51,9 @@ class Board {
 
   // Condition managers (check, checkmate, draw, win, etc.)
   bool inCheck(Piece &king);
+
+  // Move managers
+  void makeMove(std::pair<char, int> &start, std::pair<char, int> &end);
 };
 
 #endif
