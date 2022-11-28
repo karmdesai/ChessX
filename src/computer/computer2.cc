@@ -69,18 +69,6 @@ Computer2::calculateNextMove() {
   check. If they are, add the move to the list. The function will also need to
   make sure that the move does not put the computer itself in check. */
 
-  // Step 4: choose a random move from preferredMoves if there are any
-  std::random_device rd;
-  std::mt19937 gen(rd());
-
-  // print all moves
-  std::cout << "All moves: " << std::endl;
-  for (auto move : moves) {
-    std::cout << move.first.first << move.first.second << " -> "
-              << move.second.first << move.second.second << std::endl;
-  }
-  std::cout << "------------" << std::endl;
-
   // print preferred moves
   std::cout << "Preferred moves: " << std::endl;
   for (auto move : preferredMoves) {
@@ -89,17 +77,32 @@ Computer2::calculateNextMove() {
   }
   std::cout << "------------" << std::endl;
 
+
+  // Step 4: choose a random move from preferredMoves if there are any
+  std::random_device rd;
+  std::mt19937 gen(rd());
+
   if (preferredMoves.size() > 0) {
     // choose a random move from the list
     std::uniform_int_distribution<> dis(0, preferredMoves.size() - 1);
     int randomIndex = dis(gen);
 
+    // print what computer plays
+    std::cout << "Computer plays: " << preferredMoves[randomIndex].first.first
+              << preferredMoves[randomIndex].first.second << " -> "
+              << preferredMoves[randomIndex].second.first
+              << preferredMoves[randomIndex].second.second << std::endl;
     return preferredMoves.at(randomIndex);
   } else {
     // no preferred moves exist, choose a random legal move
     std::uniform_int_distribution<> dis(0, moves.size() - 1);
     int randomIndex = dis(gen);
 
+    // print what computer plays
+    std::cout << "Computer plays: " << moves[randomIndex].first.first
+              << moves[randomIndex].first.second << " -> "
+              << moves[randomIndex].second.first << moves[randomIndex].second.second
+              << std::endl;
     return moves.at(randomIndex);
   }
 }
