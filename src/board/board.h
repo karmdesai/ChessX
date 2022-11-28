@@ -81,6 +81,9 @@ class Board {
                    std::pair<char, int> newPosition);
     void movePieceBase(std::pair<char, int> oldPosition,
                           std::pair<char, int> newPosition);
+
+  // Move managers
+  void makeMove(std::pair<char, int> &start, std::pair<char, int> &end);
 };
 
 #endif
