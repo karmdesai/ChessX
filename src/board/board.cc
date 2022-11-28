@@ -520,6 +520,8 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
   std::vector<std::pair<char, int>> tmp;
 
   for (auto move : king.allPossibleMoves) {
+    // move the King to this potential position
+
     // if the piece at 'move' is not the same color (or is empty)...
     if (this->getPieceAtPosition(move)->getColor() != king.getColor()) {
       /* we take the following steps to determine whether or not the King
@@ -529,26 +531,21 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
       // create a temporary board
       Board *tmpBoard = this->clone();
 
-      /*
-      // move the King to this potential position
       tmpBoard->movePiece(position, move);
 
       if (king.getColor() == 'b') {
-        if (inCheck(*(tmpBoard->getBlackKing()),
+        if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
                     tmpBoard->getBlackKingPosition()) == false) {
           tmp.push_back(move);
         }
       } else if (king.getColor() == 'w') {
-        if (inCheck(*(tmpBoard->getWhiteKing()),
+        if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
                     tmpBoard->getWhiteKingPosition()) == false) {
           tmp.push_back(move);
         }
       }
-      */
 
       delete tmpBoard;
-
-      tmp.push_back(move);
     }
   }
 
@@ -849,7 +846,7 @@ void Board::movePiece(std::pair<char, int> oldPosition,
         // Here we should set inStartingPosition to false.
         // We should have a setter for startingPosition in the Piece class.
 
-        generateCompleteMoves();
+        this->generateCompleteMoves();
 
         return;
       }

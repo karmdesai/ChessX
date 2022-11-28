@@ -377,6 +377,8 @@ int main() {
       std::cout << "CLONE: " << std::endl;
       std::cout << newBoard << std::endl;
 
+      delete newBoard;
+
     } else {
         break;
     }
