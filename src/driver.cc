@@ -324,6 +324,13 @@ int main() {
       std::cout << "White's turn: " << std::endl;
     } else {
       std::cout << "Black's turn: " << std::endl;
+      auto move = opponent->calculateNextMove();
+      // delete b->getPieceAtPosition(newPos);
+      Piece *computerChoicePiece = b->getPieceAtPosition(move.first);
+      computerChoicePiece->setPieceAsMoved();
+      b->setPieceAtPosition(move.second, computerChoicePiece);
+      b->setPieceAtPosition(move.first, new NullPiece{'*', '*'});
+      b->setTurn(human->getPlayerColor());
     }
     // read in stuff
     std::string ask;
@@ -343,10 +350,14 @@ int main() {
       b->parsePossibleMoves(*pieceAtPosition, oldPos);
     }
 
+    if (ask == "exit") {
+      break;
+    }
+
     // if the piece is not the right color or move is out of bounds
     if (ask != "move" || oldPosX < 'a' || oldPosX > 'h' || oldPosY < '1' ||
-             oldPosY > '8' || newPosX < 'a' || newPosX > 'h' || newPosY < '1' ||
-             newPosY > '8' || b->getTurn() != pieceAtPosition->getColor()) {
+        oldPosY > '8' || newPosX < 'a' || newPosX > 'h' || newPosY < '1' ||
+        newPosY > '8' || b->getTurn() != pieceAtPosition->getColor()) {
       std::cout << "Invalid command" << std::endl;
       continue;
 
@@ -368,13 +379,13 @@ int main() {
         b->setPieceAtPosition(oldPos, new NullPiece{'*', '*'});
         b->setTurn(opponent->getPlayerColor());
       } else {
-        auto move = opponent->calculateNextMove();
-        // delete b->getPieceAtPosition(newPos);
-        Piece *computerChoicePiece = b->getPieceAtPosition(move.first);
-        computerChoicePiece->setPieceAsMoved();
-        b->setPieceAtPosition(move.second, computerChoicePiece);
-        b->setPieceAtPosition(move.first, new NullPiece{'*', '*'});
-        b->setTurn(human->getPlayerColor());
+        // auto move = opponent->calculateNextMove();
+        // // delete b->getPieceAtPosition(newPos);
+        // Piece *computerChoicePiece = b->getPieceAtPosition(move.first);
+        // computerChoicePiece->setPieceAsMoved();
+        // b->setPieceAtPosition(move.second, computerChoicePiece);
+        // b->setPieceAtPosition(move.first, new NullPiece{'*', '*'});
+        // b->setTurn(human->getPlayerColor());
       }
 
       // print the board
