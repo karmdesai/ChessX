@@ -43,8 +43,10 @@ int main() {
         std::cin >> piece >> x >> y;
         std::pair<char, int> position = std::make_pair(x, y);
 
+        Piece* pieceCurrent = b->getPieceAtPosition(position);
+
         // if there's already a piece, they need to remove it first.
-        if (b->getPieceAtPosition(position)->getName() != '*') {
+        if (pieceCurrent->getName() != '*') {
           std::cout << "There is already a piece at this position." << std::endl;
           std::cout << "Remove the piece first or select a different "
                        "position."
@@ -57,6 +59,8 @@ int main() {
           if (newPiece->getName() == '*') {
             delete newPiece;
           } else {
+            // since the piece is a NullPiece, we must delete before placing a new one.
+            delete b->getPieceAtPosition(position);
             b->setPieceAtPosition(position, newPiece);
           }
 

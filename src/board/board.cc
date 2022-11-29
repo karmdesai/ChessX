@@ -913,10 +913,9 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   if (fromPiece->getName() != '*' &&
       (fromPiece->getColor() != toPiece->getColor())) {
 
-    if (toPiece->getName() != '*') {
-      // remove the piece from the board
-      delete toPiece;
-    }
+    // if the piece is NullPiece or opponent piece...
+    delete toPiece;
+    
     // move the piece
     currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
 
