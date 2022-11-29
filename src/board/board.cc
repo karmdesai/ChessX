@@ -816,9 +816,18 @@ std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
 
           /* If we allow parsePossibleMoves for King:
               - We get a segmentation fault (due to infinite recursion)
+              If we allow parsePossibleMoves for Pawn:
+              - The parser will remove all diagonal moves (since those 
+                squares are empty). But we don't want the King to move
+                to those squares, since the Pawn can capture it.
+              - Note that the King won't be able to move there (since we 
+                implemented the tmpBoard checking functionality), but the 
+                movelist will allow these moves.
           */
           if (this->currentBoard[x][y]->getName() != 'k' &&
-              this->currentBoard[x][y]->getName() != 'K') {
+              this->currentBoard[x][y]->getName() != 'K' &&
+              this->currentBoard[x][y]->getName() != 'p' &&
+              this->currentBoard[x][y]->getName() != 'P') {
             this->parsePossibleMoves(
                 *(this->currentBoard[x][y]),
                 std::make_pair(this->convertNumToAlpha(x), y + 1));
