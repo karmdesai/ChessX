@@ -334,7 +334,8 @@ int main() {
 
       std::cin >> x >> y;
 
-      for (auto move : b->getPieceAtPosition(std::make_pair(x, y))->allPossibleMoves) {
+      for (auto move :
+           b->getPieceAtPosition(std::make_pair(x, y))->allPossibleMoves) {
         std::cout << move.first << move.second << ",";
       }
 
@@ -347,7 +348,7 @@ int main() {
       b->movePiece(std::make_pair('e', 3), std::make_pair('d', 4));
       b->movePiece(std::make_pair('d', 4), std::make_pair('d', 5));
 
-      std:: cout << "ORIGINAL: " << std::endl;
+      std::cout << "ORIGINAL: " << std::endl;
       std::cout << b << std::endl;
 
       Board *newBoard = b->clone();
@@ -357,21 +358,23 @@ int main() {
 
       newBoard->movePiece(std::make_pair('d', 5), std::make_pair('d', 6));
 
-      std:: cout << "ORIGINAL: " << std::endl;
+      std::cout << "ORIGINAL: " << std::endl;
       std::cout << b << std::endl;
 
       std::cout << "CLONE: " << std::endl;
       std::cout << newBoard << std::endl;
 
-      if (newBoard->inCheck(*(newBoard->getWhiteKing()), newBoard->getWhiteKingPosition())) {
+      if (newBoard->inCheck(*(newBoard->getWhiteKing()),
+                            newBoard->getWhiteKingPosition())) {
         std::cout << "The White King is in check!" << std::endl;
-      } else if (newBoard->inCheck(*(newBoard->getBlackKing()), newBoard->getBlackKingPosition())) {
+      } else if (newBoard->inCheck(*(newBoard->getBlackKing()),
+                                   newBoard->getBlackKingPosition())) {
         std::cout << "The Black King is in check!" << std::endl;
       } else {
         b->movePiece(std::make_pair('d', 5), std::make_pair('d', 6));
       }
 
-      std:: cout << "ORIGINAL: " << std::endl;
+      std::cout << "ORIGINAL: " << std::endl;
       std::cout << b << std::endl;
 
       std::cout << "CLONE: " << std::endl;
@@ -380,7 +383,7 @@ int main() {
       delete newBoard;
 
     } else {
-        break;
+      break;
     }
   }
   /* End Game Testing */
