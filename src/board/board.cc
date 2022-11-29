@@ -177,7 +177,6 @@ Board *Board::clone() {
 
   for (int x = 0; x < 8; ++x) {
     for (int y = 0; y < 8; ++y) {
-
       newBoard->currentBoard[x][y] = this->currentBoard[x][y]->clone();
 
       // set BlackKing and WhiteKing fields.
@@ -503,7 +502,7 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
           this->getPieceAtPosition(move)->getColor() != '*') {
         tmp.push_back(move);
       }
-    } // forward moves only have a diff. y coordinate
+    }  // forward moves only have a diff. y coordinate
     else if (move.second != position.second) {
       // if the square is empty then only we can move
       if (this->getPieceAtPosition(move)->getColor() == '*') {
@@ -797,6 +796,7 @@ std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
           /* If we allow parsePossibleMoves for King:
               - We get a segmentation fault (due to infinite recursion)
           */
+
           if (this->currentBoard[x][y]->getName() != 'k' &&
               this->currentBoard[x][y]->getName() != 'K') {
             this->parsePossibleMoves(
@@ -842,7 +842,8 @@ bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
 
 void Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
   /* REMOVING THIS LINE REMOVES THE SEGFAULT, BUT THEN
-    THE PROGRAM DOESN'T GENERATE ANY MOVES PAST THE FIRST ONE. (try with main.in)
+    THE PROGRAM DOESN'T GENERATE ANY MOVES PAST THE FIRST ONE. (try with
+    main.in)
   */
   // generateCompleteMoves();
 
@@ -854,6 +855,10 @@ void Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
       return;
     }
   }
+  // if we get here, the move is illegal
+  std::cout << "Illegal move: " << currentPiece->getName() << " from "
+            << from.first << from.second << " to " << to.first << to.second
+            << std::endl;
 }
 
 void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
@@ -862,7 +867,6 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
 
   if (fromPiece->getName() != '*' &&
       (fromPiece->getColor() != toPiece->getColor())) {
-
     if (toPiece->getName() != '*') {
       // remove the piece from the board
       delete toPiece;
