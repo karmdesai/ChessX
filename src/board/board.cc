@@ -74,7 +74,7 @@ void Board::defaultInitialization() {
         this->currentBoard[i][6] = new Pawn('p', 'b', true);
     }
 
-    generateCompleteMoves();
+    this->generateCompleteMoves();
 }
 
 // Overload the << operator for the Board class
@@ -290,6 +290,16 @@ void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
     }
 }
 
+bool Board::shouldBreak(Piece &p, Piece *tmpPiece) {
+  if (p.getColor() == 'w' && tmpPiece->getName() == 'k') {
+    return false;
+  } else if (p.getColor() == 'b' && tmpPiece->getName() == 'K') {
+    return false;
+  }
+
+  return true;
+}
+
 void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
     std::vector<std::pair<char, int>> tmp;
     int x = position.first;
@@ -308,7 +318,10 @@ void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != rook.getColor()) {
             tmp.push_back(newMove);
-            break;
+
+            if (shouldBreak(rook, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == rook.getColor()) {
             break;
         }
@@ -327,7 +340,10 @@ void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != rook.getColor()) {
             tmp.push_back(newMove);
-            break;
+            
+            if (shouldBreak(rook, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == rook.getColor()) {
             break;
         }
@@ -346,7 +362,10 @@ void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != rook.getColor()) {
             tmp.push_back(newMove);
-            break;
+            
+            if (shouldBreak(rook, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == rook.getColor()) {
             break;
         }
@@ -364,8 +383,9 @@ void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
         if (tmpPiece->getName() == '*') {
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != rook.getColor()) {
-            tmp.push_back(newMove);
-            break;
+            if (shouldBreak(rook, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == rook.getColor()) {
             break;
         }
@@ -397,7 +417,9 @@ void Board::parsePossibleMovesBishop(Piece &bishop,
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != bishop.getColor()) {
             tmp.push_back(newMove);
-            break;
+            if (shouldBreak(bishop, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == bishop.getColor()) {
             break;
         }
@@ -418,7 +440,9 @@ void Board::parsePossibleMovesBishop(Piece &bishop,
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != bishop.getColor()) {
             tmp.push_back(newMove);
-            break;
+            if (shouldBreak(bishop, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == bishop.getColor()) {
             break;
         }
@@ -439,7 +463,9 @@ void Board::parsePossibleMovesBishop(Piece &bishop,
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != bishop.getColor()) {
             tmp.push_back(newMove);
-            break;
+            if (shouldBreak(bishop, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == bishop.getColor()) {
             break;
         }
@@ -460,7 +486,9 @@ void Board::parsePossibleMovesBishop(Piece &bishop,
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != bishop.getColor()) {
             tmp.push_back(newMove);
-            break;
+            if (shouldBreak(bishop, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == bishop.getColor()) {
             break;
         }
@@ -518,37 +546,34 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
 
 void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
     std::vector<std::pair<char, int>> tmp;
+    std::vector<std::pair<char, int>> threatMap = this->generateThreatMap(&king);
+
+    std::cout << "King Name: " << king.getName() << std::endl;
+
+    std::cout << "Threat Map for King: " << std::endl;
+    for (auto threat : threatMap) {
+      std::cout << threat.first << threat.second << ",";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Possible King Moves: " << std::endl;
+    for (auto threat : king.allPossibleMoves) {
+      std::cout << threat.first << threat.second << ",";
+    }
+    std::cout << std::endl;
+    std::cout << std::endl;
 
     for (auto move : king.allPossibleMoves) {
         // move the King to this potential position
-
-        // if the piece at 'move' is not the same color (or is empty)...
-        if (this->getPieceAtPosition(move)->getColor() != king.getColor()) {
-            /* we take the following steps to determine whether or not the King
-                would be in check by taking a move */
-
-            // create a temporary board
-            Board *tmpBoard = this->clone();
-
-            tmpBoard->movePiece(position, move);
-
-            if (king.getColor() == 'b') {
-                if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
-                                      tmpBoard->getBlackKingPosition()) ==
-                    false) {
-                    tmp.push_back(move);
-                }
-            } else if (king.getColor() == 'w') {
-                if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
-                                      tmpBoard->getWhiteKingPosition()) ==
-                    false) {
-                    tmp.push_back(move);
-                }
-            }
-
-            delete tmpBoard;
+        for (auto threat : threatMap) {
+          if (move == threat) {
+            std::cout << "NOT ADDING THIS MOVE: " << move.first << move.second << std::endl;
+            continue;
+          }
         }
-    }
+
+        tmp.push_back(move);
+      }
 
     king.allPossibleMoves = tmp;
 }
@@ -582,7 +607,9 @@ void Board::parsePossibleMovesQueen(Piece &queen,
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != queen.getColor()) {
             tmp.push_back(newMove);
-            break;
+            if (shouldBreak(queen, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == queen.getColor()) {
             break;
         }
@@ -603,7 +630,9 @@ void Board::parsePossibleMovesQueen(Piece &queen,
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != queen.getColor()) {
             tmp.push_back(newMove);
-            break;
+            if (shouldBreak(queen, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == queen.getColor()) {
             break;
         }
@@ -624,7 +653,9 @@ void Board::parsePossibleMovesQueen(Piece &queen,
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != queen.getColor()) {
             tmp.push_back(newMove);
-            break;
+            if (shouldBreak(queen, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == queen.getColor()) {
             break;
         }
@@ -645,7 +676,9 @@ void Board::parsePossibleMovesQueen(Piece &queen,
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != queen.getColor()) {
             tmp.push_back(newMove);
-            break;
+            if (shouldBreak(queen, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == queen.getColor()) {
             break;
         }
@@ -666,7 +699,9 @@ void Board::parsePossibleMovesQueen(Piece &queen,
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != queen.getColor()) {
             tmp.push_back(newMove);
-            break;
+            if (shouldBreak(queen, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == queen.getColor()) {
             break;
         }
@@ -685,7 +720,9 @@ void Board::parsePossibleMovesQueen(Piece &queen,
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != queen.getColor()) {
             tmp.push_back(newMove);
-            break;
+            if (shouldBreak(queen, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == queen.getColor()) {
             break;
         }
@@ -704,7 +741,9 @@ void Board::parsePossibleMovesQueen(Piece &queen,
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != queen.getColor()) {
             tmp.push_back(newMove);
-            break;
+            if (shouldBreak(queen, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == queen.getColor()) {
             break;
         }
@@ -723,7 +762,9 @@ void Board::parsePossibleMovesQueen(Piece &queen,
             tmp.push_back(newMove);
         } else if (tmpPiece->getColor() != queen.getColor()) {
             tmp.push_back(newMove);
-            break;
+            if (shouldBreak(queen, tmpPiece)) {
+              break;
+            }
         } else if (tmpPiece->getColor() == queen.getColor()) {
             break;
         }
@@ -782,7 +823,11 @@ std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
             if (this->currentBoard[x][y]->getName() != '*') {
                 if (this->currentBoard[x][y]->getColor() != p->getColor()) {
                     this->currentBoard[x][y]->getAllPossibleMoves(std::make_pair(this->convertNumToAlpha(x), y + 1));
-                    this->parsePossibleMoves(*(this->currentBoard[x][y]), std::make_pair(this->convertNumToAlpha(x), y + 1));
+
+                    if (this->currentBoard[x][y]->getName() != 'k' &&
+                        this->currentBoard[x][y]->getName() != 'K') {
+                        this->parsePossibleMoves(*(this->currentBoard[x][y]), std::make_pair(this->convertNumToAlpha(x), y + 1));
+                    }
 
                     for (auto &move : this->currentBoard[x][y]->allPossibleMoves) {
                         tmp.push_back(move);

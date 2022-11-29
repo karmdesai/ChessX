@@ -308,7 +308,7 @@ int main() {
 
   while (std::cin >> command) {
     b->generateCompleteMoves();
-    
+
     if (command == "move") {
       char oldX;
       int oldY;
