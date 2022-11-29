@@ -35,6 +35,15 @@ Board::~Board() {
 
 void Board::defaultInitialization() {
   // Initialize white pieces
+  delete this->currentBoard[0][0];
+  delete this->currentBoard[1][0];
+  delete this->currentBoard[2][0];
+  delete this->currentBoard[3][0];
+  delete this->currentBoard[4][0];
+  delete this->currentBoard[5][0];
+  delete this->currentBoard[6][0];
+  delete this->currentBoard[7][0];
+
   this->currentBoard[0][0] = new Rook('R', 'w', true);
   this->currentBoard[1][0] = new Knight('N', 'w');
   this->currentBoard[2][0] = new Bishop('B', 'w');
@@ -51,10 +60,20 @@ void Board::defaultInitialization() {
   this->currentBoard[7][0] = new Rook('R', 'w', true);
 
   for (int i = 0; i < 8; i++) {
+    delete this->currentBoard[i][1];
     this->currentBoard[i][1] = new Pawn('P', 'w', true);
   }
 
   // Initialize black pieces
+  delete this->currentBoard[0][7];
+  delete this->currentBoard[1][7];
+  delete this->currentBoard[2][7];
+  delete this->currentBoard[3][7];
+  delete this->currentBoard[4][7];
+  delete this->currentBoard[5][7];
+  delete this->currentBoard[6][7];
+  delete this->currentBoard[7][7];
+
   this->currentBoard[0][7] = new Rook('r', 'b', true);
   this->currentBoard[1][7] = new Knight('n', 'b');
   this->currentBoard[2][7] = new Bishop('b', 'b');
@@ -71,6 +90,7 @@ void Board::defaultInitialization() {
   this->currentBoard[7][7] = new Rook('r', 'b', true);
 
   for (int i = 0; i < 8; i++) {
+    delete this->currentBoard[i][6];
     this->currentBoard[i][6] = new Pawn('p', 'b', true);
   }
 
@@ -177,7 +197,7 @@ Board *Board::clone() {
 
   for (int x = 0; x < 8; ++x) {
     for (int y = 0; y < 8; ++y) {
-
+      delete newBoard->currentBoard[x][y];
       newBoard->currentBoard[x][y] = this->currentBoard[x][y]->clone();
 
       // set BlackKing and WhiteKing fields.
@@ -850,7 +870,28 @@ void Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
 
   for (auto move : currentPiece->allPossibleMoves) {
     if (move == to) {
-      this->movePieceBase(from, to);
+      Board *tmpBoard = this->clone();
+
+      tmpBoard->movePieceBase(from, to);
+
+      if (currentPiece->getColor() == 'b') {
+          if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
+                                tmpBoard->getBlackKingPosition()) == false) {
+              this->movePieceBase(from, to);
+          } else {
+            std::cout << "Illegal move! That would put the Black King in check." << std::endl;
+          }
+      } else if (currentPiece->getColor() == 'w') {
+          if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
+                                tmpBoard->getWhiteKingPosition()) == false) {
+              this->movePieceBase(from, to);
+          } else {
+            std::cout << "Illegal move! That would put the White King in check." << std::endl;
+          }
+      }
+
+      delete tmpBoard;
+
       return;
     }
   }
