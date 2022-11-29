@@ -557,15 +557,30 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
       // move the King to this potential position
       for (auto threat : threatMap) {
         if (move == threat) {
-          /*
-          std::cout << "NOT ADDING THIS MOVE: " << move.first << move.second
-                    << std::endl; */
           shouldAdd = false;
         }
       }
 
       if (shouldAdd == true) {
-        tmp.push_back(move);
+        /* We should check if the move causes check to the King.
+          If so, its invalid! */
+        Board *tmpBoard = this->clone();
+
+        tmpBoard->movePiece(position, move);
+
+        if (king.getColor() == 'b') {
+          if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
+                                tmpBoard->getBlackKingPosition()) == false) {
+            tmp.push_back(move);
+          }
+        } else if (king.getColor() == 'w') {
+          if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
+                                tmpBoard->getWhiteKingPosition()) == false) {
+            tmp.push_back(move);
+          }
+        }
+
+        delete tmpBoard;
       }
     }
   }
@@ -822,15 +837,9 @@ std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
 
           /* If we allow parsePossibleMoves for King:
               - We get a segmentation fault (due to infinite recursion)
-              If we allow parsePossibleMoves for Pawn:
-              - The parser will remove all diagonal moves (since those 
-                squares are empty). But we don't want the King to move
-                to those squares, since the Pawn can capture it.
           */
           if (this->currentBoard[x][y]->getName() != 'k' &&
-              this->currentBoard[x][y]->getName() != 'K' &&
-              this->currentBoard[x][y]->getName() != 'p' &&
-              this->currentBoard[x][y]->getName() != 'P') {
+              this->currentBoard[x][y]->getName() != 'K') {
             this->parsePossibleMoves(
                 *(this->currentBoard[x][y]),
                 std::make_pair(this->convertNumToAlpha(x), y + 1));
