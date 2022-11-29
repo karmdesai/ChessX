@@ -1,0 +1,13 @@
+done
+move e2 e3
+move e1 e2
+move e2 f3
+move f3 f4
+move f4 e5
+movelist e5
+move e5 e6
+movelist e6
+move a7 a5
+move a5 a3
+move a8 a5
+movelist e5
