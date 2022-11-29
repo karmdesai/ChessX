@@ -774,37 +774,37 @@ void Board::generateCompleteMoves() {
     }
 }
 
+std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
+    std::vector<std::pair<char, int>> tmp;
+
+    for (int x = 0; x < 8; x++) {
+        for (int y = 0; y < 8; y++) {
+            if (this->currentBoard[x][y]->getName() != '*') {
+                if (this->currentBoard[x][y]->getColor() != p->getColor()) {
+                    this->currentBoard[x][y]->getAllPossibleMoves(std::make_pair(this->convertNumToAlpha(x), y + 1));
+                    this->parsePossibleMoves(*(this->currentBoard[x][y]), std::make_pair(this->convertNumToAlpha(x), y + 1));
+
+                    for (auto &move : this->currentBoard[x][y]->allPossibleMoves) {
+                        tmp.push_back(move);
+                    }
+                }
+            }
+        }
+    }
+
+    return tmp;
+}
+
 bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
-    // this->generateCompleteMoves();
+    std::vector<std::pair<char, int>> allLegalMoves = this->generateThreatMap(&king);
 
     if ((king.getName() != 'k') && (king.getName() != 'K')) {
         return false;
     } else {
-        /*
-        // get list of moves for King last
-        if (king.getName() == 'k') {
-          this->blackKing->getAllPossibleMoves(this->getBlackKingPosition());
-          this->parsePossibleMoves(*(this->blackKing),
-        this->getBlackKingPosition()); } else {
-          this->whiteKing->getAllPossibleMoves(this->getWhiteKingPosition());
-          this->parsePossibleMoves(*(this->whiteKing),
-        this->getWhiteKingPosition());
-        }
-        */
-
         // O(n^3) efficiency 💀 let's think of some optimization later.
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
-                if (this->currentBoard[x][y]->getColor() != king.getColor() &&
-                    this->currentBoard[x][y]->getColor() != '*' &&
-                    this->currentBoard[x][y] != &king) {
-                    for (auto move :
-                         this->currentBoard[x][y]->allPossibleMoves) {
-                        if (move == currentPosition) {
-                            return true;
-                        }
-                    }
-                }
+        for (auto move : allLegalMoves) {
+            if (move == currentPosition) {
+                return true;
             }
         }
     }
@@ -816,7 +816,7 @@ void Board::movePiece(std::pair<char, int> from,
                              std::pair<char, int> to) {
     /* REMOVING THIS LINE REMOVES THE SEGFAULT, BUT THEN
       THE PROGRAM DOESN'T GENERATE ANY MOVES PAST THE FIRST ONE. (try with main.in) */
-    generateCompleteMoves();
+    // generateCompleteMoves();
     
     Piece *currentPiece = this->getPieceAtPosition(from);
 

@@ -42,6 +42,8 @@ class Board {
 
     Piece *createPiece(char);
 
+    std::vector<std::pair<char, int>> generateThreatMap(Piece *p);
+
     // Getters
     Piece *getPieceAtPosition(std::pair<char, int> position);
 

@@ -307,7 +307,8 @@ int main() {
   std::pair<char, int> position;
 
   while (std::cin >> command) {
-
+    b->generateCompleteMoves();
+    
     if (command == "move") {
       char oldX;
       int oldY;
