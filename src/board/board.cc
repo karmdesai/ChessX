@@ -591,7 +591,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != queen.getColor()) {
       tmp.push_back(newMove);
-      
+
       break;
     } else if (tmpPiece->getColor() == queen.getColor()) {
       break;
