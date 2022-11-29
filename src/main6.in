@@ -1,0 +1,12 @@
+setup
++ K e1
++ k e8
++ r d2
++ b a5
++ n d6
+done
+movelist e1
+move a5 b6
+movelist e1
+move d6 c4
+movelist e1
