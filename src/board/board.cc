@@ -290,16 +290,6 @@ void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
   }
 }
 
-bool Board::shouldBreak(Piece &p, Piece *tmpPiece) {
-  if (p.getColor() == 'w' && tmpPiece->getName() == 'k') {
-    return false;
-  } else if (p.getColor() == 'b' && tmpPiece->getName() == 'K') {
-    return false;
-  }
-
-  return true;
-}
-
 void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
   std::vector<std::pair<char, int>> tmp;
   int x = position.first;
@@ -319,9 +309,7 @@ void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
     } else if (tmpPiece->getColor() != rook.getColor()) {
       tmp.push_back(newMove);
 
-      if (shouldBreak(rook, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == rook.getColor()) {
       break;
     }
@@ -341,9 +329,7 @@ void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
     } else if (tmpPiece->getColor() != rook.getColor()) {
       tmp.push_back(newMove);
 
-      if (shouldBreak(rook, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == rook.getColor()) {
       break;
     }
@@ -363,9 +349,7 @@ void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
     } else if (tmpPiece->getColor() != rook.getColor()) {
       tmp.push_back(newMove);
 
-      if (shouldBreak(rook, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == rook.getColor()) {
       break;
     }
@@ -383,9 +367,7 @@ void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
     if (tmpPiece->getName() == '*') {
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != rook.getColor()) {
-      if (shouldBreak(rook, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == rook.getColor()) {
       break;
     }
@@ -417,9 +399,7 @@ void Board::parsePossibleMovesBishop(Piece &bishop,
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != bishop.getColor()) {
       tmp.push_back(newMove);
-      if (shouldBreak(bishop, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == bishop.getColor()) {
       break;
     }
@@ -440,9 +420,7 @@ void Board::parsePossibleMovesBishop(Piece &bishop,
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != bishop.getColor()) {
       tmp.push_back(newMove);
-      if (shouldBreak(bishop, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == bishop.getColor()) {
       break;
     }
@@ -463,9 +441,7 @@ void Board::parsePossibleMovesBishop(Piece &bishop,
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != bishop.getColor()) {
       tmp.push_back(newMove);
-      if (shouldBreak(bishop, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == bishop.getColor()) {
       break;
     }
@@ -486,9 +462,7 @@ void Board::parsePossibleMovesBishop(Piece &bishop,
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != bishop.getColor()) {
       tmp.push_back(newMove);
-      if (shouldBreak(bishop, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == bishop.getColor()) {
       break;
     }
@@ -617,9 +591,8 @@ void Board::parsePossibleMovesQueen(Piece &queen,
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != queen.getColor()) {
       tmp.push_back(newMove);
-      if (shouldBreak(queen, tmpPiece)) {
-        break;
-      }
+      
+      break;
     } else if (tmpPiece->getColor() == queen.getColor()) {
       break;
     }
@@ -640,9 +613,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != queen.getColor()) {
       tmp.push_back(newMove);
-      if (shouldBreak(queen, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == queen.getColor()) {
       break;
     }
@@ -663,9 +634,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != queen.getColor()) {
       tmp.push_back(newMove);
-      if (shouldBreak(queen, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == queen.getColor()) {
       break;
     }
@@ -686,9 +655,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != queen.getColor()) {
       tmp.push_back(newMove);
-      if (shouldBreak(queen, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == queen.getColor()) {
       break;
     }
@@ -709,9 +676,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != queen.getColor()) {
       tmp.push_back(newMove);
-      if (shouldBreak(queen, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == queen.getColor()) {
       break;
     }
@@ -730,9 +695,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != queen.getColor()) {
       tmp.push_back(newMove);
-      if (shouldBreak(queen, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == queen.getColor()) {
       break;
     }
@@ -751,9 +714,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != queen.getColor()) {
       tmp.push_back(newMove);
-      if (shouldBreak(queen, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == queen.getColor()) {
       break;
     }
@@ -772,9 +733,7 @@ void Board::parsePossibleMovesQueen(Piece &queen,
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != queen.getColor()) {
       tmp.push_back(newMove);
-      if (shouldBreak(queen, tmpPiece)) {
-        break;
-      }
+      break;
     } else if (tmpPiece->getColor() == queen.getColor()) {
       break;
     }

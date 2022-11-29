@@ -43,7 +43,6 @@ class Board {
     Piece *createPiece(char);
 
     std::vector<std::pair<char, int>> generateThreatMap(Piece *p);
-    bool shouldBreak(Piece &p, Piece *tmpPiece);
 
     // Getters
     Piece *getPieceAtPosition(std::pair<char, int> position);
