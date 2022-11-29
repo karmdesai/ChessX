@@ -560,7 +560,7 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
           If so, its invalid! */
         Board *tmpBoard = this->clone();
 
-        tmpBoard->movePiece(position, move);
+        tmpBoard->movePieceBase(position, move);
 
         if (king.getColor() == 'b') {
           if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
