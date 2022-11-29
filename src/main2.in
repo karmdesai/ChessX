@@ -8,3 +8,6 @@ move a7 a5
 move a5 a3
 move a8 a4
 movelist f4
+move f4 e5
+movelist e5
+
