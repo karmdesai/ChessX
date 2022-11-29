@@ -1,0 +1,9 @@
+setup
++ k e1
++ K e2
+done
+- e2
++ K e3
+done
+move e1 e2
+move e3 e2
