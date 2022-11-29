@@ -540,7 +540,7 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
           If so, its invalid! */
         Board *tmpBoard = this->clone();
 
-        tmpBoard->movePiece(position, move);
+        tmpBoard->movePieceBase(position, move);
 
         if (king.getColor() == 'b') {
           if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
@@ -798,7 +798,9 @@ std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
               - We get a segmentation fault (due to infinite recursion)
           */
           if (this->currentBoard[x][y]->getName() != 'k' &&
-              this->currentBoard[x][y]->getName() != 'K') {
+              this->currentBoard[x][y]->getName() != 'K' &&
+              this->currentBoard[x][y]->getName() != 'p' &&
+              this->currentBoard[x][y]->getName() != 'P') {
             this->parsePossibleMoves(
                 *(this->currentBoard[x][y]),
                 std::make_pair(this->convertNumToAlpha(x), y + 1));
@@ -826,6 +828,10 @@ bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
   std::vector<std::pair<char, int>> allLegalMoves =
       this->generateThreatMap(&king);
 
+  for (auto threat : allLegalMoves) {
+    //std::cout << "NEW MOVE: " << threat.first << threat.second << std::endl;
+  }
+
   if ((king.getName() != 'k') && (king.getName() != 'K')) {
     return false;
   } else {
@@ -850,7 +856,28 @@ void Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
 
   for (auto move : currentPiece->allPossibleMoves) {
     if (move == to) {
-      this->movePieceBase(from, to);
+      Board *tmpBoard = this->clone();
+
+      tmpBoard->movePieceBase(from, to);
+
+      if (currentPiece->getColor() == 'b') {
+          if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
+                                tmpBoard->getBlackKingPosition()) == false) {
+              this->movePieceBase(from, to);
+          } else {
+            std::cout << "Illegal move! That would put the Black King in check." << std::endl;
+          }
+      } else if (currentPiece->getColor() == 'w') {
+          if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
+                                tmpBoard->getWhiteKingPosition()) == false) {
+              this->movePieceBase(from, to);
+          } else {
+            std::cout << "Illegal move! That would put the White King in check." << std::endl;
+          }
+      }
+
+      delete tmpBoard;
+
       return;
     }
   }
