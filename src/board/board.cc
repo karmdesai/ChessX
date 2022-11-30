@@ -514,6 +514,10 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
   std::vector<std::pair<char, int>> tmp;
 
   for (auto move : pawn.allPossibleMoves) {
+
+    // if piece has moved before, it can only move one space
+    
+
     // diagonal moves have a diff. x coordinate and a diff. y coordinate
     if ((move.first != position.first) && (move.second != position.second)) {
       // if the square is not empty and it is the opponents piece, its a
@@ -913,8 +917,8 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           this->movePieceBase(from, to);
           return true;
         } else {
-          std::cout << "Illegal move! That would put the Black King in check."
-                    << std::endl;
+          // std::cout << "Illegal move! That would put the Black King in check."
+          //           << std::endl;
           return false;
         }
       } else if (currentPiece->getColor() == 'w') {
@@ -923,9 +927,8 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           this->movePieceBase(from, to);
           return true;
         } else {
-          std::cout << "Illegal move! That would put the White King in check."
-                    << std::endl;
-          return false;
+          // std::cout << "Illegal move! That would put the White King in check." << std::endl;
+          // return false;
         }
       }
     }

@@ -182,8 +182,8 @@ int main(int argc, char *argv[]) {
   std::cout << b << std::endl;
 
   /* Start Game Testing */
-  b->setWhitePlayer(new Human('w', b));      // human is white
-  b->setBlackPlayer(new Computer2('b', b));  // computer is black
+  b->setWhitePlayer(new Computer1('w', b));  // human is white
+  b->setBlackPlayer(new Computer1('b', b));  // computer is black
 
   std::string command;
   std::pair<char, int> position;
@@ -215,8 +215,8 @@ int main(int argc, char *argv[]) {
 
         // if the move was invalid, retry the move.
         if (!movedSucessfully) {
-          std::cout << "Something very bad happened. The computer "
-                       "made an invalid move."
+          std::cout << "Something very bad happened. The computer made an "
+                       "invalid move."
                     << std::endl;
           break;
         }
@@ -231,6 +231,16 @@ int main(int argc, char *argv[]) {
         }
       } else {
         std::cin >> oldX >> oldY >> newX >> newY;
+
+        /* if any of the values read are out of bounds, retry the move.
+        usually we would want this to happen in the movePiece function
+        but it fucking seg faults for some reason, so we do it here. */
+        if (oldX < 'a' || oldX > 'h' || oldY < 1 || oldY > 8 || newX < 'a' ||
+            newX > 'h' || newY < 1 || newY > 8) {
+          std::cout << "Invalid move. Please try again." << std::endl;
+          continue;
+        }
+
         std::pair<char, int> oldPosition = std::make_pair(oldX, oldY);
         std::pair<char, int> newPosition = std::make_pair(newX, newY);
 
