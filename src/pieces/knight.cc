@@ -71,5 +71,5 @@ void Knight::setPieceAsMoved() {
 }
 
 bool Knight::getHasMoved() {
-  return;
+  return true;
 }

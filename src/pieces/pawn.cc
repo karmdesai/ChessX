@@ -90,6 +90,6 @@ void Pawn::setPieceAsMoved() {
 }
 
 bool Pawn::getHasMoved() {
-  return;
+  return inStartingPosition;
 }
 

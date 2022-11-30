@@ -101,5 +101,5 @@ void Queen::setPieceAsMoved() {
 }
 
 bool Queen::getHasMoved() {
-  return;
+  return true;
 }

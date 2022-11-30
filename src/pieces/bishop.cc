@@ -61,5 +61,5 @@ void Bishop::setPieceAsMoved() {
 }
 
 bool Bishop::getHasMoved() {
-  return;
+  return true;
 }

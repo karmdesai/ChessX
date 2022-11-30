@@ -11,5 +11,5 @@ void NullPiece::setPieceAsMoved() {
 }
 
 bool NullPiece::getHasMoved() {
-  return;
+  return true;
 }
