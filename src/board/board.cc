@@ -925,6 +925,8 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
       this->setWhiteKingPosition(to);
     }
 
+    this->getPieceAtPosition(to)->setPieceAsMoved();
+
     // set old position to a new null piece
     currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
   }
