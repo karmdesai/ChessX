@@ -79,14 +79,24 @@ Computer1::calculateNextMove() {
 
     // loop through all the moves
     for (auto move : allMoves) {
+      std::cout << "Move being checked: " << move.first.first
+                << move.first.second << " to " << move.second.first
+                << move.second.second << std::endl;
       // make the move on a copy of the board
       Board *boardCopy = board->clone();
-      boardCopy->movePiece(move.first, move.second);
-
-      // if the king is not in check, add the move to the list
-      if (!boardCopy->inCheck(*king, kingPos)) {
+      bool success = boardCopy->movePiece(move.first, move.second);
+      if (success) {
         movesThatGetKingOutOfCheck.push_back(move);
+      } else {
+        std::cout << "Move failed" << std::endl;
       }
+      // // if the king is not in check, add the move to the list
+      // if (!boardCopy->inCheck(*king, kingPos)) {
+      //   std::cout << "got here for move: " << move.first.first
+      //             << move.first.second << " to " << move.second.first
+      //             << move.second.second << std::endl;
+      //   movesThatGetKingOutOfCheck.push_back(move);
+      // }
 
       // delete the copy of the board
       delete boardCopy;
@@ -96,13 +106,49 @@ Computer1::calculateNextMove() {
     if (movesThatGetKingOutOfCheck.size() > 0) {
       std::cout << "number of possible moves: "
                 << movesThatGetKingOutOfCheck.size() << std::endl;
+      std::cout << "-----------------" << std::endl;
+      for (auto move : movesThatGetKingOutOfCheck) {
+        std::cout << move.first.first << move.first.second << " -> "
+                  << move.second.first << move.second.second << std::endl;
+      }
+      std::cout << "-----------------" << std::endl;
       int randomIndex = randomNumber(0, movesThatGetKingOutOfCheck.size() - 1);
       return movesThatGetKingOutOfCheck[randomIndex];
     }
   }
 
+  // if the king is not in check, return a move that does not put its king in
+  // check
+  std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
+      movesThatDoNotPutKingInCheck;
+
+  // loop through all the moves
+  for (auto move : allMoves) {
+    // make the move on a copy of the board
+    Board *boardCopy = board->clone();
+    boardCopy->movePiece(move.first, move.second);
+
+    // if the king is not in check, add the move to the list
+    if (!boardCopy->inCheck(*king, kingPos)) {
+      movesThatDoNotPutKingInCheck.push_back(move);
+    }
+
+    // delete the copy of the board
+    delete boardCopy;
+  }
+
+  std::cout << "-----------------" << std::endl;
+  for (auto move : allMoves) {
+    std::cout << move.first.first << move.first.second << " -> "
+              << move.second.first << move.second.second << std::endl;
+  }
+  std::cout << "-----------------" << std::endl;
+
   // if the king is not in check, we can make any move
   int randomIndex = randomNumber(0, allMoves.size() - 1);
   auto randomMove = allMoves.at(randomIndex);
+  std::cout << "Computer plays: " << randomMove.first.first
+            << randomMove.first.second << " -> " << randomMove.second.first
+            << randomMove.second.second << std::endl;
   return randomMove;
 }
