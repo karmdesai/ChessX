@@ -906,9 +906,14 @@ std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
                 this->currentBoard[x][y]->getName() == 'P') {
               // ignore forward moves in pawns (they're not threats)
               if (move.first != convertNumToAlpha(x)) {
+                // std::cout << char(x + 'a') << y + 1 << " -> " << move.first
+                //           << move.second << std::endl;
                 tmp.push_back(move);
               }
-            } else {
+            } else if (this->currentBoard[x][y]->getName() != 'P' ||
+                       this->currentBoard[x][y]->getName() != 'p') {
+              // std::cout << char(x + 'a') << y + 1 << " -> " << move.first
+              //           << move.second << ", ";
               tmp.push_back(move);
             }
           }
