@@ -23,7 +23,7 @@ Board::Board() {
     }
   }
 
-  this->whosTurn = 'w';
+  this->whosColourTurn = 'w';
 }
 
 // Destructor
@@ -211,7 +211,7 @@ Board *Board::clone() {
     }
   }
 
-  newBoard->whosTurn = this->whosTurn;
+  newBoard->whosColourTurn = this->whosColourTurn;
   newBoard->whiteKingPosition = this->whiteKingPosition;
   newBoard->blackKingPosition = this->blackKingPosition;
 
@@ -266,9 +266,9 @@ void Board::setPieceAtPosition(std::pair<char, int> position, Piece *p) {
   this->currentBoard[x][y] = p;
 }
 
-void Board::setTurn(char player) {
+void Board::setColourTurn(char player) {
   if (player == 'w' || player == 'b') {
-    this->whosTurn = player;
+    this->whosColourTurn = player;
   }
 }
 
@@ -285,7 +285,7 @@ void Board::setBlackKingPosition(std::pair<char, int> position) {
 }
 /* End Setters */
 
-char Board::getTurn() { return this->whosTurn; }
+char Board::getTurn() { return this->whosColourTurn; }
 
 void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
   // pawn
@@ -937,7 +937,7 @@ bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
   return false;
 }
 
-void Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
+bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
   /* REMOVING THIS LINE REMOVES THE SEGFAULT, BUT THEN
     THE PROGRAM DOESN'T GENERATE ANY MOVES PAST THE FIRST ONE. (try with
     main.in)
@@ -957,17 +957,21 @@ void Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
         if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
                               tmpBoard->getBlackKingPosition()) == false) {
           this->movePieceBase(from, to);
+          return true;
         } else {
           std::cout << "Illegal move! That would put the Black King in check."
                     << std::endl;
+          return false;
         }
       } else if (currentPiece->getColor() == 'w') {
         if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
                               tmpBoard->getWhiteKingPosition()) == false) {
           this->movePieceBase(from, to);
+          return true;
         } else {
           std::cout << "Illegal move! That would put the White King in check."
                     << std::endl;
+          return false;
         }
       }
     }
@@ -1061,6 +1065,24 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
   }
 }
+
+void Board::setPlayerTurn(AbstractPlayer *player) {
+  this->whosPlayerTurn = player;
+}
+
+void Board::setWhitePlayer(AbstractPlayer *player) {
+  this->whitePlayer = player;
+}
+
+void Board::setBlackPlayer(AbstractPlayer *player) {
+  this->blackPlayer = player;
+}
+
+AbstractPlayer *Board::getWhitePlayer() { return this->whitePlayer; }
+
+AbstractPlayer *Board::getBlackPlayer() { return this->blackPlayer; }
+
+AbstractPlayer *Board::getWhosPlayerTurn() { return this->whosPlayerTurn; }
 
 /*
 void Board::movePiece(std::pair<char, int> oldPosition,
