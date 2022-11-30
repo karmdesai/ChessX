@@ -516,9 +516,7 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
   std::vector<std::pair<char, int>> tmp;
 
   for (auto move : pawn.allPossibleMoves) {
-
     // if piece has moved before, it can only move one space
-    
 
     // diagonal moves have a diff. x coordinate and a diff. y coordinate
     if ((move.first != position.first) && (move.second != position.second)) {
@@ -909,9 +907,14 @@ std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
                 this->currentBoard[x][y]->getName() == 'P') {
               // ignore forward moves in pawns (they're not threats)
               if (move.first != convertNumToAlpha(x)) {
+                // std::cout << char(x + 'a') << y + 1 << " -> " << move.first
+                //           << move.second << std::endl;
                 tmp.push_back(move);
               }
-            } else {
+            } else if (this->currentBoard[x][y]->getName() != 'P' ||
+                       this->currentBoard[x][y]->getName() != 'p') {
+              // std::cout << char(x + 'a') << y + 1 << " -> " << move.first
+              //           << move.second << ", ";
               tmp.push_back(move);
             }
           }
@@ -963,7 +966,8 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           this->movePieceBase(from, to);
           return true;
         } else {
-          // std::cout << "Illegal move! That would put the Black King in check."
+          // std::cout << "Illegal move! That would put the Black King in
+          // check."
           //           << std::endl;
           return false;
         }
@@ -973,8 +977,8 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           this->movePieceBase(from, to);
           return true;
         } else {
-          // std::cout << "Illegal move! That would put the White King in check." << std::endl;
-          // return false;
+          // std::cout << "Illegal move! That would put the White King in
+          // check." << std::endl; return false;
         }
       }
     }
