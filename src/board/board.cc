@@ -524,14 +524,32 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
         tmp.push_back(move);
       }
     }  // forward moves only have a diff. y coordinate
-    else if (move.second != position.second) {
-      // if the square is empty then only we can move
-      if (this->getPieceAtPosition(move)->getColor() == '*') {
-        tmp.push_back(move);
+    else if (move.second != position.second && move.first == position.first) {
+      // if the move is two squares forward, we need to check if the square
+      // in between is empty
+      if (abs(move.second - position.second) == 2) {
+        // get the move in between
+        std::pair<char, int> inBetweenMove;
+
+        // if the pawn is white, the move is up
+        if (pawn.getColor() == 'w') {
+          inBetweenMove = std::make_pair(move.first, move.second - 1);
+        } else {
+          inBetweenMove = std::make_pair(move.first, move.second + 1);
+        }
+
+        // if the square in between is empty, its a valid move
+        if (this->getPieceAtPosition(inBetweenMove)->getName() == '*') {
+          tmp.push_back(move);
+        }
+      } else if (abs(move.second - position.second) == 1) {
+        // if the square is empty, its a valid move
+        if (this->getPieceAtPosition(move)->getName() == '*') {
+          tmp.push_back(move);
+        }
       }
     }
   }
-
   /* this is not ideal, we should have Piece.allPossibleMoves is a pointer to
     the vector, and tmp is a pointer to a vector. Then we can just swap the
     memory of the two vectors for optimal performance. */
@@ -878,6 +896,7 @@ void Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
   // generateCompleteMoves();
 
   Piece *currentPiece = this->getPieceAtPosition(from);
+  this->parsePossibleMoves(*currentPiece, from);
 
   for (auto move : currentPiece->allPossibleMoves) {
     if (move == to) {
