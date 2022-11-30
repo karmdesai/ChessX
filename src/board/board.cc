@@ -539,7 +539,8 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
         }
 
         // if the square in between is empty, its a valid move
-        if (this->getPieceAtPosition(inBetweenMove)->getName() == '*') {
+        if (this->getPieceAtPosition(inBetweenMove)->getName() == '*' &&
+            this->getPieceAtPosition(move)->getName() == '*') {
           tmp.push_back(move);
         }
       } else if (abs(move.second - position.second) == 1) {
