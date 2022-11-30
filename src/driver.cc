@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
 
         std::cin >> nextPlayer;
 
-        b->setTurn(nextPlayer);
+        b->setColourTurn(nextPlayer);
       } else if (setupCommand == "done") {
         b->generateCompleteMoves();
         // Check if the Board has a valid setup.
@@ -181,279 +181,21 @@ int main(int argc, char *argv[]) {
   std::cout << "Start the Game!" << std::endl;
   std::cout << b << std::endl;
 
-  /* Start Moves Parser Testing */
-  /*
-  // std::cout << "Enter a piece followed by current position to get all
-  possible "
-  //              "moves: "
-  //           << std::endl;
-  // std::cout << "e.g. 'R a1' for white rook currently at a1" << std::endl;
-  // std::cout << "e.g. 'b h4' for black bishop currently at h4" << std::endl;
-
-  // Piece *p = nullptr;
-
-  // char piece;
-  // char x;
-  // int y;
-
-  // std::cin >> piece >> x >> y;
-
-  // if (x < 'a' || x > 'h' || y < 1 || y > 8) {
-  //   std::cout << "Invalid position" << std::endl;
-  //   return 1;
-  // }
-
-  // std::pair<char, int> position = std::make_pair(x, y);
-
-  // if (piece == 'p') {
-  //   bool inStartingPosition = true;
-
-  //   if (y != 7) {
-  //     inStartingPosition = false;
-  //   }
-
-  //   p = new Pawn(piece, 'b', inStartingPosition);
-  //   p->getAllPossibleMoves(position);
-  //   b->parsePossibleMoves(*p, position);
-
-  // } else if (piece == 'r') {
-  //   bool inStartingPosition = false;
-
-  //   if ((x == 'a' && y == 8) || (x == 'h' && y == 8)) {
-  //     inStartingPosition = true;
-  //   }
-
-  //   p = new Rook(piece, 'w', inStartingPosition);
-
-  //   p->getAllPossibleMoves(position);
-  //   b->parsePossibleMoves(*p, position);
-
-  // } else if (piece == 'n') {
-  //   p = new Knight(piece, 'b');
-
-  //   p->getAllPossibleMoves(position);
-  //   b->parsePossibleMoves(*p, position);
-
-  // } else if (piece == 'b') {
-  //   p = new Bishop(piece, 'b');
-
-  //   p->getAllPossibleMoves(position);
-  //   b->parsePossibleMoves(*p, position);
-
-  // } else if (piece == 'q') {
-  //   p = new Queen(piece, 'b');
-
-  //   p->getAllPossibleMoves(position);
-  //   b->parsePossibleMoves(*p, position);
-
-  // } else if (piece == 'k') {
-  //   bool inStartingPosition = true;
-
-  //   if (x != 'e' || y != 8) {
-  //     inStartingPosition = false;
-  //   }
-
-  //   p = new King(piece, 'b', inStartingPosition);
-  //   p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
-
-  // } else if (piece == 'P') {
-  //   bool inStartingPosition = true;
-
-  //   if (y != 2) {
-  //     inStartingPosition = false;
-  //   }
-
-  //   p = new Pawn(piece, 'w', inStartingPosition);
-  //   p->getAllPossibleMoves(position);
-  //   b->parsePossibleMoves(*p, position);
-
-  // } else if (piece == 'R') {
-  //   bool inStartingPosition = false;
-
-  //   if ((x == 'a' && y == 1) || (x == 'h' && y == 1)) {
-  //     inStartingPosition = true;
-  //   }
-
-  //   p = new Rook(piece, 'w', inStartingPosition);
-
-  //   p->getAllPossibleMoves(position);
-  //   b->parsePossibleMoves(*p, position);
-
-  // } else if (piece == 'N') {
-  //   p = new Knight(piece, 'w');
-
-  //   p->getAllPossibleMoves(position);
-  //   b->parsePossibleMoves(*p, position);
-
-  // } else if (piece == 'B') {
-  //   p = new Bishop(piece, 'w');
-
-  //   p->getAllPossibleMoves(position);
-  //   b->parsePossibleMoves(*p, position);
-
-  // } else if (piece == 'Q') {
-  //   p = new Queen(piece, 'w');
-
-  //   p->getAllPossibleMoves(position);
-  //   b->parsePossibleMoves(*p, position);
-
-  // } else if (piece == 'K') {
-  //   bool inStartingPosition = true;
-
-  //   if (x != 'e' || y != 1) {
-  //     inStartingPosition = false;
-  //   }
-
-  //   p = new King(piece, 'w', inStartingPosition);
-  //   p->getAllPossibleMoves(position);
-    b->parsePossibleMoves(*p, position);
-
-  // } else {
-  //   std::cout << "Invalid piece" << std::endl;
-  // }
-
-  // if (p != nullptr) {
-  //   for (auto move : p->allPossibleMoves) {
-  //     std::cout << move.first << move.second << ", ";
-  //   }
-
-  //   std::cout << std::endl;
-  // }
-
-  Driver code for testing moving with the computer:
-    * Takes input in the form "move <old position> <new position>".
-    * For example, "move a2 a4" moves the piece at a2 to a4.
-  */
-
-  // create a human player and a level-1 computer player
-  AbstractPlayer *human = new Human{'w', b};         // human is white
-  AbstractPlayer *opponent = new Computer3{'b', b};  // computer is black
-
-  b->setTurn('w');
-  while (true) {
-    // print who's turn it is
-    if (b->getTurn() == 'w') {
-      std::cout << "White's turn: " << std::endl;
-    } else {
-      std::cout << "Black's turn: " << std::endl;
-      auto move = opponent->calculateNextMove();
-      // delete b->getPieceAtPosition(newPos);
-      Piece *computerChoicePiece = b->getPieceAtPosition(move.first);
-      computerChoicePiece->setPieceAsMoved();
-      b->setPieceAtPosition(move.second, computerChoicePiece);
-      b->setPieceAtPosition(move.first, new NullPiece{'*', '*'});
-      b->setTurn(human->getPlayerColor());
-      std::cout << b << std::endl;
-      continue;
-    }
-    // read in stuff
-    std::string ask;
-    char oldPosX, oldPosY, newPosX, newPosY;
-    std::cin >> ask >> oldPosX >> oldPosY >> newPosX >> newPosY;
-
-    std::pair<char, int> oldPos = std::make_pair(oldPosX, oldPosY - '0');
-    std::pair<char, int> newPos = std::make_pair(newPosX, newPosY - '0');
-
-    // if there's no piece there
-    Piece *pieceAtPosition = b->getPieceAtPosition(oldPos);
-    if (pieceAtPosition->getName() == '*') {
-      std::cout << "No piece at that position" << std::endl;
-      continue;
-    } else {
-      pieceAtPosition->getAllPossibleMoves(oldPos);
-      b->parsePossibleMoves(*pieceAtPosition, oldPos);
-    }
-
-    if (ask == "exit") {
-      break;
-    }
-
-    // if the piece is not the right color or move is out of bounds
-    if (ask != "move" || oldPosX < 'a' || oldPosX > 'h' || oldPosY < '1' ||
-        oldPosY > '8' || newPosX < 'a' || newPosX > 'h' || newPosY < '1' ||
-        newPosY > '8' || b->getTurn() != pieceAtPosition->getColor()) {
-      std::cout << "Invalid command" << std::endl;
-      continue;
-
-      // if move isnt in possible moves of the piece
-    } else if (std::find(pieceAtPosition->allPossibleMoves.begin(),
-                         pieceAtPosition->allPossibleMoves.end(),
-                         newPos) == pieceAtPosition->allPossibleMoves.end()) {
-      std::cout << "Invalid move" << std::endl;
-      continue;
-      // move should be fine
-    }
-
-    else {
-      // if its a human's turn, move the piece
-      if (b->getTurn() == human->getPlayerColor()) {
-        // delete b->getPieceAtPosition(newPos);
-        pieceAtPosition->setPieceAsMoved();
-        b->setPieceAtPosition(newPos, pieceAtPosition);
-        b->setPieceAtPosition(oldPos, new NullPiece{'*', '*'});
-        b->setTurn(opponent->getPlayerColor());
-      } else {
-        // auto move = opponent->calculateNextMove();
-        // // delete b->getPieceAtPosition(newPos);
-        // Piece *computerChoicePiece = b->getPieceAtPosition(move.first);
-        // computerChoicePiece->setPieceAsMoved();
-        // b->setPieceAtPosition(move.second, computerChoicePiece);
-        // b->setPieceAtPosition(move.first, new NullPiece{'*', '*'});
-        // b->setTurn(human->getPlayerColor());
-      }
-
-      // print the board
-      std::cout << b << std::endl;
-    }
-  }
-
-  /*
-  Testing whether clone works or not
-  */
-
-  // clone board
-  // Board *b2 = b->clone();
-
-  // // print addresses of each piece in the board
-  // for (int i = 0; i < 8; ++i) {
-  //   for (int j = 0; j < 8; ++j) {
-  //     if (b->getPieceAtPosition(std::make_pair('a' + j, 8 - i)) ==
-  //         b2->getPieceAtPosition(std::make_pair('a' + j, 8 - i))) {
-  //       std::cout << "SAME PIECE (THIS IS BAD) " << (char)('a' + j) << 8 - i
-  //                 << std::endl;
-  //     }
-  //   }
-  // }
-
-  // if (b == b2) {
-  //   std::cout << "SAME BOARD (THIS IS BAD)" << std::endl;
-  // } else {
-  //   std::cout << "Different board" << std::endl;
-  // }
-  // delete b2;
-
-  // if (p != nullptr) {
-  //   for (auto move : p->allPossibleMoves) {
-  //     std::cout << move.first << move.second << ", ";
-  //   }
-
-  //   std::cout << std::endl;
-
-  //   delete p;
-  // }
-  // * /
-  /* End Moves Parser Testing */
-
   /* Start Game Testing */
+  b->setWhitePlayer(new Human('w', b));      // human is white
+  b->setBlackPlayer(new Computer2('b', b));  // computer is black
+
   std::string command;
   std::pair<char, int> position;
-  b->setTurn('w');
+  b->setColourTurn('w');
+  b->setPlayerTurn(b->getWhitePlayer());
 
   while (std::cin >> command) {
     b->generateCompleteMoves();
 
-    if b->getTurn() == 'w') {
+    AbstractPlayer *currentPlayer = b->getWhosPlayerTurn();
+
+    if (b->getTurn() == 'w') {
       std::cout << "White's turn: " << std::endl;
     } else {
       std::cout << "Black's turn: " << std::endl;
@@ -467,23 +209,59 @@ int main(int argc, char *argv[]) {
       int newY;
 
       // if its the computer's move, tell it to calculate its move
-      
+      if (currentPlayer->isComputer()) {
+        auto move = currentPlayer->calculateNextMove();
+        bool movedSucessfully = b->movePiece(move.first, move.second);
 
-      std::cin >> oldX >> oldY >> newX >> newY;
-      std::pair<char, int> oldPosition = std::make_pair(oldX, oldY);
-      std::pair<char, int> newPosition = std::make_pair(newX, newY);
+        // if the move was invalid, retry the move.
+        if (!movedSucessfully) {
+          std::cout << "Something very bad happened. The computer "
+                       "made an invalid move."
+                    << std::endl;
+          break;
+        }
 
-      b->movePiece(oldPosition, newPosition);
+        std::cout << b << std::endl;
 
-      std::cout << b << std::endl;
+        if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
+          std::cout << "The Black King is in check!" << std::endl;
+        } else if (b->inCheck(*(b->getWhiteKing()),
+                              b->getWhiteKingPosition())) {
+          std::cout << "The White King is in check!" << std::endl;
+        }
+      } else {
+        std::cin >> oldX >> oldY >> newX >> newY;
+        std::pair<char, int> oldPosition = std::make_pair(oldX, oldY);
+        std::pair<char, int> newPosition = std::make_pair(newX, newY);
 
-      if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
-        std::cout << "The Black King is in check!" << std::endl;
-      } else if (b->inCheck(*(b->getWhiteKing()), b->getWhiteKingPosition())) {
-        std::cout << "The White King is in check!" << std::endl;
+        bool movedSucessfully = b->movePiece(oldPosition, newPosition);
+
+        // if the move was invalid in any way, retry the move.
+        if (!movedSucessfully) {
+          std::cout << "Invalid move. Please try again." << std::endl;
+          continue;
+        }
+
+        std::cout << b << std::endl;
+
+        if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
+          std::cout << "The Black King is in check!" << std::endl;
+        } else if (b->inCheck(*(b->getWhiteKing()),
+                              b->getWhiteKingPosition())) {
+          std::cout << "The White King is in check!" << std::endl;
+        }
       }
     } else {
       break;
+    }
+
+    // set player and turn to the next player
+    if (b->getTurn() == 'w') {
+      b->setColourTurn('b');
+      b->setPlayerTurn(b->getBlackPlayer());
+    } else {
+      b->setColourTurn('w');
+      b->setPlayerTurn(b->getWhitePlayer());
     }
   }
   /* End Game Testing */
