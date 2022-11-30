@@ -79,12 +79,24 @@ Computer1::calculateNextMove() {
 
     // loop through all the moves
     for (auto move : allMoves) {
+      std::cout << "Move being checked: " << move.first.first
+                << move.first.second << " to " << move.second.first
+                << move.second.second << std::endl;
       // make the move on a copy of the board
       Board *boardCopy = board->clone();
       bool success = boardCopy->movePiece(move.first, move.second);
       if (success) {
         movesThatGetKingOutOfCheck.push_back(move);
+      } else {
+        std::cout << "Move failed" << std::endl;
       }
+      // // if the king is not in check, add the move to the list
+      // if (!boardCopy->inCheck(*king, kingPos)) {
+      //   std::cout << "got here for move: " << move.first.first
+      //             << move.first.second << " to " << move.second.first
+      //             << move.second.second << std::endl;
+      //   movesThatGetKingOutOfCheck.push_back(move);
+      // }
 
       // delete the copy of the board
       delete boardCopy;
