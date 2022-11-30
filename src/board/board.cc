@@ -496,7 +496,8 @@ void Board::parsePossibleMovesBishop(Piece &bishop,
   bishop.allPossibleMoves = tmp;
 }
 
-void Board::parsePossibleMovesKnight(Piece &knight, std::pair<char, int>) {
+void Board::parsePossibleMovesKnight(Piece &knight,
+                                     std::pair<char, int>) {
   std::vector<std::pair<char, int>> tmp;
 
   for (auto move : knight.allPossibleMoves) {
