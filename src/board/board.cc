@@ -494,8 +494,7 @@ void Board::parsePossibleMovesBishop(Piece &bishop,
   bishop.allPossibleMoves = tmp;
 }
 
-void Board::parsePossibleMovesKnight(Piece &knight,
-                                     std::pair<char, int>) {
+void Board::parsePossibleMovesKnight(Piece &knight, std::pair<char, int>) {
   std::vector<std::pair<char, int>> tmp;
 
   for (auto move : knight.allPossibleMoves) {
@@ -861,13 +860,9 @@ std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
                 this->currentBoard[x][y]->getName() == 'P') {
               // ignore forward moves in pawns (they're not threats)
               if (move.first != convertNumToAlpha(x)) {
-                // std::cout << char(x + 'a') << y + 1 << " -> " << move.first
-                //           << move.second << std::endl;
                 tmp.push_back(move);
               }
             } else {
-              // std::cout << char(x + 'a') << y + 1 << " -> " << move.first
-              //           << move.second << ", ";
               tmp.push_back(move);
             }
           }
@@ -919,9 +914,6 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           this->movePieceBase(from, to);
           return true;
         } else {
-          // std::cout << "Illegal move! That would put the Black King in
-          // check."
-          //           << std::endl;
           return false;
         }
       } else if (currentPiece->getColor() == 'w') {
@@ -930,8 +922,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           this->movePieceBase(from, to);
           return true;
         } else {
-          // std::cout << "Illegal move! That would put the White King in
-          // check." << std::endl; return false;
+          return false;
         }
       }
     }
