@@ -523,7 +523,7 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
           this->getPieceAtPosition(move)->getColor() != '*') {
         tmp.push_back(move);
       }
-    } // forward moves only have a diff. y coordinate
+    }  // forward moves only have a diff. y coordinate
     else if (move.second != position.second) {
       // if the square is empty then only we can move
       if (this->getPieceAtPosition(move)->getColor() == '*') {
@@ -817,11 +817,11 @@ std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
           /* If we allow parsePossibleMoves for King:
               - We get a segmentation fault (due to infinite recursion)
               If we allow parsePossibleMoves for Pawn:
-              - The parser will remove all diagonal moves (since those 
+              - The parser will remove all diagonal moves (since those
                 squares are empty). But we don't want the King to move
                 to those squares, since the Pawn can capture it.
-              - Note that the King won't be able to move there (since we 
-                implemented the tmpBoard checking functionality), but the 
+              - Note that the King won't be able to move there (since we
+                implemented the tmpBoard checking functionality), but the
                 movelist will allow these moves.
           */
           if (this->currentBoard[x][y]->getName() != 'k' &&
@@ -834,7 +834,8 @@ std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
           }
 
           for (auto move : this->currentBoard[x][y]->allPossibleMoves) {
-            if (this->currentBoard[x][y]->getName() == 'p') {
+            if (this->currentBoard[x][y]->getName() == 'p' ||
+                this->currentBoard[x][y]->getName() == 'P') {
               // ignore forward moves in pawns (they're not threats)
               if (move.first != convertNumToAlpha(x)) {
                 tmp.push_back(move);
@@ -871,7 +872,8 @@ bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
 
 void Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
   /* REMOVING THIS LINE REMOVES THE SEGFAULT, BUT THEN
-    THE PROGRAM DOESN'T GENERATE ANY MOVES PAST THE FIRST ONE. (try with main.in)
+    THE PROGRAM DOESN'T GENERATE ANY MOVES PAST THE FIRST ONE. (try with
+    main.in)
   */
   // generateCompleteMoves();
 
@@ -884,19 +886,21 @@ void Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
       tmpBoard->movePieceBase(from, to);
 
       if (currentPiece->getColor() == 'b') {
-          if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
-                                tmpBoard->getBlackKingPosition()) == false) {
-              this->movePieceBase(from, to);
-          } else {
-            std::cout << "Illegal move! That would put the Black King in check." << std::endl;
-          }
+        if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
+                              tmpBoard->getBlackKingPosition()) == false) {
+          this->movePieceBase(from, to);
+        } else {
+          std::cout << "Illegal move! That would put the Black King in check."
+                    << std::endl;
+        }
       } else if (currentPiece->getColor() == 'w') {
-          if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
-                                tmpBoard->getWhiteKingPosition()) == false) {
-              this->movePieceBase(from, to);
-          } else {
-            std::cout << "Illegal move! That would put the White King in check." << std::endl;
-          }
+        if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
+                              tmpBoard->getWhiteKingPosition()) == false) {
+          this->movePieceBase(from, to);
+        } else {
+          std::cout << "Illegal move! That would put the White King in check."
+                    << std::endl;
+        }
       }
 
       delete tmpBoard;
@@ -912,10 +916,9 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
 
   if (fromPiece->getName() != '*' &&
       (fromPiece->getColor() != toPiece->getColor())) {
-
     // if the piece is NullPiece or opponent piece...
     delete toPiece;
-    
+
     // move the piece
     currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
 
