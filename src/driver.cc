@@ -182,8 +182,8 @@ int main(int argc, char *argv[]) {
   std::cout << b << std::endl;
 
   /* Start Game Testing */
-  b->setWhitePlayer(new Computer1('w', b));  // human is white
-  b->setBlackPlayer(new Computer1('b', b));  // computer is black
+  b->setWhitePlayer(new Human('w', b));  // human is white
+  b->setBlackPlayer(new Human('b', b));  // computer is black
 
   std::string command;
   std::pair<char, int> position;
