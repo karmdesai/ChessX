@@ -865,8 +865,7 @@ std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
                 //           << move.second << std::endl;
                 tmp.push_back(move);
               }
-            } else if (this->currentBoard[x][y]->getName() != 'P' ||
-                       this->currentBoard[x][y]->getName() != 'p') {
+            } else {
               // std::cout << char(x + 'a') << y + 1 << " -> " << move.first
               //           << move.second << ", ";
               tmp.push_back(move);
