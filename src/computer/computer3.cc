@@ -88,7 +88,7 @@ Computer3::calculateNextMove() {
 
   for (auto move : moves) {
     // get the piece at the destination
-    Piece *p = board->getPieceAtPosition(move.second);
+    // Piece *p = board->getPieceAtPosition(move.second);
 
     // make the move on a copy of the board
     Board *boardCopy = board->clone();
