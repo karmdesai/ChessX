@@ -8,3 +8,5 @@ move e7 e5
 move f4 e5
 movelist e5
 move e5 e6
+move e5 f6
+move f6 d6
