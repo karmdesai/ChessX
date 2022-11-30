@@ -8,7 +8,7 @@
 
 // the constructor for Computer1
 Computer2::Computer2(char playerColor, Board *board)
-    : AbstractPlayer{playerColor, board} {}
+    : AbstractPlayer{playerColor, board, true} {}
 
 // calculate the next move, returns a pair of moves
 std::pair<std::pair<char, int>, std::pair<char, int>>
@@ -77,7 +77,6 @@ Computer2::calculateNextMove() {
   }
   std::cout << "------------" << std::endl;
 
-
   // Step 4: choose a random move from preferredMoves if there are any
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -101,8 +100,8 @@ Computer2::calculateNextMove() {
     // print what computer plays
     std::cout << "Computer plays: " << moves[randomIndex].first.first
               << moves[randomIndex].first.second << " -> "
-              << moves[randomIndex].second.first << moves[randomIndex].second.second
-              << std::endl;
+              << moves[randomIndex].second.first
+              << moves[randomIndex].second.second << std::endl;
     return moves.at(randomIndex);
   }
 }

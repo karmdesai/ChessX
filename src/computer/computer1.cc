@@ -8,7 +8,7 @@
 
 // the constructor for Computer1
 Computer1::Computer1(char playerColor, Board *board)
-    : AbstractPlayer{playerColor, board} {}
+    : AbstractPlayer{playerColor, board, true} {}
 
 /*
  * return random number between x and y using the Mercenne-Twister generator

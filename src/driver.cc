@@ -321,7 +321,6 @@ int main(int argc, char *argv[]) {
   //   std::cout << std::endl;
   // }
 
-  /*
   Driver code for testing moving with the computer:
     * Takes input in the form "move <old position> <new position>".
     * For example, "move a2 a4" moves the piece at a2 to a4.
@@ -414,25 +413,25 @@ int main(int argc, char *argv[]) {
   */
 
   // clone board
-  Board *b2 = b->clone();
+  // Board *b2 = b->clone();
 
-  // print addresses of each piece in the board
-  for (int i = 0; i < 8; ++i) {
-    for (int j = 0; j < 8; ++j) {
-      if (b->getPieceAtPosition(std::make_pair('a' + j, 8 - i)) ==
-          b2->getPieceAtPosition(std::make_pair('a' + j, 8 - i))) {
-        std::cout << "SAME PIECE (THIS IS BAD) " << (char)('a' + j) << 8 - i
-                  << std::endl;
-      }
-    }
-  }
+  // // print addresses of each piece in the board
+  // for (int i = 0; i < 8; ++i) {
+  //   for (int j = 0; j < 8; ++j) {
+  //     if (b->getPieceAtPosition(std::make_pair('a' + j, 8 - i)) ==
+  //         b2->getPieceAtPosition(std::make_pair('a' + j, 8 - i))) {
+  //       std::cout << "SAME PIECE (THIS IS BAD) " << (char)('a' + j) << 8 - i
+  //                 << std::endl;
+  //     }
+  //   }
+  // }
 
-  if (b == b2) {
-    std::cout << "SAME BOARD (THIS IS BAD)" << std::endl;
-  } else {
-    std::cout << "Different board" << std::endl;
-  }
-  delete b2;
+  // if (b == b2) {
+  //   std::cout << "SAME BOARD (THIS IS BAD)" << std::endl;
+  // } else {
+  //   std::cout << "Different board" << std::endl;
+  // }
+  // delete b2;
 
   // if (p != nullptr) {
   //   for (auto move : p->allPossibleMoves) {
@@ -443,15 +442,22 @@ int main(int argc, char *argv[]) {
 
   //   delete p;
   // }
-  * /
-      /* End Moves Parser Testing */
+  // * /
+  /* End Moves Parser Testing */
 
-      /* Start Game Testing */
-      std::string command;
+  /* Start Game Testing */
+  std::string command;
   std::pair<char, int> position;
+  b->setTurn('w');
 
   while (std::cin >> command) {
     b->generateCompleteMoves();
+
+    if b->getTurn() == 'w') {
+      std::cout << "White's turn: " << std::endl;
+    } else {
+      std::cout << "Black's turn: " << std::endl;
+    }
 
     if (command == "move") {
       char oldX;
@@ -459,6 +465,9 @@ int main(int argc, char *argv[]) {
 
       char newX;
       int newY;
+
+      // if its the computer's move, tell it to calculate its move
+      
 
       std::cin >> oldX >> oldY >> newX >> newY;
       std::pair<char, int> oldPosition = std::make_pair(oldX, oldY);
@@ -473,60 +482,6 @@ int main(int argc, char *argv[]) {
       } else if (b->inCheck(*(b->getWhiteKing()), b->getWhiteKingPosition())) {
         std::cout << "The White King is in check!" << std::endl;
       }
-    } else if (command == "movelist") {
-      char x;
-      int y;
-
-      std::cin >> x >> y;
-
-      for (auto move :
-           b->getPieceAtPosition(std::make_pair(x, y))->allPossibleMoves) {
-        std::cout << move.first << move.second << ",";
-      }
-
-      std::cout << std::endl;
-    } else if (command == "tester") {
-      // move white king to d5
-      b->movePiece(std::make_pair('e', 2), std::make_pair('e', 4));
-      b->movePiece(std::make_pair('e', 1), std::make_pair('e', 2));
-      b->movePiece(std::make_pair('e', 2), std::make_pair('e', 3));
-      b->movePiece(std::make_pair('e', 3), std::make_pair('d', 4));
-      b->movePiece(std::make_pair('d', 4), std::make_pair('d', 5));
-
-      std::cout << "ORIGINAL: " << std::endl;
-      std::cout << b << std::endl;
-
-      Board *newBoard = b->clone();
-
-      std::cout << "CLONE: " << std::endl;
-      std::cout << newBoard << std::endl;
-
-      newBoard->movePiece(std::make_pair('d', 5), std::make_pair('d', 6));
-
-      std::cout << "ORIGINAL: " << std::endl;
-      std::cout << b << std::endl;
-
-      std::cout << "CLONE: " << std::endl;
-      std::cout << newBoard << std::endl;
-
-      if (newBoard->inCheck(*(newBoard->getWhiteKing()),
-                            newBoard->getWhiteKingPosition())) {
-        std::cout << "The White King is in check!" << std::endl;
-      } else if (newBoard->inCheck(*(newBoard->getBlackKing()),
-                                   newBoard->getBlackKingPosition())) {
-        std::cout << "The Black King is in check!" << std::endl;
-      } else {
-        b->movePiece(std::make_pair('d', 5), std::make_pair('d', 6));
-      }
-
-      std::cout << "ORIGINAL: " << std::endl;
-      std::cout << b << std::endl;
-
-      std::cout << "CLONE: " << std::endl;
-      std::cout << newBoard << std::endl;
-
-      delete newBoard;
-
     } else {
       break;
     }
