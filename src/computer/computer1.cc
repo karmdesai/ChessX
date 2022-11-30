@@ -27,14 +27,15 @@ std::pair<std::pair<char, int>, std::pair<char, int>>
 Computer1::calculateNextMove() {
   /*
   Steps:
-    - Save ALL possible moves for our color to a list
-    - Randomly choose one (for level 1) using the random number generator
+    * if the king of the player is in check, we can only make moves that
+      get the king out of check
+    * if the king is not in check, we can make any move
   */
 
   // list to keep track of moves, using a vector of pairs of pairs
-  std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>> moves;
+  std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>> allMoves;
 
-  // loop through the board
+  // loop through the board to get all the possible moves
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 8; j++) {
       // get the piece at the current position
@@ -42,9 +43,7 @@ Computer1::calculateNextMove() {
       Piece *p = board->getPieceAtPosition(currentPos);
 
       // if the piece is not nullPiece and it is our color
-      // For now WE DON'T SUPPORT King moves as kingParser is not implemented
-      if (p->getName() != '*' && p->getName() != 'k' && p->getName() != 'K' &&
-          p->getColor() == this->playerColor) {
+      if (p->getName() != '*' && p->getColor() == this->playerColor) {
         // get all possible moves for the piece
         p->getAllPossibleMoves(std::make_pair(char(i + 'a'), j + 1));
         board->parsePossibleMoves(*p, currentPos);
@@ -52,14 +51,58 @@ Computer1::calculateNextMove() {
         // add moves to the list
         for (auto move : p->allPossibleMoves) {
           auto theMove = std::make_pair(currentPos, move);
-          moves.push_back(theMove);
+          allMoves.push_back(theMove);
         }
       }
     }
   }
 
-  // from the list of moves, randomly choose one
-  int randomIndex = randomNumber(0, moves.size() - 1);
-  auto randomMove = moves.at(randomIndex);
+  // if the king is in check, we can only make moves that get the king out of
+  // check
+
+  std::pair<char, int> kingPos;
+  Piece *king;
+  // get the king's position
+  if (this->playerColor == 'w') {
+    kingPos = board->getWhiteKingPosition();
+    king = board->getWhiteKing();
+  } else {
+    kingPos = board->getBlackKingPosition();
+    king = board->getBlackKing();
+  }
+
+  // if the king is in check
+  if (board->inCheck(*king, kingPos)) {
+    // list of moves that get the king out of check
+    std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
+        movesThatGetKingOutOfCheck;
+
+    // loop through all the moves
+    for (auto move : allMoves) {
+      // make the move on a copy of the board
+      Board *boardCopy = board->clone();
+      boardCopy->movePiece(move.first, move.second);
+
+      // if the king is not in check, add the move to the list
+      if (!boardCopy->inCheck(*king, kingPos)) {
+        movesThatGetKingOutOfCheck.push_back(move);
+      }
+
+      // delete the copy of the board
+      delete boardCopy;
+    }
+
+    // if there are moves that get the king out of check, return one of them
+    if (movesThatGetKingOutOfCheck.size() > 0) {
+      std::cout << "number of possible moves: "
+                << movesThatGetKingOutOfCheck.size() << std::endl;
+      int randomIndex = randomNumber(0, movesThatGetKingOutOfCheck.size() - 1);
+      return movesThatGetKingOutOfCheck[randomIndex];
+    }
+  }
+
+  // if the king is not in check, we can make any move
+  int randomIndex = randomNumber(0, allMoves.size() - 1);
+  auto randomMove = allMoves.at(randomIndex);
   return randomMove;
 }
