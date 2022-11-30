@@ -95,3 +95,7 @@ void Queen::getAllPossibleMoves(std::pair<char, int> currentPosition) {
     this->allPossibleMoves.push_back(newMove);
   }
 }
+
+void Queen::setPieceAsMoved() {
+  return;
+}
