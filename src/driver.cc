@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
   b->setBlackPlayer(new Human('b', b));  // computer is black
 
   std::string command;
-  std::pair<char, int> position;
+  // std::pair<char, int> position;
   b->setColourTurn('w');
   b->setPlayerTurn(b->getWhitePlayer());
 
