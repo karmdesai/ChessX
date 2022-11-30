@@ -7,7 +7,7 @@
 
 // the constructor for Computer3
 Computer3::Computer3(char playerColor, Board *board)
-    : AbstractPlayer{playerColor, board} {}
+    : AbstractPlayer{playerColor, board, true} {}
 
 // calculate the next move, returns a pair of moves
 std::pair<std::pair<char, int>, std::pair<char, int>>
@@ -92,7 +92,7 @@ Computer3::calculateNextMove() {
 
     // make the move on a copy of the board
     Board *boardCopy = board->clone();
-    boardCopy->makeMove(move.first, move.second);
+    // boardCopy->makeMove(move.first, move.second);
 
     bool badMove = false;
 
