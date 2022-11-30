@@ -8,7 +8,6 @@ class Board;
 class AbstractPlayer {
  protected:
   char playerColor;
-  bool isComputer;
   Board *board;
   bool isAComputer;
 
