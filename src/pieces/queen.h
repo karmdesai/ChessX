@@ -14,6 +14,8 @@ public:
   void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
 
   void setPieceAsMoved() override;
+    void getHasMoved() override;
+
 };
 
 #endif

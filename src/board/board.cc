@@ -50,7 +50,7 @@ void Board::defaultInitialization() {
   this->currentBoard[3][0] = new Queen('Q', 'w');
 
   // don't deal with castling for now
-  Piece *newWhiteKing = new King('K', 'w', false);
+  Piece *newWhiteKing = new King('K', 'w', true);
   this->whiteKing = newWhiteKing;
   this->currentBoard[4][0] = newWhiteKing;
   this->whiteKingPosition = std::make_pair('e', 1);
@@ -80,7 +80,7 @@ void Board::defaultInitialization() {
   this->currentBoard[3][7] = new Queen('q', 'b');
 
   // don't deal with castling for now
-  Piece *newBlackKing = new King('k', 'b', false);
+  Piece *newBlackKing = new King('k', 'b', true);
   this->blackKing = newBlackKing;
   this->currentBoard[4][7] = newBlackKing;
   this->blackKingPosition = std::make_pair('e', 8);
@@ -568,6 +568,10 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
             tmp.push_back(move);
           }
         } else if (king.getColor() == 'w') {
+          if (move == std::make_pair('g', 1) && getPieceAtPosition(std::make_pair('f', 1))->getName() == '*' && 
+          getPieceAtPosition(std::make_pair('g', 1))->getName() == '*' && getPieceAtPosition)){
+
+          }
           if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
                                 tmpBoard->getWhiteKingPosition()) == false) {
             tmp.push_back(move);
