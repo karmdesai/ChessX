@@ -80,6 +80,8 @@ class Board {
                    std::pair<char, int> newPosition);
     void movePieceBase(std::pair<char, int> oldPosition,
                           std::pair<char, int> newPosition);
+
+    Piece* pieceAt(std::pair<char, int> coord);
 };
 
 #endif

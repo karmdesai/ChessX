@@ -930,6 +930,10 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   }
 }
 
+Piece* Board::pieceAt(std::pair<char, int> coord) {
+  return getPieceAtPosition(coord);
+}
+
 /*
 void Board::movePiece(std::pair<char, int> oldPosition,
                       std::pair<char, int> newPosition) {

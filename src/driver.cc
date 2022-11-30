@@ -12,6 +12,8 @@
 #include "pieces/queen.h"
 #include "pieces/rook.h"
 
+#include "observers/studio.h"
+
 int main() {
   std::cout << "**** WELCOME TO CHESS ****" << std::endl;
 
@@ -158,6 +160,9 @@ int main() {
   } else {
     b->defaultInitialization();
   }
+  
+  std::vector<Observer*> obsvec;
+  Studio *s = new Studio{b};
 
   std::cout << std::endl;
   std::cout << "Start the Game!" << std::endl;
