@@ -19,7 +19,7 @@ class Studio: public Subject {
   Board *&picture() { return thePicture; }
   void reset();
   void render();
-  Piece* getState(std::pair<char, int> coord)const;
+  Piece* getState(std::pair<char, int> coord) const;
   ~Studio();
 };
 
