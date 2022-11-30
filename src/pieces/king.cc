@@ -84,3 +84,7 @@ void King::getAllPossibleMoves(std::pair<char, int> currentPosition) {
 void King::setPieceAsMoved() {
   inStartingPosition = false;
 }
+
+bool King::getHasMoved() {
+  return inStartingPosition;
+}

@@ -59,3 +59,7 @@ void Bishop::getAllPossibleMoves(std::pair<char, int> currentPosition) {
 void Bishop::setPieceAsMoved() {
   return;
 }
+
+bool Bishop::getHasMoved() {
+  return;
+}

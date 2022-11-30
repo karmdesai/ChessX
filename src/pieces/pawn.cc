@@ -88,3 +88,8 @@ void Pawn::getAllPossibleMoves(std::pair<char, int> currentPosition) {
 void Pawn::setPieceAsMoved() {
   inStartingPosition = false;
 }
+
+bool Pawn::getHasMoved() {
+  return;
+}
+

@@ -569,9 +569,11 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
           }
         } else if (king.getColor() == 'w') {
           if (move == std::make_pair('g', 1) && getPieceAtPosition(std::make_pair('f', 1))->getName() == '*' && 
-          getPieceAtPosition(std::make_pair('g', 1))->getName() == '*' && getPieceAtPosition)){
-
-          }
+          getPieceAtPosition(std::make_pair('g', 1))->getName() == '*' && !getPieceAtPosition(std::make_pair('h', 1))->getHasMoved()){
+            tmp.push_back(move);
+          } else if (move == std::make_pair('g', 1) && getPieceAtPosition(std::make_pair('f', 1))->getName() == '*' && 
+            getPieceAtPosition(std::make_pair('g', 1))->getName() == '*' && !getPieceAtPosition(std::make_pair('h', 1))->getHasMoved()
+          )
           if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
                                 tmpBoard->getWhiteKingPosition()) == false) {
             tmp.push_back(move);
