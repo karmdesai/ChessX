@@ -8,20 +8,21 @@ class Board;
 class AbstractPlayer {
  protected:
   char playerColor;
-  bool isComputer;
   Board *board;
+  bool isAComputer;
 
  public:
-  AbstractPlayer(char playerColor, Board *board, bool isComputer);
+  AbstractPlayer(char playerColor, Board *board, bool isAComputer);
   virtual ~AbstractPlayer() = default;
 
   // Getters
   char getPlayerColor();
   Board *getBoard();
-  bool getIsComputer();
+  bool isComputer();
 
   // calculate the next move, returns a pair of moves
-  virtual std::pair<std::pair<char, int>, std::pair<char, int>> calculateNextMove() = 0;
+  virtual std::pair<std::pair<char, int>, std::pair<char, int>>
+  calculateNextMove() = 0;
 };
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <ostream>
 
+#include "../computer/abstractPlayer.h"
 #include "../pieces/piece.h"
 
 class Board {
@@ -13,7 +14,9 @@ class Board {
   // The second index is the y-coordinate (which ranges from 0 to 7).
   Piece *currentBoard[8][8];
 
-  char whosTurn;
+  // keep track of current player and color
+  char whosColourTurn;
+  AbstractPlayer *whosPlayerTurn;
 
   // We keep track of this because we are going to be calling
   //  inCheck atleast once every turn. So instead of calling a nested
@@ -23,6 +26,10 @@ class Board {
 
   std::pair<char, int> whiteKingPosition;
   std::pair<char, int> blackKingPosition;
+
+  // keep track of players
+  AbstractPlayer *whitePlayer;
+  AbstractPlayer *blackPlayer;
 
  public:
   Board();
@@ -54,15 +61,25 @@ class Board {
   std::pair<char, int> getWhiteKingPosition();
   std::pair<char, int> getBlackKingPosition();
 
+  AbstractPlayer *getWhitePlayer();
+  AbstractPlayer *getBlackPlayer();
+
+  AbstractPlayer *getWhosPlayerTurn();
+
   // Setters
   void setPieceAtPosition(std::pair<char, int> position, Piece *p);
-  void setTurn(char player);
+  void setColourTurn(char player);
+  void setPlayerTurn(AbstractPlayer *player);
 
   void setWhiteKing(Piece *wk);
   void setBlackKing(Piece *bk);
 
   void setWhiteKingPosition(std::pair<char, int> position);
   void setBlackKingPosition(std::pair<char, int> position);
+
+  // Set players
+  void setWhitePlayer(AbstractPlayer *wp);
+  void setBlackPlayer(AbstractPlayer *bp);
 
   // Move parsers/validators
   void parsePossibleMoves(Piece &piece, std::pair<char, int> position);
@@ -77,7 +94,7 @@ class Board {
 
   // Condition managers (check, checkmate, draw, win, etc.)
   bool inCheck(Piece &king, std::pair<char, int> currentPosition);
-  void movePiece(std::pair<char, int> oldPosition,
+  bool movePiece(std::pair<char, int> oldPosition,
                  std::pair<char, int> newPosition);
   void movePieceBase(std::pair<char, int> oldPosition,
                      std::pair<char, int> newPosition);
