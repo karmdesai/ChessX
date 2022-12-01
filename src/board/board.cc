@@ -1013,7 +1013,7 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
 
   } else if (fromPiece->getColor() == 'w' && to.first == 'g' &&
              to.second == 1 && fromPiece->getName() == 'K'
-             && getPieceAtPosition(std::make_pair('k', 1))->getName() == 'R') {
+             && getPieceAtPosition(std::make_pair('h', 1))->getName() == 'R') {
     Piece *rook = getPieceAtPosition(std::make_pair('h', 1));
     delete toPiece;
 
