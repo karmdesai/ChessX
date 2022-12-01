@@ -1,5 +1,6 @@
 #include "king.h"
 #include <climits>
+#include <iostream>
 
 // give the King a value of INT_MAX
 King::King(char name, char color, bool inStartingPosition)
@@ -82,4 +83,8 @@ void King::getAllPossibleMoves(std::pair<char, int> currentPosition) {
 
 void King::setPieceAsMoved() {
   inStartingPosition = false;
+}
+
+bool King::getHasMoved() {
+  return !inStartingPosition;
 }
