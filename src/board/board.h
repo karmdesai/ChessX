@@ -98,6 +98,8 @@ class Board {
                  std::pair<char, int> newPosition);
   void movePieceBase(std::pair<char, int> oldPosition,
                      std::pair<char, int> newPosition);
+
+  bool isPieceCapturable(Piece *piece, std::pair<char, int> position);
 };
 
 #endif

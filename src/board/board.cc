@@ -972,6 +972,20 @@ AbstractPlayer *Board::getBlackPlayer() { return this->blackPlayer; }
 
 AbstractPlayer *Board::getWhosPlayerTurn() { return this->whosPlayerTurn; }
 
+// function to check whether piece can be captured by opponent
+bool Board::isPieceCapturable(Piece *p, std::pair<char, int> position) {
+  std::vector<std::pair<char, int>> allLegalMoves =
+      this->generateThreatMap(p);
+
+  for (auto move : allLegalMoves) {
+    if (move == position) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 /*
 void Board::movePiece(std::pair<char, int> oldPosition,
                       std::pair<char, int> newPosition) {
