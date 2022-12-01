@@ -99,3 +99,7 @@ void Queen::getAllPossibleMoves(std::pair<char, int> currentPosition) {
 void Queen::setPieceAsMoved() {
   return;
 }
+
+bool Queen::getHasMoved() {
+  return true;
+}

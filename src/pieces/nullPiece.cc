@@ -9,3 +9,7 @@ void NullPiece::getAllPossibleMoves(std::pair<char, int>) {
 void NullPiece::setPieceAsMoved() {
   return;
 }
+
+bool NullPiece::getHasMoved() {
+  return true;
+}

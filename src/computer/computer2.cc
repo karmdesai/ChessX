@@ -96,10 +96,10 @@ Computer2::calculateNextMove() {
   for (auto move : allMoves) {
     // make the move on a copy of the board
     Board *boardCopy = board->clone();
-    boardCopy->movePiece(move.first, move.second);
+    bool success = boardCopy->movePiece(move.first, move.second);
 
     // if the king is not in check, add the move to the list
-    if (!boardCopy->inCheck(*king, kingPos)) {
+    if (success && !boardCopy->inCheck(*king, kingPos)) {
       movesThatDoNotPutOurKingInCheck.push_back(move);
     }
 
@@ -122,13 +122,13 @@ Computer2::calculateNextMove() {
     }
   }
 
-  std::cout << "---------------------" << std::endl;
-  std::cout << "moves that capture: " << std::endl;
-  for (auto move : movesThatCapture) {
-    std::cout << move.first.first << move.first.second << " "
-              << move.second.first << move.second.second << std::endl;
-  }
-  std::cout << "---------------------" << std::endl;
+  // std::cout << "---------------------" << std::endl;
+  // std::cout << "moves that capture: " << std::endl;
+  // for (auto move : movesThatCapture) {
+  //   std::cout << move.first.first << move.first.second << " "
+  //             << move.second.first << move.second.second << std::endl;
+  // }
+  // std::cout << "---------------------" << std::endl;
 
   // get all moves that put the opponent in check
   std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
@@ -163,13 +163,13 @@ Computer2::calculateNextMove() {
     delete boardCopy;
   }
 
-  std::cout << "---------------------" << std::endl;
-  std::cout << "moves that put opponent in check: " << std::endl;
-  for (auto move : movesThatPutOpponentInCheck) {
-    std::cout << move.first.first << move.first.second << " "
-              << move.second.first << move.second.second << std::endl;
-  }
-  std::cout << "---------------------" << std::endl;
+  // std::cout << "---------------------" << std::endl;
+  // std::cout << "moves that put opponent in check: " << std::endl;
+  // for (auto move : movesThatPutOpponentInCheck) {
+  //   std::cout << move.first.first << move.first.second << " "
+  //             << move.second.first << move.second.second << std::endl;
+  // }
+  // std::cout << "---------------------" << std::endl;
 
   // best case is that there is a move that captures a piece and puts the
   // opponent in check. If such a move (or moves) exist, return one of them

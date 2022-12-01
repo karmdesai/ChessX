@@ -12,6 +12,8 @@
 #include "../pieces/queen.h"
 #include "../pieces/rook.h"
 
+using namespace std;
+
 /* Board class */
 Board::Board() {
   // start with board of nullpieces
@@ -50,7 +52,7 @@ void Board::defaultInitialization() {
   this->currentBoard[3][0] = new Queen('Q', 'w');
 
   // don't deal with castling for now
-  Piece *newWhiteKing = new King('K', 'w', false);
+  Piece *newWhiteKing = new King('K', 'w', true);
   this->whiteKing = newWhiteKing;
   this->currentBoard[4][0] = newWhiteKing;
   this->whiteKingPosition = std::make_pair('e', 1);
@@ -80,7 +82,7 @@ void Board::defaultInitialization() {
   this->currentBoard[3][7] = new Queen('q', 'b');
 
   // don't deal with castling for now
-  Piece *newBlackKing = new King('k', 'b', false);
+  Piece *newBlackKing = new King('k', 'b', true);
   this->blackKing = newBlackKing;
   this->currentBoard[4][7] = newBlackKing;
   this->blackKingPosition = std::make_pair('e', 8);
@@ -902,6 +904,96 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
   Piece *currentPiece = this->getPieceAtPosition(from);
   this->parsePossibleMoves(*currentPiece, from);
 
+  // checks if when castling, the king doesn't move through a square that is
+  // under attack
+  if (currentPiece->getName() == 'k' || currentPiece->getName() == 'K') {
+    if (currentPiece->getColor() == 'w') {
+      if (from.first == 'e' && from.second == 1) {
+        if (to.first == 'g' && to.second == 1) {
+          // move king to e1, f1, and g1 on a copy of the board, and check if
+          // any of them put the king in check
+          Board *tmpBoard = this->clone();
+          tmpBoard->movePieceBase(from, std::make_pair('f', 1));
+          if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
+                                tmpBoard->whiteKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+          tmpBoard->movePieceBase(std::make_pair('f', 1),
+                                  std::make_pair('g', 1));
+          if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
+                                tmpBoard->whiteKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+        } else if (to.first == 'c' && to.second == 1) {
+          // move king to e1, d1, and c1 on a copy of the board, and check if
+          // any of them put the king in check
+          Board *tmpBoard = this->clone();
+          tmpBoard->movePieceBase(from, std::make_pair('d', 1));
+          if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
+                                tmpBoard->whiteKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+          tmpBoard->movePieceBase(std::make_pair('d', 1),
+                                  std::make_pair('c', 1));
+          if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
+                                tmpBoard->whiteKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+        }
+      }
+    } else {
+      if (from.first == 'e' && from.second == 8) {
+        if (to.first == 'g' && to.second == 8) {
+          // move king to e8, f8, and g8 on a copy of the board, and check if
+          // any of them put the king in check
+          Board *tmpBoard = this->clone();
+          tmpBoard->movePieceBase(from, std::make_pair('f', 8));
+          if (tmpBoard->inCheck(*(tmpBoard->blackKing),
+                                tmpBoard->blackKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+          tmpBoard->movePieceBase(std::make_pair('f', 8),
+                                  std::make_pair('g', 8));
+          if (tmpBoard->inCheck(*(tmpBoard->blackKing),
+                                tmpBoard->blackKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+        } else if (to.first == 'c' && to.second == 8) {
+          // move king to e8, d8, and c8 on a copy of the board, and check if
+          // any of them put the king in check
+          Board *tmpBoard = this->clone();
+          tmpBoard->movePieceBase(from, std::make_pair('d', 8));
+          if (tmpBoard->inCheck(*(tmpBoard->blackKing),
+                                tmpBoard->blackKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+          tmpBoard->movePieceBase(std::make_pair('d', 8),
+                                  std::make_pair('c', 8));
+          if (tmpBoard->inCheck(*(tmpBoard->blackKing),
+                                tmpBoard->blackKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+        }
+      }
+    }
+  }
+
   for (auto move : currentPiece->allPossibleMoves) {
     if (move == to) {
       Board *tmpBoard = this->clone();
@@ -932,6 +1024,76 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
 void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   Piece *fromPiece = getPieceAtPosition(from);
   Piece *toPiece = getPieceAtPosition(to);
+
+  // Castling
+  if (fromPiece->getColor() == 'b' && to == std::make_pair('g', 8) &&
+      fromPiece->getName() == 'k' &&
+      getPieceAtPosition(std::make_pair('h', 8))->getName() == 'r') {
+    // std::cout << "CASTLING" << std::endl;
+    Piece *rook = getPieceAtPosition(std::make_pair('h', 8));
+    delete toPiece;
+
+    currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+    currentBoard[to.first - 1 - 'a'][to.second - 1] = rook;
+
+    currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+    currentBoard['h' - 'a'][7] = new NullPiece{'*', '*'};
+    // set rook and king as moved
+    fromPiece->setPieceAsMoved();
+    rook->setPieceAsMoved();
+    return;
+
+  } else if (fromPiece->getColor() == 'b' && to == std::make_pair('c', 8) &&
+             fromPiece->getName() == 'k' &&
+             getPieceAtPosition(std::make_pair('a', 8))->getName() == 'r') {
+    // std::cout << "CASTLING" << std::endl;
+    Piece *rook = getPieceAtPosition(std::make_pair('a', 8));
+    delete toPiece;
+
+    currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+    currentBoard[to.first - 1 - 'a'][to.second - 1] = rook;
+
+    currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+    currentBoard['a' - 'a'][7] = new NullPiece{'*', '*'};
+    // set rook and king as moved
+    fromPiece->setPieceAsMoved();
+    rook->setPieceAsMoved();
+    return;
+
+  } else if (fromPiece->getColor() == 'w' && to.first == 'g' &&
+             to.second == 1 && fromPiece->getName() == 'K' &&
+             getPieceAtPosition(std::make_pair('h', 1))->getName() == 'R') {
+    Piece *rook = getPieceAtPosition(std::make_pair('h', 1));
+    // std::cout << "CASTLING" << std::endl;
+    delete toPiece;
+
+    currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+    currentBoard[to.first - 'a' - 1][to.second - 1] = rook;
+
+    currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+    currentBoard['h' - 'a'][1 - 1] = new NullPiece{'*', '*'};
+    // set rook and king as moved
+    fromPiece->setPieceAsMoved();
+    rook->setPieceAsMoved();
+
+    return;
+  } else if (fromPiece->getColor() == 'w' && to == std::make_pair('c', 1) &&
+             fromPiece->getName() == 'K' &&
+             getPieceAtPosition(std::make_pair('a', 1))->getName() == 'R') {
+    Piece *rook = getPieceAtPosition(std::make_pair('a', 1));
+    delete toPiece;
+    // std::cout << "CASTLING" << std::endl;
+
+    currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+    currentBoard[to.first + 1 - 'a'][to.second - 1] = rook;
+
+    currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+    currentBoard['a' - 'a'][0] = new NullPiece{'*', '*'};
+    // set rook and king as moved
+    fromPiece->setPieceAsMoved();
+    rook->setPieceAsMoved();
+    return;
+  }
 
   if (fromPiece->getName() != '*' &&
       (fromPiece->getColor() != toPiece->getColor())) {
@@ -974,8 +1136,7 @@ AbstractPlayer *Board::getWhosPlayerTurn() { return this->whosPlayerTurn; }
 
 // function to check whether piece can be captured by opponent
 bool Board::isPieceCapturable(Piece *p, std::pair<char, int> position) {
-  std::vector<std::pair<char, int>> allLegalMoves =
-      this->generateThreatMap(p);
+  std::vector<std::pair<char, int>> allLegalMoves = this->generateThreatMap(p);
 
   for (auto move : allLegalMoves) {
     if (move == position) {
