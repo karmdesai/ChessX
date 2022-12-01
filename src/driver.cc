@@ -213,6 +213,9 @@ int main(int argc, char *argv[]) {
       // if its the computer's move, tell it to calculate its move
       if (currentPlayer->isComputer()) {
         auto move = currentPlayer->calculateNextMove();
+        if (move == std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1))) {
+          break;
+        }
         bool movedSucessfully = b->movePiece(move.first, move.second);
 
         // if the move was invalid, retry the move.

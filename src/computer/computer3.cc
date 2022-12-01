@@ -92,6 +92,9 @@ Computer3::calculateNextMove() {
                 << movesThatGetKingOutOfCheck[randomIndex].second.second
                 << std::endl;
       return movesThatGetKingOutOfCheck[randomIndex];
+    } else {
+      std::cout << "GG IM FUCKED" << std::endl;
+      return std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
     }
   }
 
