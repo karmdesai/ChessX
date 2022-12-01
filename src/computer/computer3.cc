@@ -30,7 +30,6 @@ Computer3::calculateNextMove() {
   // loop through the board to get all the possible moves
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 8; j++) {
-      std::cout << "i: " << i << " j: " << j << std::endl;
       // get the piece at the current position
       std::pair<char, int> currentPos = std::make_pair(char('a' + i), j + 1);
       Piece *p = board->getPieceAtPosition(currentPos);
@@ -49,8 +48,6 @@ Computer3::calculateNextMove() {
       }
     }
   }
-
-  std::cout << "got past the loop" << std::endl;
 
   // if the king is in check, we can only make moves that get the king out of
   // check
@@ -90,14 +87,17 @@ Computer3::calculateNextMove() {
       int randomIndex = randomNumber(0, movesThatGetKingOutOfCheck.size() - 1);
       std::cout << "computer plays: "
                 << movesThatGetKingOutOfCheck[randomIndex].first.first
-                << movesThatGetKingOutOfCheck[randomIndex].first.second << " "
+                << movesThatGetKingOutOfCheck[randomIndex].first.second
+                << " -> "
                 << movesThatGetKingOutOfCheck[randomIndex].second.first
                 << movesThatGetKingOutOfCheck[randomIndex].second.second
                 << std::endl;
       return movesThatGetKingOutOfCheck[randomIndex];
+    } else {
+      // we've been checkmated
+      return std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
     }
   }
-  std::cout << "got past the king check" << std::endl;
 
   // remove moves from allMoves that put the king in check
   std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
@@ -108,23 +108,15 @@ Computer3::calculateNextMove() {
     // make the move on a copy of the board
     Board *boardCopy = board->clone();
     bool success = boardCopy->movePiece(move.first, move.second);
-    std::cout << "was able to make the move: " << success << std::endl;
-    std::cout << "move from: " << move.first.first << move.first.second
-              << move.second.first << move.second.second << std::endl;
 
     // if the king is not in check, add the move to the list
     if (success && !boardCopy->inCheck(*king, kingPos)) {
-      std::cout << "got inside the check for king2" << std::endl;
       movesThatDoNotPutOurKingInCheck.push_back(move);
-      std::cout << "got after push back" << std::endl;
     }
 
     // delete the copy of the board
     delete boardCopy;
-    std::cout << "deleted" << std::endl;
   }
-
-  std::cout << "got past the king check 2" << std::endl;
 
   // if the king is not in check, we should try to make the best move possible
 
@@ -169,31 +161,6 @@ Computer3::calculateNextMove() {
     }
   }
 
-  std::cout << "got past the capture check" << std::endl;
-
-  // // loop through all the moves
-  // for (auto move : movesThatDoNotPutOurKingInCheck) {
-  //   // make the move on a copy of the board
-  //   Board *boardCopy = board->clone();
-  //   bool success = boardCopy->movePiece(move.first, move.second);
-
-  //   // if the move was successful, check if piece is capturable
-  //   if (success) {
-  //     // get the piece that was moved
-  //     Piece *p = boardCopy->getPieceAtPosition(move.second);
-
-  //     // if the piece is not capturable, add it to the list of moves that
-  //     avoid
-  //     // capture
-  //     if (!boardCopy->isPieceCapturable(p, move.second)) {
-  //       movesThatAvoidCapture.push_back(move);
-  //     }
-  //   }
-
-  //   // delete the copy of the board
-  //   delete boardCopy;
-  // }
-
   // **********************************************************************
   // FROM HERE, IT IS COMPUTER2'S LOGIC
   // **********************************************************************
@@ -212,8 +179,6 @@ Computer3::calculateNextMove() {
       movesThatCapture.push_back(move);
     }
   }
-
-  std::cout << "got past the capture check 2" << std::endl;
 
   // get all moves that put the opponent in check
   std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
@@ -246,8 +211,6 @@ Computer3::calculateNextMove() {
     delete boardCopy;
   }
 
-  std::cout << "got past the check check" << std::endl;
-
   // get set intersection of movesThatAvoidCapture, movesThatCapture, and
   // movesThatPutOpponentInCheck
   std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
@@ -265,13 +228,13 @@ Computer3::calculateNextMove() {
       movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck.push_back(move);
     }
   }
-  std::cout << "------------------" << std::endl;
-  std::cout << "all three intersection" << std::endl;
-  for (auto move : movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck) {
-    std::cout << move.first.first << move.first.second << " "
-              << move.second.first << move.second.second << std::endl;
-  }
-  std::cout << "------------------" << std::endl;
+  // std::cout << "------------------" << std::endl;
+  // std::cout << "all three intersection" << std::endl;
+  // for (auto move : movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck) {
+  //   std::cout << move.first.first << move.first.second << " "
+  //             << move.second.first << move.second.second << std::endl;
+  // }
+  // std::cout << "------------------" << std::endl;
 
   if (movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck.size() > 0) {
     int randomIndex = randomNumber(
@@ -291,13 +254,13 @@ Computer3::calculateNextMove() {
     return movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck[randomIndex];
   }
 
-  std::cout << "------------------" << std::endl;
-  std::cout << "moves that avoid capture" << std::endl;
-  for (auto move : movesThatAvoidCapture) {
-    std::cout << move.first.first << move.first.second << " "
-              << move.second.first << move.second.second << std::endl;
-  }
-  std::cout << "------------------" << std::endl;
+  // std::cout << "------------------" << std::endl;
+  // std::cout << "moves that avoid capture" << std::endl;
+  // for (auto move : movesThatAvoidCapture) {
+  //   std::cout << move.first.first << move.first.second << " "
+  //             << move.second.first << move.second.second << std::endl;
+  // }
+  // std::cout << "------------------" << std::endl;
 
   // moves that avoid capture and capture
   std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
@@ -311,13 +274,13 @@ Computer3::calculateNextMove() {
       movesThatAvoidCaptureAndCapture.push_back(move);
     }
   }
-  std::cout << "------------------" << std::endl;
-  std::cout << "avoid capture and capture" << std::endl;
-  for (auto move : movesThatAvoidCaptureAndCapture) {
-    std::cout << move.first.first << move.first.second << " "
-              << move.second.first << move.second.second << std::endl;
-  }
-  std::cout << "------------------" << std::endl;
+  // std::cout << "------------------" << std::endl;
+  // std::cout << "avoid capture and capture" << std::endl;
+  // for (auto move : movesThatAvoidCaptureAndCapture) {
+  //   std::cout << move.first.first << move.first.second << " "
+  //             << move.second.first << move.second.second << std::endl;
+  // }
+  // std::cout << "------------------" << std::endl;
 
   // if there are moves that avoid capture and capture, return one of them
   if (movesThatAvoidCaptureAndCapture.size() > 0) {
@@ -347,13 +310,13 @@ Computer3::calculateNextMove() {
     }
   }
 
-  std::cout << "------------------" << std::endl;
-  std::cout << "avoid capture and put opponent in check" << std::endl;
-  for (auto move : movesThatAvoidCaptureAndPutOpponentInCheck) {
-    std::cout << move.first.first << move.first.second << " "
-              << move.second.first << move.second.second << std::endl;
-  }
-  std::cout << "------------------" << std::endl;
+  // std::cout << "------------------" << std::endl;
+  // std::cout << "avoid capture and put opponent in check" << std::endl;
+  // for (auto move : movesThatAvoidCaptureAndPutOpponentInCheck) {
+  //   std::cout << move.first.first << move.first.second << " "
+  //             << move.second.first << move.second.second << std::endl;
+  // }
+  // std::cout << "------------------" << std::endl;
 
   // if there are moves that avoid capture and put opponent in check, return one
   // of them
@@ -397,13 +360,13 @@ Computer3::calculateNextMove() {
       movesThatPutOpponentInCheck.begin(), movesThatPutOpponentInCheck.end(),
       std::back_inserter(movesThatCaptureAndPutOpponentInCheck));
 
-  std::cout << "------------------" << std::endl;
-  std::cout << "capture and check intersection" << std::endl;
-  for (auto move : movesThatCaptureAndPutOpponentInCheck) {
-    std::cout << move.first.first << move.first.second << " "
-              << move.second.first << move.second.second << std::endl;
-  }
-  std::cout << "------------------" << std::endl;
+  // std::cout << "------------------" << std::endl;
+  // std::cout << "capture and check intersection" << std::endl;
+  // for (auto move : movesThatCaptureAndPutOpponentInCheck) {
+  //   std::cout << move.first.first << move.first.second << " "
+  //             << move.second.first << move.second.second << std::endl;
+  // }
+  // std::cout << "------------------" << std::endl;
 
   if (movesThatCaptureAndPutOpponentInCheck.size() > 0) {
     int randomIndex =
@@ -432,13 +395,13 @@ Computer3::calculateNextMove() {
                  movesThatPutOpponentInCheck.end(),
                  std::back_inserter(movesThatCaptureOrPutOpponentInCheck));
 
-  std::cout << "------------------" << std::endl;
-  std::cout << "capture or check union" << std::endl;
-  for (auto move : movesThatCaptureOrPutOpponentInCheck) {
-    std::cout << move.first.first << move.first.second << " "
-              << move.second.first << move.second.second << std::endl;
-  }
-  std::cout << "------------------" << std::endl;
+  // std::cout << "------------------" << std::endl;
+  // std::cout << "capture or check union" << std::endl;
+  // for (auto move : movesThatCaptureOrPutOpponentInCheck) {
+  //   std::cout << move.first.first << move.first.second << " "
+  //             << move.second.first << move.second.second << std::endl;
+  // }
+  // std::cout << "------------------" << std::endl;
 
   if (movesThatCaptureOrPutOpponentInCheck.size() > 0) {
     int randomIndex =
@@ -472,5 +435,5 @@ Computer3::calculateNextMove() {
   // if there are no moves AT ALL its a stalemate, as the king isn't in check
   // (otherwise we would have returned a move that gets the king out of check
   // or would have realized that we've been checkmated)
-  return std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
+  return std::make_pair(std::make_pair('a', 0), std::make_pair('a', 0));
 }

@@ -192,7 +192,6 @@ int main(int argc, char *argv[]) {
 
   while (!std::cin.eof()) {
     b->generateCompleteMoves();
-    std::cout << "got here" << std::endl;
 
     AbstractPlayer *currentPlayer = b->getWhosPlayerTurn();
 
@@ -214,6 +213,24 @@ int main(int argc, char *argv[]) {
       // if its the computer's move, tell it to calculate its move
       if (currentPlayer->isComputer()) {
         auto move = currentPlayer->calculateNextMove();
+        if (move ==
+            std::make_pair(std::make_pair('a', 0), std::make_pair('a', 0))) {
+          std::cout << "It's a stalemate." << std::endl;
+          delete b;
+          return 0;
+        }
+
+        if (move ==
+            std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1))) {
+          if (currentPlayer->getPlayerColor() == 'w') {
+            std::cout << "White has been checkmated." << std::endl;
+          } else {
+            std::cout << "Black has been checkmated." << std::endl;
+          }
+          delete b;
+          return 0;
+        }
+
         bool movedSucessfully = b->movePiece(move.first, move.second);
 
         // if the move was invalid, retry the move.
@@ -256,10 +273,6 @@ int main(int argc, char *argv[]) {
         }
 
         std::cout << b << std::endl;
-        std::cout << "white king: " << b->getWhiteKingPosition().first
-                  << b->getWhiteKingPosition().second << std::endl;
-        std::cout << "black king: " << b->getBlackKingPosition().first
-                  << b->getBlackKingPosition().second << std::endl;
 
         if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
           std::cout << "The Black King is in check!" << std::endl;

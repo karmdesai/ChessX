@@ -85,10 +85,9 @@ Computer1::calculateNextMove() {
     }
   }
 
-  // if the king is not in check, return a move that does not put its king in
-  // check
+  /// remove moves from allMoves that put the king in check
   std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
-      movesThatDoNotPutKingInCheck;
+      movesThatDoNotPutOurKingInCheck;
 
   // loop through all the moves
   for (auto move : allMoves) {
@@ -97,8 +96,8 @@ Computer1::calculateNextMove() {
     bool success = boardCopy->movePiece(move.first, move.second);
 
     // if the king is not in check, add the move to the list
-    if (success) {
-      movesThatDoNotPutKingInCheck.push_back(move);
+    if (success && !boardCopy->inCheck(*king, kingPos)) {
+      movesThatDoNotPutOurKingInCheck.push_back(move);
     }
 
     // delete the copy of the board
