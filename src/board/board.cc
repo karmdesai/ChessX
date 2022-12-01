@@ -129,8 +129,6 @@ std::ostream &operator<<(std::ostream &out, const Board *myBoard) {
   out << "  abcdefgh";
   out << std::endl;
 
-
-  out << myBoard->currentBoard[5][0]->getName() << endl;
   return out;
 }
 
@@ -571,10 +569,6 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
     shouldAdd = true;
     
     if (king.getColor() != this->getPieceAtPosition(move)->getColor()) {
-      // if (move.first == 'g' && move.second == 1) {
-      //   std::cout << move.first << move.second << " .   " << getPieceAtPosition(move)->getColor() << "KING COLOR "<< king.getColor() << std::endl;
-      //   std::cout << "BOARD AT NEW KING PLACE" << currentBoard[6][0]->getColor() << "    NAME:  " << currentBoard[6][0]->getName() << std::endl;
-      // }
 
       // move the King to this potential position
       for (auto threat : threatMap) {
@@ -587,22 +581,18 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
         if (king.getColor() == 'b') {
           if (move == std::make_pair('g', 8) && (getPieceAtPosition(std::make_pair('f', 8))->getName() != '*' || 
             getPieceAtPosition(std::make_pair('g', 8))->getName() != '*' || getPieceAtPosition(std::make_pair('h', 8))->getHasMoved())){
-              std::cout << "RAN 1" <<std::endl;
               continue;
           } else if (move == std::make_pair('c', 8) && (getPieceAtPosition(std::make_pair('c', 8))->getName() != '*' || 
             getPieceAtPosition(std::make_pair('d', 8))->getName() != '*' || getPieceAtPosition(std::make_pair('a', 8))->getHasMoved()))
            {
-            std::cout << "RAN 2" <<std::endl;
             continue;
           }
         } else if (king.getColor() == 'w') {
           if (move == std::make_pair('g', 1) && (getPieceAtPosition(std::make_pair('f', 1))->getName() != '*' || 
             getPieceAtPosition(std::make_pair('g', 1))->getName() != '*' || getPieceAtPosition(std::make_pair('h', 1))->getHasMoved())){
-              std::cout << "RAN 3" <<std::endl;
               continue;
           } else if (move == std::make_pair('c', 1) && (getPieceAtPosition(std::make_pair('c', 1))->getName() != '*' || 
             getPieceAtPosition(std::make_pair('d', 1))->getName() != '*' || getPieceAtPosition(std::make_pair('a', 1))->getHasMoved())) {
-            std::cout << "RAN 4" <<std::endl;
             continue;
           }
         }
