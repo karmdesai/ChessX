@@ -1106,7 +1106,6 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
 void Board::setEnPassantPawn(std::pair<char, int> pawn) {
   this->enPassantPawn.first = pawn.first;
   this->enPassantPawn.second = pawn.second;
-  cout << "enpassantpawnchanged" << endl;
 }
 
 /*
