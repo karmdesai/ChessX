@@ -53,7 +53,7 @@ class Board {
 
   // Getters
   Piece *getPieceAtPosition(std::pair<char, int> position);
-  char getTurn();
+  char getColourTurn();
 
   Piece *getWhiteKing();
   Piece *getBlackKing();

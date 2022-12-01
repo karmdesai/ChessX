@@ -82,6 +82,9 @@ Computer1::calculateNextMove() {
     if (movesThatGetKingOutOfCheck.size() > 0) {
       int randomIndex = randomNumber(0, movesThatGetKingOutOfCheck.size() - 1);
       return movesThatGetKingOutOfCheck[randomIndex];
+    } else {
+      // we've lost, as there are no moves that get the king out of check
+      return std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
     }
   }
 
@@ -96,7 +99,7 @@ Computer1::calculateNextMove() {
     bool success = boardCopy->movePiece(move.first, move.second);
 
     // if the king is not in check, add the move to the list
-    if (success && !boardCopy->inCheck(*king, kingPos)) {
+    if (success) {
       movesThatDoNotPutOurKingInCheck.push_back(move);
     }
 
@@ -105,10 +108,11 @@ Computer1::calculateNextMove() {
   }
 
   // if the king is not in check, we can make any move
-  int randomIndex = randomNumber(0, allMoves.size() - 1);
-  auto randomMove = allMoves.at(randomIndex);
-  std::cout << "Computer plays: " << randomMove.first.first
-            << randomMove.first.second << " -> " << randomMove.second.first
-            << randomMove.second.second << std::endl;
-  return randomMove;
+  if (allMoves.size() > 0) {
+    int randomIndex = randomNumber(0, allMoves.size() - 1);
+    return allMoves[randomIndex];
+  } else {
+    // it's a stalemate, as we're not in check and there are no moves
+    return std::make_pair(std::make_pair('a', 0), std::make_pair('a', 0));
+  }
 }

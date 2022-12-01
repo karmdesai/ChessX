@@ -76,12 +76,6 @@ Computer2::calculateNextMove() {
     // if there are moves that get the king out of check, return one of them
     if (movesThatGetKingOutOfCheck.size() > 0) {
       int randomIndex = randomNumber(0, movesThatGetKingOutOfCheck.size() - 1);
-      std::cout << "computer plays: "
-                << movesThatGetKingOutOfCheck[randomIndex].first.first
-                << movesThatGetKingOutOfCheck[randomIndex].first.second << " "
-                << movesThatGetKingOutOfCheck[randomIndex].second.first
-                << movesThatGetKingOutOfCheck[randomIndex].second.second
-                << std::endl;
       return movesThatGetKingOutOfCheck[randomIndex];
     } else {  // we've lost :(
       return std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
@@ -122,14 +116,6 @@ Computer2::calculateNextMove() {
     }
   }
 
-  // std::cout << "---------------------" << std::endl;
-  // std::cout << "moves that capture: " << std::endl;
-  // for (auto move : movesThatCapture) {
-  //   std::cout << move.first.first << move.first.second << " "
-  //             << move.second.first << move.second.second << std::endl;
-  // }
-  // std::cout << "---------------------" << std::endl;
-
   // get all moves that put the opponent in check
   std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
       movesThatPutOpponentInCheck;
@@ -154,22 +140,12 @@ Computer2::calculateNextMove() {
 
     // if the king is in check, add the move to the list
     if (boardCopy->inCheck(*king, kingPos)) {
-      std::cout << "move: " << move.first.first << move.first.second << " "
-                << move.second.first << move.second.second << std::endl;
       movesThatPutOpponentInCheck.push_back(move);
     }
 
     // delete the copy of the board
     delete boardCopy;
   }
-
-  // std::cout << "---------------------" << std::endl;
-  // std::cout << "moves that put opponent in check: " << std::endl;
-  // for (auto move : movesThatPutOpponentInCheck) {
-  //   std::cout << move.first.first << move.first.second << " "
-  //             << move.second.first << move.second.second << std::endl;
-  // }
-  // std::cout << "---------------------" << std::endl;
 
   // best case is that there is a move that captures a piece and puts the
   // opponent in check. If such a move (or moves) exist, return one of them
@@ -189,14 +165,6 @@ Computer2::calculateNextMove() {
   if (movesThatCaptureAndPutOpponentInCheck.size() > 0) {
     int randomIndex =
         randomNumber(0, movesThatCaptureAndPutOpponentInCheck.size() - 1);
-    std::cout
-        << "computer plays: "
-        << movesThatCaptureAndPutOpponentInCheck[randomIndex].first.first
-        << movesThatCaptureAndPutOpponentInCheck[randomIndex].first.second
-        << " "
-        << movesThatCaptureAndPutOpponentInCheck[randomIndex].second.first
-        << movesThatCaptureAndPutOpponentInCheck[randomIndex].second.second
-        << std::endl;
     return movesThatCaptureAndPutOpponentInCheck[randomIndex];
   }
 
@@ -216,13 +184,6 @@ Computer2::calculateNextMove() {
   if (movesThatCaptureOrPutOpponentInCheck.size() > 0) {
     int randomIndex =
         randomNumber(0, movesThatCaptureOrPutOpponentInCheck.size() - 1);
-    std::cout << "computer plays: "
-              << movesThatCaptureOrPutOpponentInCheck[randomIndex].first.first
-              << movesThatCaptureOrPutOpponentInCheck[randomIndex].first.second
-              << " "
-              << movesThatCaptureOrPutOpponentInCheck[randomIndex].second.first
-              << movesThatCaptureOrPutOpponentInCheck[randomIndex].second.second
-              << std::endl;
     return movesThatCaptureOrPutOpponentInCheck[randomIndex];
   }
 
@@ -232,18 +193,11 @@ Computer2::calculateNextMove() {
   if (movesThatDoNotPutOurKingInCheck.size() > 0) {
     int randomIndex =
         randomNumber(0, movesThatDoNotPutOurKingInCheck.size() - 1);
-    std::cout << "computer plays: "
-              << movesThatDoNotPutOurKingInCheck[randomIndex].first.first
-              << movesThatDoNotPutOurKingInCheck[randomIndex].first.second
-              << " "
-              << movesThatDoNotPutOurKingInCheck[randomIndex].second.first
-              << movesThatDoNotPutOurKingInCheck[randomIndex].second.second
-              << std::endl;
     return movesThatDoNotPutOurKingInCheck[randomIndex];
   }
 
   // if there are no moves AT ALL its a stalemate, as the king isn't in check
   // (otherwise we would have returned a move that gets the king out of check
   // or would have realized that we've been checkmated)
-  return std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
+  return std::make_pair(std::make_pair('a', 0), std::make_pair('a', 0));
 }

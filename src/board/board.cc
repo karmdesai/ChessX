@@ -51,7 +51,6 @@ void Board::defaultInitialization() {
   this->currentBoard[2][0] = new Bishop('B', 'w');
   this->currentBoard[3][0] = new Queen('Q', 'w');
 
-  // don't deal with castling for now
   Piece *newWhiteKing = new King('K', 'w', true);
   this->whiteKing = newWhiteKing;
   this->currentBoard[4][0] = newWhiteKing;
@@ -81,7 +80,6 @@ void Board::defaultInitialization() {
   this->currentBoard[2][7] = new Bishop('b', 'b');
   this->currentBoard[3][7] = new Queen('q', 'b');
 
-  // don't deal with castling for now
   Piece *newBlackKing = new King('k', 'b', true);
   this->blackKing = newBlackKing;
   this->currentBoard[4][7] = newBlackKing;
@@ -285,7 +283,7 @@ void Board::setBlackKingPosition(std::pair<char, int> position) {
 }
 /* End Setters */
 
-char Board::getTurn() { return this->whosColourTurn; }
+char Board::getColourTurn() { return this->whosColourTurn; }
 
 void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
   // pawn
@@ -916,16 +914,12 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           tmpBoard->movePieceBase(from, std::make_pair('f', 1));
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
-            std::cout << "Castling is not allowed, king would be in check"
-                      << std::endl;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('f', 1),
                                   std::make_pair('g', 1));
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
-            std::cout << "Castling is not allowed, king would be in check"
-                      << std::endl;
             return false;
           }
         } else if (to.first == 'c' && to.second == 1) {
@@ -935,16 +929,12 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           tmpBoard->movePieceBase(from, std::make_pair('d', 1));
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
-            std::cout << "Castling is not allowed, king would be in check"
-                      << std::endl;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('d', 1),
                                   std::make_pair('c', 1));
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
-            std::cout << "Castling is not allowed, king would be in check"
-                      << std::endl;
             return false;
           }
         }
@@ -958,16 +948,12 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           tmpBoard->movePieceBase(from, std::make_pair('f', 8));
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
-            std::cout << "Castling is not allowed, king would be in check"
-                      << std::endl;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('f', 8),
                                   std::make_pair('g', 8));
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
-            std::cout << "Castling is not allowed, king would be in check"
-                      << std::endl;
             return false;
           }
         } else if (to.first == 'c' && to.second == 8) {
@@ -977,16 +963,12 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           tmpBoard->movePieceBase(from, std::make_pair('d', 8));
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
-            std::cout << "Castling is not allowed, king would be in check"
-                      << std::endl;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('d', 8),
                                   std::make_pair('c', 8));
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
-            std::cout << "Castling is not allowed, king would be in check"
-                      << std::endl;
             return false;
           }
         }
@@ -1029,7 +1011,6 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   if (fromPiece->getColor() == 'b' && to == std::make_pair('g', 8) &&
       fromPiece->getName() == 'k' &&
       getPieceAtPosition(std::make_pair('h', 8))->getName() == 'r') {
-    // std::cout << "CASTLING" << std::endl;
     Piece *rook = getPieceAtPosition(std::make_pair('h', 8));
     delete toPiece;
 
@@ -1046,7 +1027,6 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   } else if (fromPiece->getColor() == 'b' && to == std::make_pair('c', 8) &&
              fromPiece->getName() == 'k' &&
              getPieceAtPosition(std::make_pair('a', 8))->getName() == 'r') {
-    // std::cout << "CASTLING" << std::endl;
     Piece *rook = getPieceAtPosition(std::make_pair('a', 8));
     delete toPiece;
 
@@ -1064,7 +1044,6 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
              to.second == 1 && fromPiece->getName() == 'K' &&
              getPieceAtPosition(std::make_pair('h', 1))->getName() == 'R') {
     Piece *rook = getPieceAtPosition(std::make_pair('h', 1));
-    // std::cout << "CASTLING" << std::endl;
     delete toPiece;
 
     currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
@@ -1082,7 +1061,6 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
              getPieceAtPosition(std::make_pair('a', 1))->getName() == 'R') {
     Piece *rook = getPieceAtPosition(std::make_pair('a', 1));
     delete toPiece;
-    // std::cout << "CASTLING" << std::endl;
 
     currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
     currentBoard[to.first + 1 - 'a'][to.second - 1] = rook;

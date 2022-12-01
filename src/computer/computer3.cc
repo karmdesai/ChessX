@@ -85,13 +85,6 @@ Computer3::calculateNextMove() {
     // if there are moves that get the king out of check, return one of them
     if (movesThatGetKingOutOfCheck.size() > 0) {
       int randomIndex = randomNumber(0, movesThatGetKingOutOfCheck.size() - 1);
-      // std::cout << "computer plays: "
-      //           << movesThatGetKingOutOfCheck[randomIndex].first.first
-      //           << movesThatGetKingOutOfCheck[randomIndex].first.second
-      //           << " -> "
-      //           << movesThatGetKingOutOfCheck[randomIndex].second.first
-      //           << movesThatGetKingOutOfCheck[randomIndex].second.second
-      //           << std::endl;
       return movesThatGetKingOutOfCheck[randomIndex];
     } else {
       // we've been checkmated

@@ -17,6 +17,8 @@
 #include "pieces/queen.h"
 #include "pieces/rook.h"
 
+const int MAX_TRIES = 10;
+
 int main(int argc, char *argv[]) {
   std::cout << "**** WELCOME TO CHESS ****" << std::endl;
 
@@ -188,7 +190,7 @@ int main(int argc, char *argv[]) {
 
   /* Start Game Testing */
   b->setWhitePlayer(new Computer3('w', b));
-  b->setBlackPlayer(new Computer3('b', b));
+  b->setBlackPlayer(new Computer1('b', b));
 
   std::string command;
   // std::pair<char, int> position;
@@ -212,10 +214,19 @@ int main(int argc, char *argv[]) {
       return 0;
     }
 
-    else if (whiteChecker->calculateNextMove() ==
+    // if it's black turn and there are no moves, it's stalemate.
+    else if (b->getColourTurn() == 'b' &&
+             b->getBlackPlayer()->calculateNextMove() ==
                  std::make_pair(std::make_pair('a', 0),
-                                std::make_pair('a', 0)) ||
-             blackChecker->calculateNextMove() ==
+                                std::make_pair('a', 0))) {
+      std::cout << "Stalemate! It's a draw!" << std::endl;
+      delete b;
+      return 0;
+    }
+
+    // if it's white turn and there are no moves, it's stalemate.
+    else if (b->getColourTurn() == 'w' &&
+             b->getWhitePlayer()->calculateNextMove() ==
                  std::make_pair(std::make_pair('a', 0),
                                 std::make_pair('a', 0))) {
       std::cout << "Stalemate! It's a draw!" << std::endl;
@@ -225,7 +236,7 @@ int main(int argc, char *argv[]) {
 
     AbstractPlayer *currentPlayer = b->getWhosPlayerTurn();
 
-    if (b->getTurn() == 'w') {
+    if (b->getColourTurn() == 'w') {
       std::cout << "White's turn: " << std::endl;
     } else {
       std::cout << "Black's turn: " << std::endl;
@@ -244,18 +255,31 @@ int main(int argc, char *argv[]) {
       if (currentPlayer->isComputer()) {
         auto move = currentPlayer->calculateNextMove();
         // print out the move
-        std::cout << "Computer plays: " << move.first.first << move.first.second
-                  << " -> " << move.second.first << move.second.second
-                  << std::endl;
+        std::cout << "move " << move.first.first << move.first.second << " "
+                  << move.second.first << move.second.second << std::endl;
 
         bool movedSucessfully = b->movePiece(move.first, move.second);
+        int count = 0;
 
-        // if the move was invalid, retry the move.
-        if (!movedSucessfully) {
-          std::cout << "Something very bad happened. The computer made an "
-                       "invalid move. The program has been terminated."
-                    << std::endl;
+        /* So there's this weird bug where the computer might try to move
+        a piece that is pinned to its own king. Here I try to force it to
+        choose a new move, and give it 10 tries. If it still fails, then I
+        just assume the computer has lost it's mind and force it to resign. */
+        while (count < MAX_TRIES && !movedSucessfully) {
+          // tell the computer to calculate its move again.
+          auto newMove = currentPlayer->calculateNextMove();
+          if (newMove == move) {
+            count++;
+          } else {
+            movedSucessfully = b->movePiece(newMove.first, newMove.second);
+          }
           break;
+        }
+
+        if (count == 5) {
+          std::cout << "Computer is stuck. Exiting game." << std::endl;
+          delete b;
+          return 0;
         }
 
         std::cout << b << std::endl;
@@ -308,7 +332,7 @@ int main(int argc, char *argv[]) {
     }
 
     // set player and turn to the next player
-    if (b->getTurn() == 'w') {
+    if (b->getColourTurn() == 'w') {
       b->setColourTurn('b');
       b->setPlayerTurn(b->getBlackPlayer());
     } else {
