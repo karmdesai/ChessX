@@ -199,25 +199,6 @@ int main(int argc, char *argv[]) {
       std::cout << "White's turn: " << std::endl;
     } else {
       std::cout << "Black's turn: " << std::endl;
-      auto move = opponent->calculateNextMove();
-      // delete b->getPieceAtPosition(newPos);
-      Piece *computerChoicePiece = b->getPieceAtPosition(move.first);
-      computerChoicePiece->setPieceAsMoved();
-      b->setPieceAtPosition(move.second, computerChoicePiece);
-      b->setPieceAtPosition(move.first, new NullPiece{'*', '*'});
-      b->setTurn(human->getPlayerColor());
-      std::cout << b << std::endl;
-      continue;
-    }
-
-    std::cin >> command;
-
-    AbstractPlayer *currentPlayer = b->getWhosPlayerTurn();
-
-    if (b->getTurn() == 'w') {
-      std::cout << "White's turn: " << std::endl;
-    } else {
-      std::cout << "Black's turn: " << std::endl;
     }
 
     std::cin >> command;
