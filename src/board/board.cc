@@ -977,7 +977,7 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   Piece *toPiece = getPieceAtPosition(to);
 
   // Castling
-  if (fromPiece->getColor() == 'b' && to == std::make_pair('g', 8)) {
+  if (fromPiece->getColor() == 'b' && to == std::make_pair('g', 8) && fromPiece->getName() == 'k') {
     Piece *rook = getPieceAtPosition(std::make_pair('h', 8));
     delete toPiece;
 
@@ -991,7 +991,7 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     rook->setPieceAsMoved();
     return;
 
-  } else if (fromPiece->getColor() == 'b' && to == std::make_pair('c', 8)) {
+  } else if (fromPiece->getColor() == 'b' && to == std::make_pair('c', 8) && fromPiece->getName() == 'k') {
     Piece *rook = getPieceAtPosition(std::make_pair('a', 8));
     delete toPiece;
 
@@ -1006,7 +1006,7 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     return;
 
   } else if (fromPiece->getColor() == 'w' && to.first == 'g' &&
-             to.second == 1) {
+             to.second == 1 && fromPiece->getName() == 'K') {
     Piece *rook = getPieceAtPosition(std::make_pair('h', 1));
     delete toPiece;
 
@@ -1020,7 +1020,7 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     rook->setPieceAsMoved();
 
     return;
-  } else if (fromPiece->getColor() == 'w' && to == std::make_pair('c', 1)) {
+  } else if (fromPiece->getColor() == 'w' && to == std::make_pair('c', 1) && fromPiece->getName() == 'K') {
     Piece *rook = getPieceAtPosition(std::make_pair('a', 1));
     delete toPiece;
 
