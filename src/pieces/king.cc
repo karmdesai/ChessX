@@ -86,5 +86,5 @@ void King::setPieceAsMoved() {
 }
 
 bool King::getHasMoved() {
-  return inStartingPosition;
+  return !inStartingPosition;
 }

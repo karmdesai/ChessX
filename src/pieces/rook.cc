@@ -51,5 +51,5 @@ void Rook::setPieceAsMoved() {
 }
 
 bool Rook::getHasMoved() {
-  return inStartingPosition;
+  return !inStartingPosition;
 }

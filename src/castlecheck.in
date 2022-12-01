@@ -1,5 +1,10 @@
 move 
-move e2 e3
-move f1 d3
-move g1 h3
-move e1 g1
+move b1 a3
+move b2 b3
+move c2 c3
+move d2 d3
+move d1 c2
+move c1 d2
+move a1 b1
+move b1 a1
+move e1 c1

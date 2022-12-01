@@ -12,6 +12,8 @@
 #include "../pieces/queen.h"
 #include "../pieces/rook.h"
 
+using namespace std;
+
 /* Board class */
 Board::Board() {
   // start with board of nullpieces
@@ -127,6 +129,8 @@ std::ostream &operator<<(std::ostream &out, const Board *myBoard) {
   out << "  abcdefgh";
   out << std::endl;
 
+
+  out << myBoard->currentBoard[5][0]->getName() << endl;
   return out;
 }
 
@@ -546,8 +550,13 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
 
   for (auto move : king.allPossibleMoves) {
     shouldAdd = true;
-
+    
     if (king.getColor() != this->getPieceAtPosition(move)->getColor()) {
+      // if (move.first == 'g' && move.second == 1) {
+      //   std::cout << move.first << move.second << " .   " << getPieceAtPosition(move)->getColor() << "KING COLOR "<< king.getColor() << std::endl;
+      //   std::cout << "BOARD AT NEW KING PLACE" << currentBoard[6][0]->getColor() << "    NAME:  " << currentBoard[6][0]->getName() << std::endl;
+      // }
+
       // move the King to this potential position
       for (auto threat : threatMap) {
         if (move == threat) {
@@ -556,23 +565,25 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
       }
 
       if (shouldAdd == true) {
-
         if (king.getColor() == 'b') {
           if (move == std::make_pair('g', 8) && (getPieceAtPosition(std::make_pair('f', 8))->getName() != '*' || 
             getPieceAtPosition(std::make_pair('g', 8))->getName() != '*' || getPieceAtPosition(std::make_pair('h', 8))->getHasMoved())){
+              std::cout << "RAN 1" <<std::endl;
               continue;
           } else if (move == std::make_pair('c', 8) && (getPieceAtPosition(std::make_pair('c', 8))->getName() != '*' || 
             getPieceAtPosition(std::make_pair('d', 8))->getName() != '*' || getPieceAtPosition(std::make_pair('a', 8))->getHasMoved()))
            {
+            std::cout << "RAN 2" <<std::endl;
             continue;
           }
         } else if (king.getColor() == 'w') {
           if (move == std::make_pair('g', 1) && (getPieceAtPosition(std::make_pair('f', 1))->getName() != '*' || 
             getPieceAtPosition(std::make_pair('g', 1))->getName() != '*' || getPieceAtPosition(std::make_pair('h', 1))->getHasMoved())){
+              std::cout << "RAN 3" <<std::endl;
               continue;
           } else if (move == std::make_pair('c', 1) && (getPieceAtPosition(std::make_pair('c', 1))->getName() != '*' || 
-            getPieceAtPosition(std::make_pair('d', 1))->getName() != '*' || getPieceAtPosition(std::make_pair('a', 1))->getHasMoved())
-          ) {
+            getPieceAtPosition(std::make_pair('d', 1))->getName() != '*' || getPieceAtPosition(std::make_pair('a', 1))->getHasMoved())) {
+            std::cout << "RAN 4" <<std::endl;
             continue;
           }
         }
@@ -582,7 +593,6 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
         Board *tmpBoard = this->clone();
 
         tmpBoard->movePieceBase(position, move);
-
         if (king.getColor() == 'b') {
           if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
                                 tmpBoard->getBlackKingPosition()) == false) {
@@ -934,58 +944,52 @@ void Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
 void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   Piece *fromPiece = getPieceAtPosition(from);
   Piece *toPiece = getPieceAtPosition(to);
-  std::cout << "to: " << to.first << to.second << std::endl;
 
-  //Castling
-  // if (fromPiece->getColor() == 'b' && to == std::make_pair('g', 8)) {
-  //   Piece *rook = getPieceAtPosition(std::make_pair('h', 8));
-  //   delete toPiece;
+  // Castling
+  if (fromPiece->getColor() == 'b' && to == std::make_pair('g', 8)) {
+    Piece *rook = getPieceAtPosition(std::make_pair('h', 8));
+    delete toPiece;
 
-  //   currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
-  //   currentBoard[to.first + 1 - 'a'][to.second + 1 - 1] = rook;
+    currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+    currentBoard[to.first - 1 - 'a'][to.second - 1] = rook;
 
-  //   delete rook;
-  //   currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
-  //   currentBoard['h' - 'a'][7] = new NullPiece{'*', '*'};
-  //   return;
+    currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+    currentBoard['h' - 'a'][7] = new NullPiece{'*', '*'};
+    return;
     
-  // } else if (fromPiece->getColor() == 'b' && to == std::make_pair('c', 8)) {
-  //   Piece *rook = getPieceAtPosition(std::make_pair('a', 8));
-  //   delete toPiece;
+  } else if (fromPiece->getColor() == 'b' && to == std::make_pair('c', 8)) {
+    Piece *rook = getPieceAtPosition(std::make_pair('a', 8));
+    delete toPiece;
 
-  //   currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
-  //   currentBoard[to.first + 1 - 'a'][to.second + 1 - 1] = rook;
+    currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+    currentBoard[to.first - 1 - 'a'][to.second - 1] = rook;
 
-  //   delete rook;
-  //   currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
-  //   currentBoard['a' - 'a'][7] = new NullPiece{'*', '*'};
-  //   return;
+    currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+    currentBoard['a' - 'a'][7] = new NullPiece{'*', '*'};
+    return;
 
-  // } else if (fromPiece->getColor() == 'w' && to == std::make_pair('g', 1)) {
-  //   std::cout << "DASDJKASJDKASJDKAJS" << std::endl;
-  //   Piece *rook = getPieceAtPosition(std::make_pair('h', 1));
-  //   delete toPiece;
+  } else if (fromPiece->getColor() == 'w' && to.first == 'g' && to.second == 1) {
+    Piece *rook = getPieceAtPosition(std::make_pair('h', 1));
+    delete toPiece;
 
-  //   currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
-  //   currentBoard[to.first + 1 - 'a'][to.second + 1 - 1] = rook;
+    currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+    currentBoard[to.first - 'a' - 1][to.second - 1] = rook;
 
-  //   delete rook;
-  //   currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
-  //   currentBoard['h' - 'a'][0] = new NullPiece{'*', '*'};
-  //   return;
-  
-  // } else if (fromPiece->getColor() == 'w' && to == std::make_pair('c', 1)) {
-  //   Piece *rook = getPieceAtPosition(std::make_pair('a', 1));
-  //   delete toPiece;
+    currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+    currentBoard['h' - 'a'][1 - 1] = new NullPiece{'*', '*'};
 
-  //   currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
-  //   currentBoard[to.first + 1 - 'a'][to.second + 1 - 1] = rook;
+    return;
+  } else if (fromPiece->getColor() == 'w' && to == std::make_pair('c', 1)) {
+    Piece *rook = getPieceAtPosition(std::make_pair('a', 1));
+    delete toPiece;
 
-  //   delete rook;
-  //   currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
-  //   currentBoard['a' - 'a'][7] = new NullPiece{'*', '*'};
-  //   return;
-  // }
+    currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+    currentBoard[to.first + 1 - 'a'][to.second - 1] = rook;
+
+    currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+    currentBoard['a' - 'a'][0] = new NullPiece{'*', '*'};
+    return;
+  }
 
   if (fromPiece->getName() != '*' &&
       (fromPiece->getColor() != toPiece->getColor())) {
