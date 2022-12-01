@@ -30,6 +30,7 @@ Computer3::calculateNextMove() {
   // loop through the board to get all the possible moves
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 8; j++) {
+      std::cout << "i: " << i << " j: " << j << std::endl;
       // get the piece at the current position
       std::pair<char, int> currentPos = std::make_pair(char('a' + i), j + 1);
       Piece *p = board->getPieceAtPosition(currentPos);
@@ -48,6 +49,8 @@ Computer3::calculateNextMove() {
       }
     }
   }
+
+  std::cout << "got past the loop" << std::endl;
 
   // if the king is in check, we can only make moves that get the king out of
   // check
@@ -94,6 +97,7 @@ Computer3::calculateNextMove() {
       return movesThatGetKingOutOfCheck[randomIndex];
     }
   }
+  std::cout << "got past the king check" << std::endl;
 
   // remove moves from allMoves that put the king in check
   std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
@@ -104,15 +108,23 @@ Computer3::calculateNextMove() {
     // make the move on a copy of the board
     Board *boardCopy = board->clone();
     bool success = boardCopy->movePiece(move.first, move.second);
+    std::cout << "was able to make the move: " << success << std::endl;
+    std::cout << "move from: " << move.first.first << move.first.second
+              << move.second.first << move.second.second << std::endl;
 
     // if the king is not in check, add the move to the list
     if (success && !boardCopy->inCheck(*king, kingPos)) {
+      std::cout << "got inside the check for king2" << std::endl;
       movesThatDoNotPutOurKingInCheck.push_back(move);
+      std::cout << "got after push back" << std::endl;
     }
 
     // delete the copy of the board
     delete boardCopy;
+    std::cout << "deleted" << std::endl;
   }
+
+  std::cout << "got past the king check 2" << std::endl;
 
   // if the king is not in check, we should try to make the best move possible
 
@@ -157,6 +169,8 @@ Computer3::calculateNextMove() {
     }
   }
 
+  std::cout << "got past the capture check" << std::endl;
+
   // // loop through all the moves
   // for (auto move : movesThatDoNotPutOurKingInCheck) {
   //   // make the move on a copy of the board
@@ -199,6 +213,8 @@ Computer3::calculateNextMove() {
     }
   }
 
+  std::cout << "got past the capture check 2" << std::endl;
+
   // get all moves that put the opponent in check
   std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
       movesThatPutOpponentInCheck;
@@ -229,6 +245,8 @@ Computer3::calculateNextMove() {
     // delete the copy of the board
     delete boardCopy;
   }
+
+  std::cout << "got past the check check" << std::endl;
 
   // get set intersection of movesThatAvoidCapture, movesThatCapture, and
   // movesThatPutOpponentInCheck

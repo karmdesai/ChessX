@@ -182,7 +182,7 @@ int main(int argc, char *argv[]) {
   std::cout << b << std::endl;
 
   /* Start Game Testing */
-  b->setWhitePlayer(new Human('w', b));      // human is white
+  b->setWhitePlayer(new Computer3('w', b));  // human is white
   b->setBlackPlayer(new Computer3('b', b));  // computer is black
 
   std::string command;
@@ -192,6 +192,7 @@ int main(int argc, char *argv[]) {
 
   while (!std::cin.eof()) {
     b->generateCompleteMoves();
+    std::cout << "got here" << std::endl;
 
     AbstractPlayer *currentPlayer = b->getWhosPlayerTurn();
 
