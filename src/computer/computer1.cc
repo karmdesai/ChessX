@@ -10,18 +10,6 @@
 Computer1::Computer1(char playerColor, Board *board)
     : AbstractPlayer{playerColor, board, true} {}
 
-/*
- * return random number between x and y using the Mercenne-Twister generator
- * source:
- * https://stackoverflow.com/questions/5008804/generating-a-random-integer-from-a-range
- */
-int randomNumber(int x, int y) {
-  std::random_device rd;
-  std::mt19937 gen(rd());
-  std::uniform_int_distribution<> uni(x, y);
-  return uni(gen);
-}
-
 // calculate the next move
 std::pair<std::pair<char, int>, std::pair<char, int>>
 Computer1::calculateNextMove() {
@@ -106,10 +94,10 @@ Computer1::calculateNextMove() {
   for (auto move : allMoves) {
     // make the move on a copy of the board
     Board *boardCopy = board->clone();
-    boardCopy->movePiece(move.first, move.second);
+    bool success = boardCopy->movePiece(move.first, move.second);
 
     // if the king is not in check, add the move to the list
-    if (!boardCopy->inCheck(*king, kingPos)) {
+    if (success) {
       movesThatDoNotPutKingInCheck.push_back(move);
     }
 

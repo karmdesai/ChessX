@@ -23,6 +23,9 @@ class AbstractPlayer {
   // calculate the next move, returns a pair of moves
   virtual std::pair<std::pair<char, int>, std::pair<char, int>>
   calculateNextMove() = 0;
+
+  // random number generator
+  int randomNumber(int x, int y);
 };
 
 #endif
