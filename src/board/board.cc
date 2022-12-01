@@ -521,7 +521,6 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
 
       // Here we will also need to check if moving the pawn causes check to
       // its own king.
-      cout << move.first << move.second << "      ENPASSANT    " << enPassantPawn.first << enPassantPawn.second << endl;
       if (this->getPieceAtPosition(move)->getColor() == '*' && 
           move.first == enPassantPawn.first && move.second - 1 == enPassantPawn.second
           && enPassantValid && getPieceAtPosition(enPassantPawn)->getName() != pawn.getName() &&
