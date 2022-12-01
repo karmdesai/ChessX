@@ -567,9 +567,7 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
 
   for (auto move : king.allPossibleMoves) {
     shouldAdd = true;
-    
     if (king.getColor() != this->getPieceAtPosition(move)->getColor()) {
-
       // move the King to this potential position
       for (auto threat : threatMap) {
         if (move == threat) {
@@ -578,28 +576,36 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
       }
 
       if (shouldAdd == true) {
+        Board *tmpBoard = this->clone();
+
         if (king.getColor() == 'b') {
-          if (move == std::make_pair('g', 8) && (getPieceAtPosition(std::make_pair('f', 8))->getName() != '*' || 
-            getPieceAtPosition(std::make_pair('g', 8))->getName() != '*' || getPieceAtPosition(std::make_pair('h', 8))->getHasMoved())){
+          if (move == std::make_pair('g', 8) && (getPieceAtPosition(std::make_pair('f', 8))->getName() != '*' 
+            || getPieceAtPosition(std::make_pair('g', 8))->getName() != '*' 
+            || getPieceAtPosition(std::make_pair('h', 8))->getHasMoved())
+            || (tmpBoard->inCheck(*(tmpBoard->getBlackKing()), std::make_pair('f', 8)) == true)){
               continue;
-          } else if (move == std::make_pair('c', 8) && (getPieceAtPosition(std::make_pair('c', 8))->getName() != '*' || 
-            getPieceAtPosition(std::make_pair('d', 8))->getName() != '*' || getPieceAtPosition(std::make_pair('a', 8))->getHasMoved()))
+          } else if (move == std::make_pair('c', 8) && (getPieceAtPosition(std::make_pair('c', 8))->getName() != '*' 
+            || getPieceAtPosition(std::make_pair('d', 8))->getName() != '*' 
+            || getPieceAtPosition(std::make_pair('a', 8))->getHasMoved()
+            || (tmpBoard->inCheck(*(tmpBoard->getBlackKing()), std::make_pair('d', 8))) == true))
            {
             continue;
           }
         } else if (king.getColor() == 'w') {
-          if (move == std::make_pair('g', 1) && (getPieceAtPosition(std::make_pair('f', 1))->getName() != '*' || 
-            getPieceAtPosition(std::make_pair('g', 1))->getName() != '*' || getPieceAtPosition(std::make_pair('h', 1))->getHasMoved())){
+          if (move == std::make_pair('g', 1) && (getPieceAtPosition(std::make_pair('f', 1))->getName() != '*' 
+            || getPieceAtPosition(std::make_pair('g', 1))->getName() != '*' 
+            || getPieceAtPosition(std::make_pair('h', 1))->getHasMoved()
+            || (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()), std::make_pair('f', 1))) == true)){
               continue;
-          } else if (move == std::make_pair('c', 1) && (getPieceAtPosition(std::make_pair('c', 1))->getName() != '*' || 
-            getPieceAtPosition(std::make_pair('d', 1))->getName() != '*' || getPieceAtPosition(std::make_pair('a', 1))->getHasMoved())) {
+          } else if (move == std::make_pair('c', 1) && (getPieceAtPosition(std::make_pair('c', 1))->getName() != '*' 
+            || getPieceAtPosition(std::make_pair('d', 1))->getName() != '*' 
+            || getPieceAtPosition(std::make_pair('a', 1))->getHasMoved()
+            || (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()), std::make_pair('d', 1))) == true)) {
             continue;
           }
         }
-
         /* We should check if the move causes check to the King.
           If so, its invalid! */
-        Board *tmpBoard = this->clone();
 
         tmpBoard->movePieceBase(position, move);
         if (king.getColor() == 'b') {
@@ -965,6 +971,7 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
 
     currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
     currentBoard['h' - 'a'][7] = new NullPiece{'*', '*'};
+    this->getPieceAtPosition(to)->setPieceAsMoved();
     return;
     
   } else if (fromPiece->getColor() == 'b' && to == std::make_pair('c', 8)) {
@@ -976,6 +983,7 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
 
     currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
     currentBoard['a' - 'a'][7] = new NullPiece{'*', '*'};
+    this->getPieceAtPosition(to)->setPieceAsMoved();
     return;
 
   } else if (fromPiece->getColor() == 'w' && to.first == 'g' && to.second == 1) {
@@ -987,6 +995,7 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
 
     currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
     currentBoard['h' - 'a'][1 - 1] = new NullPiece{'*', '*'};
+    this->getPieceAtPosition(to)->setPieceAsMoved();
 
     return;
   } else if (fromPiece->getColor() == 'w' && to == std::make_pair('c', 1)) {
@@ -998,6 +1007,7 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
 
     currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
     currentBoard['a' - 'a'][0] = new NullPiece{'*', '*'};
+    this->getPieceAtPosition(to)->setPieceAsMoved();
     return;
   }
 
