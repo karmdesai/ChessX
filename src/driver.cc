@@ -233,16 +233,6 @@ int main(int argc, char *argv[]) {
 
     std::cin >> command;
 
-    AbstractPlayer *currentPlayer = b->getWhosPlayerTurn();
-
-    if (b->getTurn() == 'w') {
-      std::cout << "White's turn: " << std::endl;
-    } else {
-      std::cout << "Black's turn: " << std::endl;
-    }
-
-    std::cin >> command;
-
     if (command == "move") {
       char oldX;
       int oldY;
