@@ -941,9 +941,9 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     // move the piece
     currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
 
-    if (this->currentBoard[to.first - 'a'][to.second - 1]->getName() == 'k') {
+    if (fromPiece->getName() == 'k') {
       this->setBlackKingPosition(to);
-    } else if (currentBoard[to.first - 'a'][to.second - 1]->getName() == 'K') {
+    } else if (fromPiece->getName() == 'K') {
       this->setWhiteKingPosition(to);
     }
 

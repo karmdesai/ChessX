@@ -1,7 +1,6 @@
 #include "computer2.h"
 
 #include <iostream>
-#include <random>
 
 #include "../board/board.h"
 #include "../pieces/piece.h"
@@ -18,10 +17,10 @@ Computer2::calculateNextMove() {
   will choose one at random. If there are no moves that fit these criteria, it
   will choose a random move like Computer1. */
 
-  // Step 1: get all the possible moves
-  std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>> moves;
+  // first get all the possible moves
+  std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>> allMoves;
 
-  // loop through the board
+  // loop through the board to get all the possible moves
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 8; j++) {
       // get the piece at the current position
@@ -29,9 +28,7 @@ Computer2::calculateNextMove() {
       Piece *p = board->getPieceAtPosition(currentPos);
 
       // if the piece is not nullPiece and it is our color
-      // For now WE DON'T SUPPORT King moves as kingParser is not implemented
-      if (p->getName() != '*' && p->getName() != 'k' && p->getName() != 'K' &&
-          p->getColor() == this->playerColor) {
+      if (p->getName() != '*' && p->getColor() == this->playerColor) {
         // get all possible moves for the piece
         p->getAllPossibleMoves(std::make_pair(char(i + 'a'), j + 1));
         board->parsePossibleMoves(*p, currentPos);
@@ -39,69 +36,214 @@ Computer2::calculateNextMove() {
         // add moves to the list
         for (auto move : p->allPossibleMoves) {
           auto theMove = std::make_pair(currentPos, move);
-          moves.push_back(theMove);
+          allMoves.push_back(theMove);
         }
       }
     }
   }
 
-  std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
-      preferredMoves;
+  // if king is in check, then we must first get out of check
+  std::pair<char, int> kingPos;
+  Piece *king;
+  // get the king's position
+  if (this->playerColor == 'w') {
+    kingPos = board->getWhiteKingPosition();
+    king = board->getWhiteKing();
+  } else {
+    kingPos = board->getBlackKingPosition();
+    king = board->getBlackKing();
+  }
 
-  // Step 2: filter out the moves that don't capture the opponent's piece
+  // if the king is in check
+  if (board->inCheck(*king, kingPos)) {
+    // list of moves that get the king out of check
+    std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
+        movesThatGetKingOutOfCheck;
 
-  for (auto move : moves) {
-    // get the piece at the destination
-    Piece *p = board->getPieceAtPosition(move.second);
+    // loop through all the moves
+    for (auto move : allMoves) {
+      // make the move on a copy of the board
+      Board *boardCopy = board->clone();
+      bool success = boardCopy->movePiece(move.first, move.second);
+      if (success) {
+        movesThatGetKingOutOfCheck.push_back(move);
+      }
 
-    // if the piece is not nullPiece and it is the opponent's color
-    if (p->getName() != '*' && p->getColor() != this->playerColor) {
-      // add the move to the list
-      preferredMoves.push_back(move);
+      // delete the copy of the board
+      delete boardCopy;
+    }
+
+    // if there are moves that get the king out of check, return one of them
+    if (movesThatGetKingOutOfCheck.size() > 0) {
+      int randomIndex = randomNumber(0, movesThatGetKingOutOfCheck.size() - 1);
+      std::cout << "computer plays: "
+                << movesThatGetKingOutOfCheck[randomIndex].first.first
+                << movesThatGetKingOutOfCheck[randomIndex].first.second << " "
+                << movesThatGetKingOutOfCheck[randomIndex].second.first
+                << movesThatGetKingOutOfCheck[randomIndex].second.second
+                << std::endl;
+      return movesThatGetKingOutOfCheck[randomIndex];
+    } else {  // we've lost :(
+      return std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
     }
   }
 
-  // Step 3: filter out the moves that don't put the opponent in check
+  // remove moves from allMoves that put the king in check
+  std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
+      movesThatDoNotPutOurKingInCheck;
 
-  /* This cannot be done as the check function is not implemented.
-  But, the idea is to make a copy of the board (using the board->clone()
-  function), make the move on the copy, and then check if the opponent is in
-  check. If they are, add the move to the list. The function will also need to
-  make sure that the move does not put the computer itself in check. */
+  // loop through all the moves
+  for (auto move : allMoves) {
+    // make the move on a copy of the board
+    Board *boardCopy = board->clone();
+    boardCopy->movePiece(move.first, move.second);
 
-  // print preferred moves
-  std::cout << "Preferred moves: " << std::endl;
-  for (auto move : preferredMoves) {
-    std::cout << move.first.first << move.first.second << " -> "
+    // if the king is not in check, add the move to the list
+    if (!boardCopy->inCheck(*king, kingPos)) {
+      movesThatDoNotPutOurKingInCheck.push_back(move);
+    }
+
+    // delete the copy of the board
+    delete boardCopy;
+  }
+
+  // get all moves from movesThatDoNotPutOurKingInCheck that capture a piece
+  std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
+      movesThatCapture;
+
+  // loop through all the moves
+  for (auto move : movesThatDoNotPutOurKingInCheck) {
+    // get the piece at the destination
+    Piece *p = board->getPieceAtPosition(move.second);
+
+    // if the piece is not nullPiece, add the move to the list
+    if (p->getName() != '*' && p->getColor() != this->playerColor) {
+      movesThatCapture.push_back(move);
+    }
+  }
+
+  std::cout << "---------------------" << std::endl;
+  std::cout << "moves that capture: " << std::endl;
+  for (auto move : movesThatCapture) {
+    std::cout << move.first.first << move.first.second << " "
               << move.second.first << move.second.second << std::endl;
   }
-  std::cout << "------------" << std::endl;
+  std::cout << "---------------------" << std::endl;
 
-  // Step 4: choose a random move from preferredMoves if there are any
-  std::random_device rd;
-  std::mt19937 gen(rd());
+  // get all moves that put the opponent in check
+  std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
+      movesThatPutOpponentInCheck;
 
-  if (preferredMoves.size() > 0) {
-    // choose a random move from the list
-    std::uniform_int_distribution<> dis(0, preferredMoves.size() - 1);
-    int randomIndex = dis(gen);
+  // loop through all the moves
+  for (auto move : movesThatDoNotPutOurKingInCheck) {
+    // make the move on a copy of the board
+    Board *boardCopy = board->clone();
+    boardCopy->movePieceBase(move.first, move.second);
 
-    // print what computer plays
-    std::cout << "Computer plays: " << preferredMoves[randomIndex].first.first
-              << preferredMoves[randomIndex].first.second << " -> "
-              << preferredMoves[randomIndex].second.first
-              << preferredMoves[randomIndex].second.second << std::endl;
-    return preferredMoves.at(randomIndex);
-  } else {
-    // no preferred moves exist, choose a random legal move
-    std::uniform_int_distribution<> dis(0, moves.size() - 1);
-    int randomIndex = dis(gen);
+    Piece *king;
+    std::pair<char, int> kingPos;
 
-    // print what computer plays
-    std::cout << "Computer plays: " << moves[randomIndex].first.first
-              << moves[randomIndex].first.second << " -> "
-              << moves[randomIndex].second.first
-              << moves[randomIndex].second.second << std::endl;
-    return moves.at(randomIndex);
+    // get the opponent's king's position
+    if (this->playerColor == 'w') {
+      kingPos = boardCopy->getBlackKingPosition();
+      king = boardCopy->getBlackKing();
+    } else {
+      kingPos = boardCopy->getWhiteKingPosition();
+      king = boardCopy->getWhiteKing();
+    }
+
+    // if the king is in check, add the move to the list
+    if (boardCopy->inCheck(*king, kingPos)) {
+      std::cout << "move: " << move.first.first << move.first.second << " "
+                << move.second.first << move.second.second << std::endl;
+      movesThatPutOpponentInCheck.push_back(move);
+    }
+
+    // delete the copy of the board
+    delete boardCopy;
   }
+
+  std::cout << "---------------------" << std::endl;
+  std::cout << "moves that put opponent in check: " << std::endl;
+  for (auto move : movesThatPutOpponentInCheck) {
+    std::cout << move.first.first << move.first.second << " "
+              << move.second.first << move.second.second << std::endl;
+  }
+  std::cout << "---------------------" << std::endl;
+
+  // best case is that there is a move that captures a piece and puts the
+  // opponent in check. If such a move (or moves) exist, return one of them
+
+  // get intersection of movesThatCapture and movesThatPutOpponentInCheck
+  std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
+      movesThatCaptureAndPutOpponentInCheck;
+
+  // using std::set_intersection
+  // source:
+  // https://stackoverflow.com/questions/19483663/vector-intersection-in-c
+  std::set_intersection(
+      movesThatCapture.begin(), movesThatCapture.end(),
+      movesThatPutOpponentInCheck.begin(), movesThatPutOpponentInCheck.end(),
+      std::back_inserter(movesThatCaptureAndPutOpponentInCheck));
+
+  if (movesThatCaptureAndPutOpponentInCheck.size() > 0) {
+    int randomIndex =
+        randomNumber(0, movesThatCaptureAndPutOpponentInCheck.size() - 1);
+    std::cout
+        << "computer plays: "
+        << movesThatCaptureAndPutOpponentInCheck[randomIndex].first.first
+        << movesThatCaptureAndPutOpponentInCheck[randomIndex].first.second
+        << " "
+        << movesThatCaptureAndPutOpponentInCheck[randomIndex].second.first
+        << movesThatCaptureAndPutOpponentInCheck[randomIndex].second.second
+        << std::endl;
+    return movesThatCaptureAndPutOpponentInCheck[randomIndex];
+  }
+
+  // if there's no intersecting moves, we just choose a random move from the
+  // union of movesThatCapture and movesThatPutOpponentInCheck
+
+  // get union of movesThatCapture and movesThatPutOpponentInCheck
+  std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
+      movesThatCaptureOrPutOpponentInCheck;
+
+  // using std::set_union
+  std::set_union(movesThatCapture.begin(), movesThatCapture.end(),
+                 movesThatPutOpponentInCheck.begin(),
+                 movesThatPutOpponentInCheck.end(),
+                 std::back_inserter(movesThatCaptureOrPutOpponentInCheck));
+
+  if (movesThatCaptureOrPutOpponentInCheck.size() > 0) {
+    int randomIndex =
+        randomNumber(0, movesThatCaptureOrPutOpponentInCheck.size() - 1);
+    std::cout << "computer plays: "
+              << movesThatCaptureOrPutOpponentInCheck[randomIndex].first.first
+              << movesThatCaptureOrPutOpponentInCheck[randomIndex].first.second
+              << " "
+              << movesThatCaptureOrPutOpponentInCheck[randomIndex].second.first
+              << movesThatCaptureOrPutOpponentInCheck[randomIndex].second.second
+              << std::endl;
+    return movesThatCaptureOrPutOpponentInCheck[randomIndex];
+  }
+
+  // if there are no moves that capture or put the opponent in check, we just
+  // choose a random move from movesThatDoNotPutOurKingInCheck
+
+  if (movesThatDoNotPutOurKingInCheck.size() > 0) {
+    int randomIndex =
+        randomNumber(0, movesThatDoNotPutOurKingInCheck.size() - 1);
+    std::cout << "computer plays: "
+              << movesThatDoNotPutOurKingInCheck[randomIndex].first.first
+              << movesThatDoNotPutOurKingInCheck[randomIndex].first.second
+              << " "
+              << movesThatDoNotPutOurKingInCheck[randomIndex].second.first
+              << movesThatDoNotPutOurKingInCheck[randomIndex].second.second
+              << std::endl;
+    return movesThatDoNotPutOurKingInCheck[randomIndex];
+  }
+
+  // if there are no moves AT ALL its a stalemate, as the king isn't in check
+  // (otherwise we would have returned a move that gets the king out of check
+  // or would have realized that we've been checkmated)
+  return std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
 }
