@@ -521,16 +521,18 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
 
       // Here we will also need to check if moving the pawn causes check to
       // its own king.
-      if (this->getPieceAtPosition(move)->getColor() != pawn.getColor() &&
+      if (this->getPieceAtPosition(move)->getColor() == '*' && 
+          move.first == enPassantPawn.first && move.second - 1 == enPassantPawn.second
+          && enPassantValid && getPieceAtPosition(enPassantPawn)->getName() != pawn.getName() &&
+          pawn.getColor() == 'w') {
+        tmp.push_back(move);
+      } else if (this->getPieceAtPosition(move)->getColor() == '*' && 
+          move.first == enPassantPawn.first && move.second + 1 == enPassantPawn.second
+          && enPassantValid && getPieceAtPosition(enPassantPawn)->getName() != pawn.getName()
+          && pawn.getColor() == 'b') {
+        tmp.push_back(move);
+      } else if (this->getPieceAtPosition(move)->getColor() != pawn.getColor() &&
           this->getPieceAtPosition(move)->getColor() != '*') {
-        tmp.push_back(move);
-      } else if (this->getPieceAtPosition(move)->getColor() == '*' && 
-          position.first - 1 == enPassantPawn.first && position.second == enPassantPawn.second
-          && enPassantValid && getPieceAtPosition(enPassantPawn)->getColor() != pawn.getColor()) {
-        tmp.push_back(move);
-      } else if (this->getPieceAtPosition(move)->getColor() == '*' && 
-          position.first + 1 == enPassantPawn.first && position.second == enPassantPawn.second
-          && enPassantValid && getPieceAtPosition(enPassantPawn)->getColor() != pawn.getColor()){
         tmp.push_back(move);
       }
     }  // forward moves only have a diff. y coordinate
@@ -1041,6 +1043,35 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     fromPiece->setPieceAsMoved();
     rook->setPieceAsMoved();
     return;
+  }
+
+  //EnPassant
+  if (enPassantPawn.first) {
+    if (this->getPieceAtPosition(from)->getName() == 'P' && 
+        (this->getPieceAtPosition(from)->getName() != this->getPieceAtPosition(enPassantPawn)->getName())) {
+      if (to.first == enPassantPawn.first && to.second - 1 == enPassantPawn.second) {
+        Piece *enpassant = getPieceAtPosition(enPassantPawn);
+        delete toPiece;
+        currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+        delete enpassant;
+        currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+        currentBoard[enPassantPawn.first - 'a'][enPassantPawn.second - 1] = new NullPiece{'*', '*'};
+        enPassantValid = false;
+        return;
+      }
+    } else if (this->getPieceAtPosition(from)->getName() == 'p' && 
+              (this->getPieceAtPosition(from)->getName() != this->getPieceAtPosition(enPassantPawn)->getName())) {
+      if (to.first == enPassantPawn.first && to.second + 1 == enPassantPawn.second) {
+        Piece *enpassant = getPieceAtPosition(enPassantPawn);
+        delete toPiece;
+        currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+        delete enpassant;
+        currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+        currentBoard[enPassantPawn.first - 'a'][enPassantPawn.second - 1] = new NullPiece{'*', '*'};
+        enPassantValid = false;
+        return;
+      }
+    }
   }
 
   if (fromPiece->getName() != '*' &&
