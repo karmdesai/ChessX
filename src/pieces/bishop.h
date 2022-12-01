@@ -12,6 +12,9 @@ public:
   Bishop *clone() override { return new Bishop{*this}; }
 
   void getAllPossibleMoves(std::pair<char, int> currentPosition) override;
+
+  void setPieceAsMoved() override;
+  bool getHasMoved() override;
 };
 
 #endif

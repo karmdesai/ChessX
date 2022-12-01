@@ -45,3 +45,11 @@ void Rook::getAllPossibleMoves(std::pair<char, int> currentPosition) {
     this->allPossibleMoves.push_back(newMove);
   }
 }
+
+void Rook::setPieceAsMoved() {
+  inStartingPosition = false;
+}
+
+bool Rook::getHasMoved() {
+  return !inStartingPosition;
+}

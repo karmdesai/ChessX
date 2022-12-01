@@ -42,6 +42,8 @@ public:
 
   // the Piece class is an abstract class
   void virtual getAllPossibleMoves(std::pair<char, int> currentPosition) = 0;
+  void virtual setPieceAsMoved() = 0;
+  bool virtual getHasMoved() = 0;
 };
 
 #endif

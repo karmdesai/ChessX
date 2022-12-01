@@ -1,5 +1,6 @@
 #include "pawn.h"
 #include <vector>
+#include <iostream>
 
 Pawn::Pawn(char name, char color, bool inStartingPosition)
     : Piece(1, name, color), inStartingPosition(inStartingPosition) {}
@@ -83,3 +84,12 @@ void Pawn::getAllPossibleMoves(std::pair<char, int> currentPosition) {
     }
   }
 }
+
+void Pawn::setPieceAsMoved() {
+  inStartingPosition = false;
+}
+
+bool Pawn::getHasMoved() {
+  return !inStartingPosition;
+}
+

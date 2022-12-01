@@ -55,3 +55,11 @@ void Bishop::getAllPossibleMoves(std::pair<char, int> currentPosition) {
     this->allPossibleMoves.push_back(newMove);
   }
 }
+
+void Bishop::setPieceAsMoved() {
+  return;
+}
+
+bool Bishop::getHasMoved() {
+  return true;
+}

@@ -65,3 +65,11 @@ void Knight::getAllPossibleMoves(std::pair<char, int> currentPosition) {
     this->allPossibleMoves.push_back(newMove);
   }
 }
+
+void Knight::setPieceAsMoved() {
+  return;
+}
+
+bool Knight::getHasMoved() {
+  return true;
+}
