@@ -524,6 +524,14 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
       if (this->getPieceAtPosition(move)->getColor() != pawn.getColor() &&
           this->getPieceAtPosition(move)->getColor() != '*') {
         tmp.push_back(move);
+      } else if (this->getPieceAtPosition(move)->getColor() == '*' && 
+          position.first - 1 == enPassantPawn.first && position.second == enPassantPawn.second
+          && enPassantValid && getPieceAtPosition(enPassantPawn)->getColor() != pawn.getColor()) {
+        tmp.push_back(move);
+      } else if (this->getPieceAtPosition(move)->getColor() == '*' && 
+          position.first + 1 == enPassantPawn.first && position.second == enPassantPawn.second
+          && enPassantValid && getPieceAtPosition(enPassantPawn)->getColor() != pawn.getColor()){
+        tmp.push_back(move);
       }
     }  // forward moves only have a diff. y coordinate
     else if (move.second != position.second && move.first == position.first) {
@@ -1051,9 +1059,23 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
 
     this->getPieceAtPosition(to)->setPieceAsMoved();
 
+    if (abs(from.second - to.second) == 2 && 
+      (getPieceAtPosition(to)->getName() == 'P' || getPieceAtPosition(to)->getName() == 'p')) {
+        setEnPassantPawn(to);
+        enPassantValid = true;
+    } else {
+        enPassantValid = false;
+    }
+
     // set old position to a new null piece
     currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
   }
+}
+
+void Board::setEnPassantPawn(std::pair<char, int> pawn) {
+  this->enPassantPawn.first = pawn.first;
+  this->enPassantPawn.second = pawn.second;
+  cout << "enpassantpawnchanged" << endl;
 }
 
 /*
