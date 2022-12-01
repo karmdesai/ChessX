@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
 
   /* Start Game Testing */
   b->setWhitePlayer(new Human('w', b));      // human is white
-  b->setBlackPlayer(new Computer2('b', b));  // computer is black
+  b->setBlackPlayer(new Computer3('b', b));  // computer is black
 
   std::string command;
   // std::pair<char, int> position;
@@ -267,8 +267,13 @@ int main(int argc, char *argv[]) {
           std::cout << "The White King is in check!" << std::endl;
         }
       }
-    } else {
+
+    } else if (command == "exit") {
       break;
+    } else {
+      // retry the move.
+      std::cout << "Invalid command. Please try again." << std::endl;
+      continue;
     }
 
     // set player and turn to the next player
