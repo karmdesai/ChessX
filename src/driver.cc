@@ -182,8 +182,8 @@ int main(int argc, char *argv[]) {
   std::cout << b << std::endl;
 
   /* Start Game Testing */
-  b->setWhitePlayer(new Computer1('w', b));  // human is white
-  b->setBlackPlayer(new Computer1('b', b));  // computer is black
+  b->setWhitePlayer(new Human('w', b));      // human is white
+  b->setBlackPlayer(new Computer2('b', b));  // computer is black
 
   std::string command;
   // std::pair<char, int> position;
@@ -274,6 +274,10 @@ int main(int argc, char *argv[]) {
         }
 
         std::cout << b << std::endl;
+        std::cout << "white king: " << b->getWhiteKingPosition().first
+                  << b->getWhiteKingPosition().second << std::endl;
+        std::cout << "black king: " << b->getBlackKingPosition().first
+                  << b->getBlackKingPosition().second << std::endl;
 
         if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
           std::cout << "The Black King is in check!" << std::endl;
