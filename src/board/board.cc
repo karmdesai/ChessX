@@ -31,6 +31,7 @@ Board::~Board() {
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
       delete this->currentBoard[x][y];
+      // std::cout << "deleted: " << x << " " << y << std::endl;
     }
   }
 }
@@ -980,8 +981,8 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   Piece *toPiece = getPieceAtPosition(to);
 
   // Castling
-  if (fromPiece->getColor() == 'b' && to == std::make_pair('g', 8) 
-      && fromPiece->getName() == 'k' && getPieceAtPosition(std::make_pair('h', 8))->getName() == 'r') {
+  if (fromPiece->getColor() == 'b' && to == std::make_pair('g', 8)) {
+    std::cout << "GOT HERE1" << std::endl;
     Piece *rook = getPieceAtPosition(std::make_pair('h', 8));
     delete toPiece;
 
@@ -995,8 +996,8 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     rook->setPieceAsMoved();
     return;
 
-  } else if (fromPiece->getColor() == 'b' && to == std::make_pair('c', 8) && fromPiece->getName() == 'k'
-              && getPieceAtPosition(std::make_pair('a', 8))->getName() == 'r') {
+  } else if (fromPiece->getColor() == 'b' && to == std::make_pair('c', 8)) {
+    std::cout << "GOT HERE2" << std::endl;
     Piece *rook = getPieceAtPosition(std::make_pair('a', 8));
     delete toPiece;
 
@@ -1011,8 +1012,8 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     return;
 
   } else if (fromPiece->getColor() == 'w' && to.first == 'g' &&
-             to.second == 1 && fromPiece->getName() == 'K'
-             && getPieceAtPosition(std::make_pair('h', 1))->getName() == 'R') {
+             to.second == 1) {
+    std::cout << "GOT HERE3" << std::endl;
     Piece *rook = getPieceAtPosition(std::make_pair('h', 1));
     delete toPiece;
 
@@ -1026,8 +1027,8 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     rook->setPieceAsMoved();
 
     return;
-  } else if (fromPiece->getColor() == 'w' && to == std::make_pair('c', 1) && fromPiece->getName() == 'K'
-              && getPieceAtPosition(std::make_pair('a', 1))->getName() == 'R') {
+  } else if (fromPiece->getColor() == 'w' && to == std::make_pair('c', 1)) {
+    std::cout << "GOT HERE4" << std::endl;
     Piece *rook = getPieceAtPosition(std::make_pair('a', 1));
     delete toPiece;
 
