@@ -904,6 +904,96 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
   Piece *currentPiece = this->getPieceAtPosition(from);
   this->parsePossibleMoves(*currentPiece, from);
 
+  // checks if when castling, the king doesn't move through a square that is
+  // under attack
+  if (currentPiece->getName() == 'k' || currentPiece->getName() == 'K') {
+    if (currentPiece->getColor() == 'w') {
+      if (from.first == 'e' && from.second == 1) {
+        if (to.first == 'g' && to.second == 1) {
+          // move king to e1, f1, and g1 on a copy of the board, and check if
+          // any of them put the king in check
+          Board *tmpBoard = this->clone();
+          tmpBoard->movePieceBase(from, std::make_pair('f', 1));
+          if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
+                                tmpBoard->whiteKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+          tmpBoard->movePieceBase(std::make_pair('f', 1),
+                                  std::make_pair('g', 1));
+          if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
+                                tmpBoard->whiteKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+        } else if (to.first == 'c' && to.second == 1) {
+          // move king to e1, d1, and c1 on a copy of the board, and check if
+          // any of them put the king in check
+          Board *tmpBoard = this->clone();
+          tmpBoard->movePieceBase(from, std::make_pair('d', 1));
+          if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
+                                tmpBoard->whiteKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+          tmpBoard->movePieceBase(std::make_pair('d', 1),
+                                  std::make_pair('c', 1));
+          if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
+                                tmpBoard->whiteKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+        }
+      }
+    } else {
+      if (from.first == 'e' && from.second == 8) {
+        if (to.first == 'g' && to.second == 8) {
+          // move king to e8, f8, and g8 on a copy of the board, and check if
+          // any of them put the king in check
+          Board *tmpBoard = this->clone();
+          tmpBoard->movePieceBase(from, std::make_pair('f', 8));
+          if (tmpBoard->inCheck(*(tmpBoard->blackKing),
+                                tmpBoard->blackKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+          tmpBoard->movePieceBase(std::make_pair('f', 8),
+                                  std::make_pair('g', 8));
+          if (tmpBoard->inCheck(*(tmpBoard->blackKing),
+                                tmpBoard->blackKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+        } else if (to.first == 'c' && to.second == 8) {
+          // move king to e8, d8, and c8 on a copy of the board, and check if
+          // any of them put the king in check
+          Board *tmpBoard = this->clone();
+          tmpBoard->movePieceBase(from, std::make_pair('d', 8));
+          if (tmpBoard->inCheck(*(tmpBoard->blackKing),
+                                tmpBoard->blackKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+          tmpBoard->movePieceBase(std::make_pair('d', 8),
+                                  std::make_pair('c', 8));
+          if (tmpBoard->inCheck(*(tmpBoard->blackKing),
+                                tmpBoard->blackKingPosition)) {
+            std::cout << "Castling is not allowed, king would be in check"
+                      << std::endl;
+            return false;
+          }
+        }
+      }
+    }
+  }
+
   for (auto move : currentPiece->allPossibleMoves) {
     if (move == to) {
       Board *tmpBoard = this->clone();

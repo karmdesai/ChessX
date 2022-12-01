@@ -181,9 +181,14 @@ int main(int argc, char *argv[]) {
   std::cout << "Start the Game!" << std::endl;
   std::cout << b << std::endl;
 
+  // we always have two computers in the background, which check for
+  // checkmate or stalemate. They don't actually play the game.
+  AbstractPlayer *whiteChecker = new Computer3('w', b);
+  AbstractPlayer *blackChecker = new Computer3('b', b);
+
   /* Start Game Testing */
-  b->setWhitePlayer(new Computer3('w', b));  // human is white
-  b->setBlackPlayer(new Computer3('b', b));  // computer is black
+  b->setWhitePlayer(new Computer3('w', b));
+  b->setBlackPlayer(new Computer3('b', b));
 
   std::string command;
   // std::pair<char, int> position;
@@ -192,6 +197,31 @@ int main(int argc, char *argv[]) {
 
   while (!std::cin.eof()) {
     b->generateCompleteMoves();
+    // check for checkmate or stalemate on both sides.
+    if (whiteChecker->calculateNextMove() ==
+        std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1))) {
+      std::cout << "Checkmate! Black wins!" << std::endl;
+      delete b;
+      return 0;
+    }
+
+    else if (blackChecker->calculateNextMove() ==
+             std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1))) {
+      std::cout << "Checkmate! White wins!" << std::endl;
+      delete b;
+      return 0;
+    }
+
+    else if (whiteChecker->calculateNextMove() ==
+                 std::make_pair(std::make_pair('a', 0),
+                                std::make_pair('a', 0)) ||
+             blackChecker->calculateNextMove() ==
+                 std::make_pair(std::make_pair('a', 0),
+                                std::make_pair('a', 0))) {
+      std::cout << "Stalemate! It's a draw!" << std::endl;
+      delete b;
+      return 0;
+    }
 
     AbstractPlayer *currentPlayer = b->getWhosPlayerTurn();
 
@@ -213,30 +243,17 @@ int main(int argc, char *argv[]) {
       // if its the computer's move, tell it to calculate its move
       if (currentPlayer->isComputer()) {
         auto move = currentPlayer->calculateNextMove();
-        if (move ==
-            std::make_pair(std::make_pair('a', 0), std::make_pair('a', 0))) {
-          std::cout << "It's a stalemate." << std::endl;
-          delete b;
-          return 0;
-        }
-
-        if (move ==
-            std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1))) {
-          if (currentPlayer->getPlayerColor() == 'w') {
-            std::cout << "White has been checkmated." << std::endl;
-          } else {
-            std::cout << "Black has been checkmated." << std::endl;
-          }
-          delete b;
-          return 0;
-        }
+        // print out the move
+        std::cout << "Computer plays: " << move.first.first << move.first.second
+                  << " -> " << move.second.first << move.second.second
+                  << std::endl;
 
         bool movedSucessfully = b->movePiece(move.first, move.second);
 
         // if the move was invalid, retry the move.
         if (!movedSucessfully) {
           std::cout << "Something very bad happened. The computer made an "
-                       "invalid move."
+                       "invalid move. The program has been terminated."
                     << std::endl;
           break;
         }

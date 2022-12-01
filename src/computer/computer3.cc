@@ -85,13 +85,13 @@ Computer3::calculateNextMove() {
     // if there are moves that get the king out of check, return one of them
     if (movesThatGetKingOutOfCheck.size() > 0) {
       int randomIndex = randomNumber(0, movesThatGetKingOutOfCheck.size() - 1);
-      std::cout << "computer plays: "
-                << movesThatGetKingOutOfCheck[randomIndex].first.first
-                << movesThatGetKingOutOfCheck[randomIndex].first.second
-                << " -> "
-                << movesThatGetKingOutOfCheck[randomIndex].second.first
-                << movesThatGetKingOutOfCheck[randomIndex].second.second
-                << std::endl;
+      // std::cout << "computer plays: "
+      //           << movesThatGetKingOutOfCheck[randomIndex].first.first
+      //           << movesThatGetKingOutOfCheck[randomIndex].first.second
+      //           << " -> "
+      //           << movesThatGetKingOutOfCheck[randomIndex].second.first
+      //           << movesThatGetKingOutOfCheck[randomIndex].second.second
+      //           << std::endl;
       return movesThatGetKingOutOfCheck[randomIndex];
     } else {
       // we've been checkmated
@@ -239,18 +239,18 @@ Computer3::calculateNextMove() {
   if (movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck.size() > 0) {
     int randomIndex = randomNumber(
         0, movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck.size() - 1);
-    std::cout
-        << "computer plays: "
-        << movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck[randomIndex]
-               .first.first
-        << movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck[randomIndex]
-               .first.second
-        << " "
-        << movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck[randomIndex]
-               .second.first
-        << movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck[randomIndex]
-               .second.second
-        << std::endl;
+    // std::cout
+    //     << "computer plays: "
+    //     << movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck[randomIndex]
+    //            .first.first
+    //     << movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck[randomIndex]
+    //            .first.second
+    //     << " "
+    //     << movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck[randomIndex]
+    //            .second.first
+    //     << movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck[randomIndex]
+    //            .second.second
+    //     << std::endl;
     return movesThatAvoidCaptureAndCaptureAndPutOpponentInCheck[randomIndex];
   }
 
@@ -286,13 +286,13 @@ Computer3::calculateNextMove() {
   if (movesThatAvoidCaptureAndCapture.size() > 0) {
     int randomIndex =
         randomNumber(0, movesThatAvoidCaptureAndCapture.size() - 1);
-    std::cout << "computer plays: "
-              << movesThatAvoidCaptureAndCapture[randomIndex].first.first
-              << movesThatAvoidCaptureAndCapture[randomIndex].first.second
-              << " "
-              << movesThatAvoidCaptureAndCapture[randomIndex].second.first
-              << movesThatAvoidCaptureAndCapture[randomIndex].second.second
-              << std::endl;
+    // std::cout << "computer plays: "
+    //           << movesThatAvoidCaptureAndCapture[randomIndex].first.first
+    //           << movesThatAvoidCaptureAndCapture[randomIndex].first.second
+    //           << " "
+    //           << movesThatAvoidCaptureAndCapture[randomIndex].second.first
+    //           << movesThatAvoidCaptureAndCapture[randomIndex].second.second
+    //           << std::endl;
     return movesThatAvoidCaptureAndCapture[randomIndex];
   }
 
@@ -323,25 +323,26 @@ Computer3::calculateNextMove() {
   if (movesThatAvoidCaptureAndPutOpponentInCheck.size() > 0) {
     int randomIndex =
         randomNumber(0, movesThatAvoidCaptureAndPutOpponentInCheck.size() - 1);
-    std::cout
-        << "computer plays: "
-        << movesThatAvoidCaptureAndPutOpponentInCheck[randomIndex].first.first
-        << movesThatAvoidCaptureAndPutOpponentInCheck[randomIndex].first.second
-        << " "
-        << movesThatAvoidCaptureAndPutOpponentInCheck[randomIndex].second.first
-        << movesThatAvoidCaptureAndPutOpponentInCheck[randomIndex].second.second
-        << std::endl;
+    // std::cout
+    // << "computer plays: "
+    // << movesThatAvoidCaptureAndPutOpponentInCheck[randomIndex].first.first
+    // << movesThatAvoidCaptureAndPutOpponentInCheck[randomIndex].first.second
+    // << " "
+    // << movesThatAvoidCaptureAndPutOpponentInCheck[randomIndex].second.first
+    // << movesThatAvoidCaptureAndPutOpponentInCheck[randomIndex].second.second
+    // << std::endl;
     return movesThatAvoidCaptureAndPutOpponentInCheck[randomIndex];
   }
 
   // just choose a random move from movesThatAvoidCapture
   if (movesThatAvoidCapture.size() > 0) {
     int randomIndex = randomNumber(0, movesThatAvoidCapture.size() - 1);
-    std::cout << "computer plays: "
-              << movesThatAvoidCapture[randomIndex].first.first
-              << movesThatAvoidCapture[randomIndex].first.second << " "
-              << movesThatAvoidCapture[randomIndex].second.first
-              << movesThatAvoidCapture[randomIndex].second.second << std::endl;
+    // std::cout << "computer plays: "
+    //           << movesThatAvoidCapture[randomIndex].first.first
+    //           << movesThatAvoidCapture[randomIndex].first.second << " "
+    //           << movesThatAvoidCapture[randomIndex].second.first
+    //           << movesThatAvoidCapture[randomIndex].second.second <<
+    //           std::endl;
     return movesThatAvoidCapture[randomIndex];
   }
 
@@ -371,14 +372,14 @@ Computer3::calculateNextMove() {
   if (movesThatCaptureAndPutOpponentInCheck.size() > 0) {
     int randomIndex =
         randomNumber(0, movesThatCaptureAndPutOpponentInCheck.size() - 1);
-    std::cout
-        << "computer plays: "
-        << movesThatCaptureAndPutOpponentInCheck[randomIndex].first.first
-        << movesThatCaptureAndPutOpponentInCheck[randomIndex].first.second
-        << " "
-        << movesThatCaptureAndPutOpponentInCheck[randomIndex].second.first
-        << movesThatCaptureAndPutOpponentInCheck[randomIndex].second.second
-        << std::endl;
+    // std::cout
+    // << "computer plays: "
+    // << movesThatCaptureAndPutOpponentInCheck[randomIndex].first.first
+    // << movesThatCaptureAndPutOpponentInCheck[randomIndex].first.second
+    // << " "
+    // << movesThatCaptureAndPutOpponentInCheck[randomIndex].second.first
+    // << movesThatCaptureAndPutOpponentInCheck[randomIndex].second.second
+    // << std::endl;
     return movesThatCaptureAndPutOpponentInCheck[randomIndex];
   }
 
@@ -406,13 +407,17 @@ Computer3::calculateNextMove() {
   if (movesThatCaptureOrPutOpponentInCheck.size() > 0) {
     int randomIndex =
         randomNumber(0, movesThatCaptureOrPutOpponentInCheck.size() - 1);
-    std::cout << "computer plays: "
-              << movesThatCaptureOrPutOpponentInCheck[randomIndex].first.first
-              << movesThatCaptureOrPutOpponentInCheck[randomIndex].first.second
-              << " "
-              << movesThatCaptureOrPutOpponentInCheck[randomIndex].second.first
-              << movesThatCaptureOrPutOpponentInCheck[randomIndex].second.second
-              << std::endl;
+    // std::cout << "computer plays: "
+    //           <<
+    //           movesThatCaptureOrPutOpponentInCheck[randomIndex].first.first
+    //           <<
+    //           movesThatCaptureOrPutOpponentInCheck[randomIndex].first.second
+    //           << " "
+    //           <<
+    //           movesThatCaptureOrPutOpponentInCheck[randomIndex].second.first
+    //           <<
+    //           movesThatCaptureOrPutOpponentInCheck[randomIndex].second.second
+    //           << std::endl;
     return movesThatCaptureOrPutOpponentInCheck[randomIndex];
   }
 
@@ -422,13 +427,13 @@ Computer3::calculateNextMove() {
   if (movesThatDoNotPutOurKingInCheck.size() > 0) {
     int randomIndex =
         randomNumber(0, movesThatDoNotPutOurKingInCheck.size() - 1);
-    std::cout << "computer plays: "
-              << movesThatDoNotPutOurKingInCheck[randomIndex].first.first
-              << movesThatDoNotPutOurKingInCheck[randomIndex].first.second
-              << " "
-              << movesThatDoNotPutOurKingInCheck[randomIndex].second.first
-              << movesThatDoNotPutOurKingInCheck[randomIndex].second.second
-              << std::endl;
+    // std::cout << "computer plays: "
+    //           << movesThatDoNotPutOurKingInCheck[randomIndex].first.first
+    //           << movesThatDoNotPutOurKingInCheck[randomIndex].first.second
+    //           << " "
+    //           << movesThatDoNotPutOurKingInCheck[randomIndex].second.first
+    //           << movesThatDoNotPutOurKingInCheck[randomIndex].second.second
+    //           << std::endl;
     return movesThatDoNotPutOurKingInCheck[randomIndex];
   }
 
