@@ -368,7 +368,6 @@ void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != rook.getColor()) {
       tmp.push_back(newMove);
-
       break;
     } else if (tmpPiece->getColor() == rook.getColor()) {
       break;
@@ -387,6 +386,7 @@ void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
     if (tmpPiece->getName() == '*') {
       tmp.push_back(newMove);
     } else if (tmpPiece->getColor() != rook.getColor()) {
+      tmp.push_back(newMove);
       break;
     } else if (tmpPiece->getColor() == rook.getColor()) {
       break;
