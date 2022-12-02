@@ -104,6 +104,8 @@ class Board {
     void setEnPassantPawn(std::pair<char, int> pawn);
 
   bool isPieceCapturable(Piece *piece, std::pair<char, int> position);
+
+  bool isInsufficientMaterial();
 };
 
 #endif
