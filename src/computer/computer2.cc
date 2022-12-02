@@ -1,6 +1,7 @@
 #include "computer2.h"
 
 #include <iostream>
+#include <algorithm>
 
 #include "../board/board.h"
 #include "../pieces/piece.h"

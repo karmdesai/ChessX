@@ -922,6 +922,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
                                 tmpBoard->whiteKingPosition)) {
             return false;
           }
+          delete tmpBoard;
         } else if (to.first == 'c' && to.second == 1) {
           // move king to e1, d1, and c1 on a copy of the board, and check if
           // any of them put the king in check
@@ -937,6 +938,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
                                 tmpBoard->whiteKingPosition)) {
             return false;
           }
+          delete tmpBoard;
         }
       }
     } else {
@@ -956,6 +958,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
                                 tmpBoard->blackKingPosition)) {
             return false;
           }
+          delete tmpBoard;
         } else if (to.first == 'c' && to.second == 8) {
           // move king to e8, d8, and c8 on a copy of the board, and check if
           // any of them put the king in check
@@ -971,6 +974,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
                                 tmpBoard->blackKingPosition)) {
             return false;
           }
+          delete tmpBoard;
         }
       }
     }
@@ -986,19 +990,24 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
         if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
                               tmpBoard->getBlackKingPosition()) == false) {
           this->movePieceBase(from, to);
+          delete tmpBoard;
           return true;
         } else {
+          delete tmpBoard;
           return false;
         }
       } else if (currentPiece->getColor() == 'w') {
         if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
                               tmpBoard->getWhiteKingPosition()) == false) {
           this->movePieceBase(from, to);
+          delete tmpBoard;
           return true;
         } else {
+          delete tmpBoard;
           return false;
         }
       }
+          delete tmpBoard;
     }
   }
 }
@@ -1125,56 +1134,3 @@ bool Board::isPieceCapturable(Piece *p, std::pair<char, int> position) {
   return false;
 }
 
-/*
-void Board::movePiece(std::pair<char, int> oldPosition,
-                      std::pair<char, int> newPosition) {
-  // doing no checks right now, so there could be memory issues.
-  int oldX = convertAlphaToNum(oldPosition.first);
-  int oldY = oldPosition.second - 1;
-
-  int newX = convertAlphaToNum(newPosition.first);
-  int newY = newPosition.second - 1;
-
-  Piece *oldPiece = this->getPieceAtPosition(oldPosition);
-  Piece *newPiece = this->getPieceAtPosition(newPosition);
-
-  // if the Piece to move isn't an empty square...
-  if (oldPiece->getName() != '*') {
-
-    // if the new position is in valid moves...
-    for (auto move : oldPiece->allPossibleMoves) {
-      if (move == newPosition) {
-        // and if the square to move is not empty and not of the same colour...
-        if (newPiece->getName() != '*' &&
-            newPiece->getName() != oldPiece->getName()) {
-
-          // capture the piece.
-          delete newPiece;
-
-          // and replace with an empty square.
-          this->setPieceAtPosition(newPosition, this->createPiece('*'));
-        }
-
-        // Swap the empty square with the current Piece.
-        // We need the coordinates, cause it doesn't work if we just swap
-        //  oldPiece and newPiece.
-        std::swap(this->currentBoard[oldX][oldY],
-                  this->currentBoard[newX][newY]);
-
-        if (this->currentBoard[newX][newY]->getName() == 'k') {
-          this->setBlackKingPosition(newPosition);
-        } else if (this->currentBoard[newX][newY]->getName() == 'K') {
-          this->setWhiteKingPosition(newPosition);
-        }
-
-        // Here we should set inStartingPosition to false.
-        // We should have a setter for startingPosition in the Piece class.
-
-        this->generateCompleteMoves();
-
-        return;
-      }
-    }
-  }
-}
-*/
