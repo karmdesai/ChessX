@@ -17,8 +17,7 @@ class Studio: public Subject {
   explicit Studio(Board *board): thePicture{board} {}
 
   Board *&picture() { return thePicture; }
-  void reset();
-  void render();
+  void render(std::pair<char, int> from, std::pair<char, int> to);
   Piece* getState(std::pair<char, int> coord) const;
   ~Studio();
 };

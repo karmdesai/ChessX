@@ -14,6 +14,7 @@
 
 #include "observers/studio.h"
 #include "observers/textObserver.h"
+#include "observers/GUIObs.h"
 
 int main() {
   std::cout << "**** WELCOME TO CHESS ****" << std::endl;
@@ -32,9 +33,11 @@ int main() {
   Board *b = new Board();
   Studio *s = new Studio{b};
   TextObs* obs = new TextObs{ s };
+  GraphObs* guiobs = new GraphObs{ s };
+
   /* Start Board Setup */
   if (firstCommand == "setup") {
-    s->render();
+    s->render(std::make_pair('o', 0), std::make_pair('o', 0));
 
     std::string setupCommand;
 
@@ -68,7 +71,7 @@ int main() {
             b->setPieceAtPosition(position, newPiece);
           }
 
-          s->render();
+          s->render(std::make_pair('o', 0), std::make_pair('o', 0));
         }
       } else if (setupCommand == "-") {
         char x;
@@ -81,7 +84,7 @@ int main() {
           delete b->getPieceAtPosition(position);
           b->setPieceAtPosition(position, new NullPiece('*', '*'));
 
-          s->render();
+          s->render(std::make_pair('o', 0), std::make_pair('o', 0));
         }
       } else if (setupCommand == "=") {
         char nextPlayer;
@@ -165,7 +168,7 @@ int main() {
 
   std::cout << std::endl;
   std::cout << "Start the Game!" << std::endl;
-  s->render();
+  s->render(std::make_pair('o', 0), std::make_pair('o', 0));
 
   /* Start Moves Parser Testing */
   /*
@@ -330,7 +333,7 @@ int main() {
 
       b->movePiece(oldPosition, newPosition);
 
-      s->render();
+      s->render(oldPosition, newPosition);
       
       if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
         std::cout << "The Black King is in check!" << std::endl;
@@ -357,7 +360,7 @@ int main() {
       b->movePiece(std::make_pair('d', 4), std::make_pair('d', 5));
 
       std:: cout << "ORIGINAL: " << std::endl;
-      s->render();
+      s->render(std::make_pair('e', 2), std::make_pair('e', 4));
 
       Board *newBoard = b->clone();
 
@@ -367,7 +370,7 @@ int main() {
       newBoard->movePiece(std::make_pair('d', 5), std::make_pair('d', 6));
 
       std:: cout << "ORIGINAL: " << std::endl;
-      s->render();
+      s->render(std::make_pair('e', 2), std::make_pair('e', 4));
 
       std::cout << "CLONE: " << std::endl;
       std::cout << newBoard << std::endl;
@@ -381,7 +384,7 @@ int main() {
       }
 
       std:: cout << "ORIGINAL: " << std::endl;
-      s->render();
+      s->render(std::make_pair('e', 2), std::make_pair('e', 4));
 
       std::cout << "CLONE: " << std::endl;
       std::cout << newBoard << std::endl;
@@ -393,6 +396,7 @@ int main() {
     }
   }
   /* End Game Testing */
-
+  delete obs;
+  delete guiobs;
   delete b;
 }

@@ -11,7 +11,7 @@ class Subject {
   Subject();
   void attach(Observer *o);
   void detach(Observer *o);
-  void notifyObservers();
+  void notifyObservers(std::pair<char, int> from, std::pair<char, int> to);
   virtual Piece* getState(std::pair<char, int> coord) const = 0;
   virtual ~Subject() = default;
 };

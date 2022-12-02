@@ -13,7 +13,8 @@ TextObs::~TextObs() {
   canvas->detach(this);
 }
 
-void TextObs::notify() {
+void TextObs::notify(std::pair<char, int> from, std::pair<char, int> to) {
+  cout << "TEXT OBS RAN" << endl;
   for (int y = 8; y > 0; y--) {
     cout << y << " ";
 
