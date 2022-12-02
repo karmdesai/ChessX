@@ -1021,7 +1021,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           return false;
         }
       }
-          delete tmpBoard;
+      delete tmpBoard;
     }
   }
 }
@@ -1200,4 +1200,3 @@ bool Board::isPieceCapturable(Piece *p, std::pair<char, int> position) {
 
   return false;
 }
-
