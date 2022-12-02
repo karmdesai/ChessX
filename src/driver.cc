@@ -265,8 +265,8 @@ Result playGame(Board *b) {
 
   // we always have two computers in the background, which check for
   // checkmate or stalemate. They don't actually play the game.
-  AbstractPlayer *whiteChecker = new Computer3('w', b);
-  AbstractPlayer *blackChecker = new Computer3('b', b);
+  AbstractPlayer *whiteChecker = new Computer1('w', b);
+  AbstractPlayer *blackChecker = new Computer1('b', b);
 
   /* Start Game Testing */
   std::string command;
