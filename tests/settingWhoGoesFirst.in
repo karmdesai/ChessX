@@ -1,0 +1,13 @@
+setup
++ K e1
+
++ k e8
++ R a1
+=  black
+done
+
+game human computer3
+move
+move a1 a2
+resign
+exit

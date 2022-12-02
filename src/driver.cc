@@ -57,6 +57,8 @@ void initializeBoard(Board *b) {
   std::string setupCommand;
 
   while (std::cin >> setupCommand) {
+    bool choseWhoGoesFirst = false;
+
     if (setupCommand == "=") {
       std::string color;
       std::cin >> color;
@@ -69,6 +71,7 @@ void initializeBoard(Board *b) {
         std::cout << "Invalid color. Please enter 'white' or 'black'."
                   << std::endl;
       }
+      choseWhoGoesFirst = true;
 
     } else if (setupCommand == "+") {
       char piece;
@@ -115,12 +118,6 @@ void initializeBoard(Board *b) {
 
         std::cout << b << std::endl;
       }
-    } else if (setupCommand == "=") {
-      char nextPlayer;
-
-      std::cin >> nextPlayer;
-
-      b->setColourTurn(nextPlayer);
     } else if (setupCommand == "done") {
       b->generateCompleteMoves();
       // Check if the Board has a valid setup.
@@ -189,6 +186,10 @@ void initializeBoard(Board *b) {
         }
 
         std::cout << std::endl;
+      }
+      if (!choseWhoGoesFirst) {
+        // set to white by default.
+        b->setColourTurn('w');
       }
     }
   }
@@ -270,9 +271,13 @@ Result playGame(Board *b) {
 
   /* Start Game Testing */
   std::string command;
-  // std::pair<char, int> position;
-  b->setColourTurn('w');
-  b->setPlayerTurn(b->getWhitePlayer());
+  // set next player's turn
+  char nextTurn = b->getColourTurn();
+  if (nextTurn == 'w') {
+    b->setPlayerTurn(b->getWhitePlayer());
+  } else {
+    b->setPlayerTurn(b->getBlackPlayer());
+  }
 
   while (!std::cin.eof()) {
     b->generateCompleteMoves();
@@ -458,7 +463,7 @@ int main() {
   std::string firstCommand;
 
   Stats stats = {0, 0, 0, 0};
-  while (true) {
+  while (!std::cin.eof()) {
     Board *b = new Board();
     std::cout << "Please enter 'setup' immediately if you would like "
                  "to use a custom setup. Otherwise, enter 'done'."
