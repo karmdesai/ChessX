@@ -48,6 +48,7 @@ Computer3::calculateNextMove() {
       }
     }
   }
+  // std::cout << "got after all moves" << std::endl;
 
   // if the king is in check, we can only make moves that get the king out of
   // check
@@ -181,25 +182,29 @@ Computer3::calculateNextMove() {
   for (auto move : movesThatDoNotPutOurKingInCheck) {
     // make the move on a copy of the board
     Board *boardCopy = board->clone();
-    boardCopy->movePieceBase(move.first, move.second);
+    bool success = boardCopy->movePiece(move.first, move.second);
 
-    Piece *king;
-    std::pair<char, int> kingPos;
-
-    // get the opponent's king's position
-    if (this->playerColor == 'w') {
-      kingPos = boardCopy->getBlackKingPosition();
-      king = boardCopy->getBlackKing();
+    if (!success) {
+      delete boardCopy;
+      continue;
     } else {
-      kingPos = boardCopy->getWhiteKingPosition();
-      king = boardCopy->getWhiteKing();
-    }
+      Piece *king;
+      std::pair<char, int> kingPos;
 
-    // if the king is in check, add the move to the list
-    if (boardCopy->inCheck(*king, kingPos)) {
-      movesThatPutOpponentInCheck.push_back(move);
-    }
+      // get the opponent's king's position
+      if (this->playerColor == 'w') {
+        kingPos = boardCopy->getBlackKingPosition();
+        king = boardCopy->getBlackKing();
+      } else {
+        kingPos = boardCopy->getWhiteKingPosition();
+        king = boardCopy->getWhiteKing();
+      }
 
+      // if the king is in check, add the move to the list
+      if (boardCopy->inCheck(*king, kingPos)) {
+        movesThatPutOpponentInCheck.push_back(move);
+      }
+    }
     // delete the copy of the board
     delete boardCopy;
   }

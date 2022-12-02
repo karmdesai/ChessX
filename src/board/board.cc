@@ -914,12 +914,14 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           tmpBoard->movePieceBase(from, std::make_pair('f', 1));
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
+          delete tmpBoard;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('f', 1),
                                   std::make_pair('g', 1));
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
+          delete tmpBoard;
             return false;
           }
           delete tmpBoard;
@@ -930,12 +932,15 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           tmpBoard->movePieceBase(from, std::make_pair('d', 1));
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
+
+          delete tmpBoard;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('d', 1),
                                   std::make_pair('c', 1));
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
+          delete tmpBoard;
             return false;
           }
           delete tmpBoard;
@@ -950,12 +955,14 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           tmpBoard->movePieceBase(from, std::make_pair('f', 8));
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
+          delete tmpBoard;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('f', 8),
                                   std::make_pair('g', 8));
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
+          delete tmpBoard;
             return false;
           }
           delete tmpBoard;
@@ -966,12 +973,14 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           tmpBoard->movePieceBase(from, std::make_pair('d', 8));
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
+          delete tmpBoard;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('d', 8),
                                   std::make_pair('c', 8));
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
+          delete tmpBoard;
             return false;
           }
           delete tmpBoard;
@@ -1007,7 +1016,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           return false;
         }
       }
-          delete tmpBoard;
+      delete tmpBoard;
     }
   }
 }
@@ -1133,4 +1142,3 @@ bool Board::isPieceCapturable(Piece *p, std::pair<char, int> position) {
 
   return false;
 }
-

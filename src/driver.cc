@@ -186,11 +186,11 @@ int main(int argc, char *argv[]) {
 
   // we always have two computers in the background, which check for
   // checkmate or stalemate. They don't actually play the game.
-  AbstractPlayer *whiteChecker = new Computer3('w', b);
-  AbstractPlayer *blackChecker = new Computer3('b', b);
+  AbstractPlayer *whiteChecker = new Computer1('w', b);
+  AbstractPlayer *blackChecker = new Computer1('b', b);
 
   /* Start Game Testing */
-  b->setWhitePlayer(new Computer3('w', b));
+  b->setWhitePlayer(new Human('w', b));
   b->setBlackPlayer(new Computer1('b', b));
 
   std::string command;
