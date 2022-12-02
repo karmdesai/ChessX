@@ -13,6 +13,7 @@
 #include "pieces/rook.h"
 
 #include "observers/studio.h"
+#include "observers/textObserver.h"
 
 int main() {
   std::cout << "**** WELCOME TO CHESS ****" << std::endl;
@@ -29,10 +30,11 @@ int main() {
   std::cin >> firstCommand;
 
   Board *b = new Board();
-
+  Studio *s = new Studio{b};
+  TextObs* obs = new TextObs{ s };
   /* Start Board Setup */
   if (firstCommand == "setup") {
-    std::cout << b << std::endl;
+    s->render();
 
     std::string setupCommand;
 
@@ -66,7 +68,7 @@ int main() {
             b->setPieceAtPosition(position, newPiece);
           }
 
-          std::cout << b << std::endl;
+          s->render();
         }
       } else if (setupCommand == "-") {
         char x;
@@ -79,7 +81,7 @@ int main() {
           delete b->getPieceAtPosition(position);
           b->setPieceAtPosition(position, new NullPiece('*', '*'));
 
-          std::cout << b << std::endl;
+          s->render();
         }
       } else if (setupCommand == "=") {
         char nextPlayer;
@@ -160,13 +162,10 @@ int main() {
   } else {
     b->defaultInitialization();
   }
-  
-  std::vector<Observer*> obsvec;
-  Studio *s = new Studio{b};
 
   std::cout << std::endl;
   std::cout << "Start the Game!" << std::endl;
-  std::cout << b << std::endl;
+  s->render();
 
   /* Start Moves Parser Testing */
   /*
@@ -331,8 +330,8 @@ int main() {
 
       b->movePiece(oldPosition, newPosition);
 
-      std::cout << b << std::endl;
-
+      s->render();
+      
       if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
         std::cout << "The Black King is in check!" << std::endl;
       } else if (b->inCheck(*(b->getWhiteKing()), b->getWhiteKingPosition())) {
@@ -358,7 +357,7 @@ int main() {
       b->movePiece(std::make_pair('d', 4), std::make_pair('d', 5));
 
       std:: cout << "ORIGINAL: " << std::endl;
-      std::cout << b << std::endl;
+      s->render();
 
       Board *newBoard = b->clone();
 
@@ -368,7 +367,7 @@ int main() {
       newBoard->movePiece(std::make_pair('d', 5), std::make_pair('d', 6));
 
       std:: cout << "ORIGINAL: " << std::endl;
-      std::cout << b << std::endl;
+      s->render();
 
       std::cout << "CLONE: " << std::endl;
       std::cout << newBoard << std::endl;
@@ -382,7 +381,7 @@ int main() {
       }
 
       std:: cout << "ORIGINAL: " << std::endl;
-      std::cout << b << std::endl;
+      s->render();
 
       std::cout << "CLONE: " << std::endl;
       std::cout << newBoard << std::endl;

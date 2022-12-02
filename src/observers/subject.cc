@@ -1,7 +1,8 @@
 #include "subject.h"
 #include "observer.h"
 #include <iostream>
-using namespace std;
+#include <algorithm>
+
 Subject::Subject() {}
 
 void Subject::attach( Observer *o ) {
