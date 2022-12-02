@@ -10,5 +10,5 @@ void Studio::render(std::pair<char, int> from, std::pair<char, int> to) {
 Studio::~Studio() { delete thePicture; }
 
 Piece* Studio::getState(std::pair<char, int> coord) const {
-  return thePicture->pieceAt(coord);
+  return thePicture->getPieceAtPosition(coord);
 }
