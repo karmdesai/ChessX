@@ -522,7 +522,17 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
 
       // Here we will also need to check if moving the pawn causes check to
       // its own king.
-      if (this->getPieceAtPosition(move)->getColor() != pawn.getColor() &&
+      if (this->getPieceAtPosition(move)->getColor() == '*' && 
+          move.first == enPassantPawn.first && move.second - 1 == enPassantPawn.second
+          && enPassantValid && getPieceAtPosition(enPassantPawn)->getName() != pawn.getName() &&
+          pawn.getColor() == 'w') {
+        tmp.push_back(move);
+      } else if (this->getPieceAtPosition(move)->getColor() == '*' && 
+          move.first == enPassantPawn.first && move.second + 1 == enPassantPawn.second
+          && enPassantValid && getPieceAtPosition(enPassantPawn)->getName() != pawn.getName()
+          && pawn.getColor() == 'b') {
+        tmp.push_back(move);
+      } else if (this->getPieceAtPosition(move)->getColor() != pawn.getColor() &&
           this->getPieceAtPosition(move)->getColor() != '*') {
         tmp.push_back(move);
       }
@@ -1073,6 +1083,35 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     return;
   }
 
+  //EnPassant
+  if (enPassantPawn.first) {
+    if (this->getPieceAtPosition(from)->getName() == 'P' && 
+        (this->getPieceAtPosition(from)->getName() != this->getPieceAtPosition(enPassantPawn)->getName())) {
+      if (to.first == enPassantPawn.first && to.second - 1 == enPassantPawn.second) {
+        Piece *enpassant = getPieceAtPosition(enPassantPawn);
+        delete toPiece;
+        currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+        delete enpassant;
+        currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+        currentBoard[enPassantPawn.first - 'a'][enPassantPawn.second - 1] = new NullPiece{'*', '*'};
+        enPassantValid = false;
+        return;
+      }
+    } else if (this->getPieceAtPosition(from)->getName() == 'p' && 
+              (this->getPieceAtPosition(from)->getName() != this->getPieceAtPosition(enPassantPawn)->getName())) {
+      if (to.first == enPassantPawn.first && to.second + 1 == enPassantPawn.second) {
+        Piece *enpassant = getPieceAtPosition(enPassantPawn);
+        delete toPiece;
+        currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+        delete enpassant;
+        currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+        currentBoard[enPassantPawn.first - 'a'][enPassantPawn.second - 1] = new NullPiece{'*', '*'};
+        enPassantValid = false;
+        return;
+      }
+    }
+  }
+
   if (fromPiece->getName() != '*' &&
       (fromPiece->getColor() != toPiece->getColor())) {
     // if the piece is NullPiece or opponent piece...
@@ -1089,9 +1128,22 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
 
     this->getPieceAtPosition(to)->setPieceAsMoved();
 
+    if (abs(from.second - to.second) == 2 && 
+      (getPieceAtPosition(to)->getName() == 'P' || getPieceAtPosition(to)->getName() == 'p')) {
+        setEnPassantPawn(to);
+        enPassantValid = true;
+    } else {
+        enPassantValid = false;
+    }
+
     // set old position to a new null piece
     currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
   }
+}
+
+void Board::setEnPassantPawn(std::pair<char, int> pawn) {
+  this->enPassantPawn.first = pawn.first;
+  this->enPassantPawn.second = pawn.second;
 }
 
 void Board::setPlayerTurn(AbstractPlayer *player) {
