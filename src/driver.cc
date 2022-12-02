@@ -20,40 +20,53 @@
 
 const int MAX_TRIES = 10;
 
+// struct to keep track of number of games played and the results
+struct Result {
+  int numGames;
+  int numWinsWhite;
+  int numWinsBlack;
+  int numDraws;
+};
+
 int main(int argc, char *argv[]) {
   std::cout << "**** WELCOME TO CHESS ****" << std::endl;
 
-  std::cout << "Please enter the setup command immediately if you would like "
-               "to use a custom setup."
+  std::cout << "Please enter 'setup' immediately if you would like "
+               "to use a custom setup. Otherwise, enter 'done'."
             << std::endl;
-  std::cout << "You will not be able to use a custom setup later on."
+  std::cout << "You will not be able to choose a custom setup until another "
+               "game starts."
             << std::endl;
   std::cout << std::endl;
 
-  // check for whether user wants default setup or custom setup through
-  // commandline flag
-  bool customSetup = false;
-  if (argc > 1) {
-    std::string flag = argv[1];
-    if (flag == "-c") {
-      customSetup = true;
-    }
-  }
-
   // you can only setup on the very first command for now.
-  // std::string firstCommand;
-  // std::cin >> firstCommand;
+  std::string firstCommand;
+  std::cin >> firstCommand;
 
   Board *b = new Board();
+  Result results = {0, 0, 0, 0};
 
   /* Start Board Setup */
-  if (customSetup) {
+  if (firstCommand == "setup") {
     std::cout << b << std::endl;
 
     std::string setupCommand;
 
     while (std::cin >> setupCommand) {
-      if (setupCommand == "+") {
+      if (setupCommand == "=") {
+        std::string color;
+        std::cin >> color;
+
+        if (color == "white") {
+          b->setColourTurn('w');
+        } else if (color == "black") {
+          b->setColourTurn('b');
+        } else {
+          std::cout << "Invalid color. Please enter 'white' or 'black'."
+                    << std::endl;
+        }
+
+      } else if (setupCommand == "+") {
         char piece;
         char x;
         int y;
@@ -179,196 +192,271 @@ int main(int argc, char *argv[]) {
   } else {
     b->defaultInitialization();
   }
+  /* End Board Setup */
 
-  std::cout << std::endl;
-  std::cout << "Start the Game!" << std::endl;
-  std::cout << b << std::endl;
+  std::string command, whitePlayer, blackPlayer;
 
-  // we always have two computers in the background, which check for
-  // checkmate or stalemate. They don't actually play the game.
-  AbstractPlayer *whiteChecker = new Computer3('w', b);
-  AbstractPlayer *blackChecker = new Computer3('b', b);
+  while (true) {
+    std::cout << "To start a new game, enter 'game white-player "
+                 "black-player', where white-player and black-player are "
+                 "either 'human' or one of 'computer[1-4]'."
+              << std::endl;
+    std::cin >> command >> whitePlayer >> blackPlayer;
 
-  /* Start Game Testing */
-  b->setWhitePlayer(new Human('w', b));
-  b->setBlackPlayer(new Computer3('b', b));
-
-  std::string command;
-  // std::pair<char, int> position;
-  b->setColourTurn('w');
-  b->setPlayerTurn(b->getWhitePlayer());
-
-  while (!std::cin.eof()) {
-    b->generateCompleteMoves();
-    // check for checkmate or stalemate on both sides.
-    if (whiteChecker->calculateNextMove() ==
-        std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1))) {
-      std::cout << "Checkmate! Black wins!" << std::endl;
-      delete whiteChecker;
-      delete blackChecker;
-      delete b->getWhitePlayer();
-      delete b->getBlackPlayer();
-      delete b;
-      return 0;
-    }
-
-    else if (blackChecker->calculateNextMove() ==
-             std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1))) {
-      std::cout << "Checkmate! White wins!" << std::endl;
-      delete whiteChecker;
-      delete blackChecker;
-      delete b->getWhitePlayer();
-      delete b->getBlackPlayer();
-      delete b;
-      return 0;
-    }
-
-    // if it's black turn and there are no moves, it's stalemate.
-    else if (b->getColourTurn() == 'b' &&
-             b->getBlackPlayer()->calculateNextMove() ==
-                 std::make_pair(std::make_pair('a', 0),
-                                std::make_pair('a', 0))) {
-      std::cout << "Stalemate! It's a draw!" << std::endl;
-      delete whiteChecker;
-      delete blackChecker;
-      delete b->getWhitePlayer();
-      delete b->getBlackPlayer();
-      delete b;
-      return 0;
-    }
-
-    // if it's white turn and there are no moves, it's stalemate.
-    else if (b->getColourTurn() == 'w' &&
-             b->getWhitePlayer()->calculateNextMove() ==
-                 std::make_pair(std::make_pair('a', 0),
-                                std::make_pair('a', 0))) {
-      std::cout << "Stalemate! It's a draw!" << std::endl;
-      delete b;
-      delete whiteChecker;
-      delete blackChecker;
-      delete b->getWhitePlayer();
-      delete b->getBlackPlayer();
-      return 0;
-    }
-
-    AbstractPlayer *currentPlayer = b->getWhosPlayerTurn();
-
-    if (b->getColourTurn() == 'w') {
-      std::cout << "White's turn: " << std::endl;
-    } else {
-      std::cout << "Black's turn: " << std::endl;
-    }
-
-    std::cin >> command;
-
-    if (command == "move") {
-      char oldX;
-      int oldY;
-
-      char newX;
-      int newY;
-
-      // if its the computer's move, tell it to calculate its move
-      if (currentPlayer->isComputer()) {
-        auto move = currentPlayer->calculateNextMove();
-        // print out the move
-        std::cout << "move " << move.first.first << move.first.second << " "
-                  << move.second.first << move.second.second << std::endl;
-
-        bool movedSucessfully = b->movePiece(move.first, move.second);
-        int count = 0;
-
-        /* So there's this weird bug where the computer might try to move
-        a piece that is pinned to its own king. Here I try to force it to
-        choose a new move, and give it 10 tries. If it still fails, then I
-        just assume the computer has lost it's mind and force it to resign. */
-        while (count < MAX_TRIES && !movedSucessfully) {
-          // tell the computer to calculate its move again.
-          auto newMove = currentPlayer->calculateNextMove();
-          if (newMove == move) {
-            count++;
-          } else {
-            movedSucessfully = b->movePiece(newMove.first, newMove.second);
-          }
-          break;
-        }
-
-        if (count == MAX_TRIES) {
-          std::cout << "Player is stuck. Player resigns." << std::endl;
-          delete b;
-          return 0;
-        }
-
-        std::cout << b << std::endl;
-
-        if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
-          std::cout << "The Black King is in check!" << std::endl;
-        } else if (b->inCheck(*(b->getWhiteKing()),
-                              b->getWhiteKingPosition())) {
-          std::cout << "The White King is in check!" << std::endl;
-        }
-      } else {
-        std::cin >> oldX >> oldY >> newX >> newY;
-
-        /* if any of the values read are out of bounds, retry the move.
-        usually we would want this to happen in the movePiece function
-        but it fucking seg faults for some reason, so we do it here. */
-        if (oldX < 'a' || oldX > 'h' || oldY < 1 || oldY > 8 || newX < 'a' ||
-            newX > 'h' || newY < 1 || newY > 8) {
-          std::cout << "Move is out of bounds. Try again!" << std::endl;
-          continue;
-        }
-
-        std::pair<char, int> oldPosition = std::make_pair(oldX, oldY);
-        std::pair<char, int> newPosition = std::make_pair(newX, newY);
-
-        // check if the player is trying to move a piece that isn't theirs.
-        if (b->getPieceAtPosition(oldPosition)->getColor() !=
-            b->getColourTurn()) {
-          std::cout << "You can't move that piece, it's not yours!" << std::endl;
-          continue;
-        }
-
-        bool movedSucessfully = b->movePiece(oldPosition, newPosition);
-
-        // if the move was invalid in any way, retry the move.
-        if (!movedSucessfully) {
-          std::cout << "Invalid move. Please try again." << std::endl;
-          continue;
-        }
-
-        std::cout << b << std::endl;
-
-        if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
-          std::cout << "The Black King is in check!" << std::endl;
-        } else if (b->inCheck(*(b->getWhiteKing()),
-                              b->getWhiteKingPosition())) {
-          std::cout << "The White King is in check!" << std::endl;
-        }
-      }
-
-    } else if (command == "exit") {
-      break;
-    } else {
-      // retry the move.
-      std::cout << "Invalid command. Please try again." << std::endl;
+    if (command != "game") {
+      std::cout << "Invalid command. Please follow the format "
+                   "'game white-player black-player'."
+                << std::endl;
       continue;
-    }
-
-    // set player and turn to the next player
-    if (b->getColourTurn() == 'w') {
-      b->setColourTurn('b');
-      b->setPlayerTurn(b->getBlackPlayer());
+    } else if (whitePlayer != "human" && whitePlayer != "computer1" &&
+               whitePlayer != "computer2" && whitePlayer != "computer3" &&
+               whitePlayer != "computer4") {
+      std::cout << "Invalid white player. Please follow the format "
+                   "'game white-player black-player'."
+                << std::endl;
+      continue;
+    } else if (blackPlayer != "human" && blackPlayer != "computer1" &&
+               blackPlayer != "computer2" && blackPlayer != "computer3" &&
+               blackPlayer != "computer4") {
+      std::cout << "Invalid black player. Please follow the format "
+                   "'game white-player black-player'."
+                << std::endl;
+      continue;
     } else {
-      b->setColourTurn('w');
-      b->setPlayerTurn(b->getWhitePlayer());
+      break;
     }
   }
-  /* End Game Testing */
 
-  delete whiteChecker;
-  delete blackChecker;
-  delete b->getWhitePlayer();
-  delete b->getBlackPlayer();
-  delete b;
+  // create new players according to what the user specified.
+
+  if (whitePlayer == "human") {
+    b->setWhitePlayer(new Human('w', b));
+  } else if (whitePlayer == "computer1") {
+    b->setWhitePlayer(new Computer1('w', b));
+  } else if (whitePlayer == "computer2") {
+    b->setWhitePlayer(new Computer2('w', b));
+  } else if (whitePlayer == "computer3") {
+    b->setWhitePlayer(new Computer3('w', b));
+  } else if (whitePlayer == "computer4") {
+    // not implemented yet
+    // b->setWhitePlayer(new Computer4('w', b));
+  }
+
+  if (blackPlayer == "human") {
+    b->setBlackPlayer(new Human('b', b));
+  } else if (blackPlayer == "computer1") {
+    b->setBlackPlayer(new Computer1('b', b));
+  } else if (blackPlayer == "computer2") {
+    b->setBlackPlayer(new Computer2('b', b));
+  } else if (blackPlayer == "computer3") {
+    b->setBlackPlayer(new Computer3('b', b));
+  } else if (blackPlayer == "computer4") {
+    // not implemented yet
+    // b->setBlackPlayer(new Computer4('b', b));
+  }
+
+  while (true) {
+    std::cout << std::endl;
+    std::cout << "Start the Game!" << std::endl;
+    std::cout << b << std::endl;
+
+    // we always have two computers in the background, which check for
+    // checkmate or stalemate. They don't actually play the game.
+    AbstractPlayer *whiteChecker = new Computer3('w', b);
+    AbstractPlayer *blackChecker = new Computer3('b', b);
+
+    /* Start Game Testing */
+    b->setWhitePlayer(new Computer3('w', b));
+    b->setBlackPlayer(new Computer1('b', b));
+
+    std::string command;
+    // std::pair<char, int> position;
+    b->setColourTurn('w');
+    b->setPlayerTurn(b->getWhitePlayer());
+
+    while (!std::cin.eof()) {
+      b->generateCompleteMoves();
+      // check for checkmate or stalemate on both sides.
+      if (whiteChecker->calculateNextMove() ==
+          std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1))) {
+        std::cout << "Checkmate! Black wins!" << std::endl;
+        delete whiteChecker;
+        delete blackChecker;
+        delete b->getWhitePlayer();
+        delete b->getBlackPlayer();
+        delete b;
+        return 0;
+      }
+
+      else if (blackChecker->calculateNextMove() ==
+               std::make_pair(std::make_pair('a', -1),
+                              std::make_pair('a', -1))) {
+        std::cout << "Checkmate! White wins!" << std::endl;
+        delete whiteChecker;
+        delete blackChecker;
+        delete b->getWhitePlayer();
+        delete b->getBlackPlayer();
+        delete b;
+        return 0;
+      }
+
+      // if it's black turn and there are no moves, it's stalemate.
+      else if (b->getColourTurn() == 'b' &&
+               b->getBlackPlayer()->calculateNextMove() ==
+                   std::make_pair(std::make_pair('a', 0),
+                                  std::make_pair('a', 0))) {
+        std::cout << "Stalemate! It's a draw!" << std::endl;
+        delete whiteChecker;
+        delete blackChecker;
+        delete b->getWhitePlayer();
+        delete b->getBlackPlayer();
+        delete b;
+        return 0;
+      }
+
+      // if it's white turn and there are no moves, it's stalemate.
+      else if (b->getColourTurn() == 'w' &&
+               b->getWhitePlayer()->calculateNextMove() ==
+                   std::make_pair(std::make_pair('a', 0),
+                                  std::make_pair('a', 0))) {
+        std::cout << "Stalemate! It's a draw!" << std::endl;
+        delete b;
+        delete whiteChecker;
+        delete blackChecker;
+        delete b->getWhitePlayer();
+        delete b->getBlackPlayer();
+        return 0;
+      }
+
+      AbstractPlayer *currentPlayer = b->getWhosPlayerTurn();
+
+      if (b->getColourTurn() == 'w') {
+        std::cout << "White's turn: " << std::endl;
+      } else {
+        std::cout << "Black's turn: " << std::endl;
+      }
+
+      std::cin >> command;
+
+      if (command == "move") {
+        char oldX;
+        int oldY;
+
+        char newX;
+        int newY;
+
+        // if its the computer's move, tell it to calculate its move
+        if (currentPlayer->isComputer()) {
+          auto move = currentPlayer->calculateNextMove();
+          // print out the move
+          std::cout << "move " << move.first.first << move.first.second << " "
+                    << move.second.first << move.second.second << std::endl;
+
+          bool movedSucessfully = b->movePiece(move.first, move.second);
+          int count = 0;
+
+          /* So there's this weird bug where the computer might try to move
+          a piece that is pinned to its own king. Here I try to force it to
+          choose a new move, and give it 10 tries. If it still fails, then I
+          just assume the computer has lost it's mind and force it to resign. */
+          while (count < MAX_TRIES && !movedSucessfully) {
+            // tell the computer to calculate its move again.
+            auto newMove = currentPlayer->calculateNextMove();
+            if (newMove == move) {
+              count++;
+            } else {
+              movedSucessfully = b->movePiece(newMove.first, newMove.second);
+            }
+            break;
+          }
+
+          if (count == MAX_TRIES) {
+            std::cout << "Computer is stuck. Computer resigns." << std::endl;
+            // increment the score of the other player.
+            if (currentPlayer->getPlayerColor() == 'w') {
+              results.numWinsBlack++;
+            } else {
+              results.numWinsWhite++;
+            }
+          }
+
+          std::cout << b << std::endl;
+
+          if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
+            std::cout << "The Black King is in check!" << std::endl;
+          } else if (b->inCheck(*(b->getWhiteKing()),
+                                b->getWhiteKingPosition())) {
+            std::cout << "The White King is in check!" << std::endl;
+          }
+        } else {
+          std::cin >> oldX >> oldY >> newX >> newY;
+
+          /* if any of the values read are out of bounds, retry the move.
+          usually we would want this to happen in the movePiece function
+          but it fucking seg faults for some reason, so we do it here. */
+          if (oldX < 'a' || oldX > 'h' || oldY < 1 || oldY > 8 || newX < 'a' ||
+              newX > 'h' || newY < 1 || newY > 8) {
+            std::cout << "Move is out of bounds. Try again!" << std::endl;
+            continue;
+          }
+
+          std::pair<char, int> oldPosition = std::make_pair(oldX, oldY);
+          std::pair<char, int> newPosition = std::make_pair(newX, newY);
+
+          // check if the player is trying to move a piece that isn't theirs.
+          if (b->getPieceAtPosition(oldPosition)->getColor() !=
+              b->getColourTurn()) {
+            std::cout << "You can't move that piece, it's not yours!"
+                      << std::endl;
+            continue;
+          }
+
+          bool movedSucessfully = b->movePiece(oldPosition, newPosition);
+
+          // if the move was invalid in any way, retry the move.
+          if (!movedSucessfully) {
+            std::cout << "Invalid move. Please try again." << std::endl;
+            continue;
+          }
+
+          std::cout << b << std::endl;
+
+          if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
+            std::cout << "The Black King is in check!" << std::endl;
+          } else if (b->inCheck(*(b->getWhiteKing()),
+                                b->getWhiteKingPosition())) {
+            std::cout << "The White King is in check!" << std::endl;
+          }
+        }
+
+      } else if (command == "resign") {
+        // increment the score of the color that won.
+        if (b->getColourTurn() == 'w') {
+          results.numWinsWhite++;
+        } else {
+          results.numWinsBlack++;
+        }
+        break;
+      } else {
+        // retry the move.
+        std::cout << "Invalid command. Please try again." << std::endl;
+        continue;
+      }
+
+      // set player and turn to the next player
+      if (b->getColourTurn() == 'w') {
+        b->setColourTurn('b');
+        b->setPlayerTurn(b->getBlackPlayer());
+      } else {
+        b->setColourTurn('w');
+        b->setPlayerTurn(b->getWhitePlayer());
+      }
+    }
+
+    delete whiteChecker;
+    delete blackChecker;
+    delete b->getWhitePlayer();
+    delete b->getBlackPlayer();
+    delete b;
+  }
 }
