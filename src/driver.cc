@@ -31,7 +31,7 @@ struct Stats {
     std::cout << "Final Score:" << std::endl;
     std::cout << "White:           " << numWinsWhite << std::endl;
     std::cout << "Black:           " << numWinsBlack << std::endl;
-    std::cout << "Number of draws: " << numDraws << std::endl;
+    std::cout << "Draws: " << numDraws << std::endl;
   }
 };
 
