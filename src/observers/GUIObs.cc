@@ -18,7 +18,49 @@ Xwindow* GraphObs::getWindowAdd() {
 }
 
 void drawKing(Xwindow *w, char col, int startX, int startY) {
+  int color = 0;
+  if (col == 'b') color = 1;
 
+  int bgcol = 4;
+  if ((startX + startY) % 2 != 0) bgcol  = 2;
+  
+  w->fillRectangle(startX * 80, startY * 80, 80, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 10, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 10, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 10, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 10, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 10, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 20, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 20, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 20, 10, 10, bgcol);
+  w->fillRectangle(startX * 80 + 40, startY * 80 + 20, 10, 10, color);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 20, 30, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 30, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 30, 20, 10, color);
+  w->fillRectangle(startX * 80 + 40, startY * 80 + 30, 40, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 40, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 40, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 40, 10, 10, bgcol);
+  w->fillRectangle(startX * 80 + 40, startY * 80 + 40, 10, 10, color);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 40, 30, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 50, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 50, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 50, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 50, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 50, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 60, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 60, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 60, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 60, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 60, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 70, 80, 10, bgcol);
 }
 
 void drawPawn(Xwindow *w, char col, int startX, int startY) {
@@ -160,19 +202,288 @@ void drawPawn(Xwindow *w, char col, int startX, int startY) {
 }
 
 void drawBishop(Xwindow *w, char col, int startX, int startY) {
+  int color = 0;
+  if (col == 'b') color = 1;
+
+  int bgcol = 4;
+  if ((startX + startY) % 2 != 0) bgcol  = 2;
+  
+  w->fillRectangle(startX * 80, startY * 80, 80, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 10, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 10, 30, 10, color);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 10, 30, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 20, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 20, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 20, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 20, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 20, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 30, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 30, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 30, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 30, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 30, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 40, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 40, 30, 10, color);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 40, 30, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 50, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 50, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 50, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 50, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 50, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 60, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 60, 30, 10, color);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 60, 30, 10, bgcol);
+
+
+  w->fillRectangle(startX * 80, startY * 80 + 70, 80, 10, bgcol);
 
 }
 
 void drawKnight(Xwindow *w, char col, int startX, int startY) {
+    int color = 0;
+  if (col == 'b') color = 1;
+
+  int bgcol = 4;
+  if ((startX + startY) % 2 != 0) bgcol  = 2;
+
+  w->fillRectangle(startX * 80, startY * 80, 80, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 10, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 10, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 10, 50, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 20, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 20, 40, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 20, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 30, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 30, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 30, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 30, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 30, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 40, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 40, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 40, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 40, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 40, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 50, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 50, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 50, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 50, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 50, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 60, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 60, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 60, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 60, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 60, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 70, 80, 10, bgcol);
 
 } 
 
 void drawRook(Xwindow *w, char col, int startX, int startY) {
+  if (col == 'b') {
+    if ((startX + startY) % 2 == 0) {
+      w->fillRectangle(startX * 80, startY * 80, 80, 10, Xwindow::Blue);
 
+      w->fillRectangle(startX * 80, startY * 80 + 10, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 10, 40, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 10, 20, 10, Xwindow::Blue);
+
+      w->fillRectangle(startX * 80, startY * 80 + 20, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 20, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 20, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 20, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 20, 20, 10, Xwindow::Blue);
+
+      w->fillRectangle(startX * 80, startY * 80 + 30, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 30, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 30, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 30, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 30, 20, 10, Xwindow::Blue);
+
+      w->fillRectangle(startX * 80, startY * 80 + 40, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 40, 30, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 40, 30, 10, Xwindow::Blue);
+
+      w->fillRectangle(startX * 80, startY * 80 + 50, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 50, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 50, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 50, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 50, 20, 10, Xwindow::Blue);
+
+      w->fillRectangle(startX * 80, startY * 80 + 60, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 60, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 60, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 60, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 60, 20, 10, Xwindow::Blue);
+
+      w->fillRectangle(startX * 80, startY * 80 + 70, 80, 10, Xwindow::Blue);
+
+    } else {
+      w->fillRectangle(startX * 80, startY * 80, 80, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 10, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 10, 40, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 10, 20, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 20, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 20, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 20, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 20, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 20, 20, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 30, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 30, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 30, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 30, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 30, 20, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 40, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 40, 30, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 40, 30, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 50, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 50, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 50, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 50, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 50, 20, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 60, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 60, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 60, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 60, 10, 10, Xwindow::Black);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 60, 20, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 70, 80, 10, Xwindow::Red);
+    }
+  } else {
+    if ((startX + startY) % 2 == 0) {
+      w->fillRectangle(startX * 80, startY * 80, 80, 10, Xwindow::Blue);
+
+      w->fillRectangle(startX * 80, startY * 80 + 10, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 10, 40, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 10, 20, 10, Xwindow::Blue);
+
+      w->fillRectangle(startX * 80, startY * 80 + 20, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 20, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 20, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 20, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 20, 20, 10, Xwindow::Blue);
+
+      w->fillRectangle(startX * 80, startY * 80 + 30, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 30, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 30, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 30, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 30, 20, 10, Xwindow::Blue);
+
+      w->fillRectangle(startX * 80, startY * 80 + 40, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 40, 30, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 40, 30, 10, Xwindow::Blue);
+
+      w->fillRectangle(startX * 80, startY * 80 + 50, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 50, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 50, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 50, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 50, 20, 10, Xwindow::Blue);
+
+      w->fillRectangle(startX * 80, startY * 80 + 60, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 60, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 60, 20, 10, Xwindow::Blue);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 60, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 60, 20, 10, Xwindow::Blue);
+
+      w->fillRectangle(startX * 80, startY * 80 + 70, 80, 10, Xwindow::Blue);
+
+    } else {
+      w->fillRectangle(startX * 80, startY * 80, 80, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 10, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 10, 40, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 10, 20, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 20, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 20, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 20, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 20, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 20, 20, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 30, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 30, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 30, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 30, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 30, 20, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 40, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 40, 30, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 40, 30, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 50, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 50, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 50, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 50, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 50, 20, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 60, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 20, startY * 80 + 60, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 30, startY * 80 + 60, 20, 10, Xwindow::Red);
+      w->fillRectangle(startX * 80 + 50, startY * 80 + 60, 10, 10, Xwindow::White);
+      w->fillRectangle(startX * 80 + 60, startY * 80 + 60, 20, 10, Xwindow::Red);
+
+      w->fillRectangle(startX * 80, startY * 80 + 70, 80, 10, Xwindow::Red);
+    }
+  }
 }
 
 void drawQueen(Xwindow *w, char col, int startX, int startY) {
+    int color = 0;
+  if (col == 'b') color = 1;
 
+  int bgcol = 4;
+  if ((startX + startY) % 2 != 0) bgcol  = 2;
+
+  w->fillRectangle(startX * 80, startY * 80, 80, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 10, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 10, 40, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 10, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 20, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 20, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 20, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 20, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 20, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 30, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 30, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 30, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 30, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 30, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 40, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 40, 10, 10, color);
+  w->fillRectangle(startX * 80 + 30, startY * 80 + 40, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 40, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 40, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 50, 20, 10, bgcol);
+  w->fillRectangle(startX * 80 + 20, startY * 80 + 50, 40, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 50, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 60, 50, 10, bgcol);
+  w->fillRectangle(startX * 80 + 50, startY * 80 + 60, 10, 10, color);
+  w->fillRectangle(startX * 80 + 60, startY * 80 + 60, 20, 10, bgcol);
+
+  w->fillRectangle(startX * 80, startY * 80 + 70, 80, 10, bgcol);
 }
 
 void drawBlank(Xwindow *w, int startX, int startY) {
@@ -192,38 +503,37 @@ void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to) {
           switch (currentSpace->getName())
           {
           case 'r':
-            drawPawn(getWindowAdd(), 'b', x, 8 - y);
+            drawRook(getWindowAdd(), 'b', x, 8 - y);
             break;
           case 'n':
-            drawPawn(getWindowAdd(), 'b', x, 8 - y);
+            drawKnight(getWindowAdd(), 'b', x, 8 - y);
             break;
           case 'b':
-            drawPawn(getWindowAdd(), 'b', x, 8- y);
+            drawBishop(getWindowAdd(), 'b', x, 8- y);
             break;
           case 'q':
-            drawPawn(getWindowAdd(), 'b', x, 8- y);
+            drawQueen(getWindowAdd(), 'b', x, 8- y);
             break;
           case 'k':
-            drawPawn(getWindowAdd(), 'b', x, 8- y);
+            drawKing(getWindowAdd(), 'b', x, 8- y);
             break;
           case 'p':
             drawPawn(getWindowAdd(), 'b', x, 8- y);
             break;
           case 'R':
-            drawPawn(getWindowAdd(), 'w', x, 8- y);
+            drawRook(getWindowAdd(), 'w', x, 8- y);
             break;
           case 'N':
-            drawPawn(getWindowAdd(), 'w', x, 8- y);
+            drawKnight(getWindowAdd(), 'w', x, 8- y);
             break;
           case 'B':
-            drawPawn(getWindowAdd(), 'w', x, 8- y);
+            drawBishop(getWindowAdd(), 'w', x, 8- y);
             break;
           case 'Q':
-            drawPawn(getWindowAdd(), 'w', x, 8- y);
+            drawQueen(getWindowAdd(), 'w', x, 8- y);
             break;
           case 'K':
-            cout << "LFMAOFAMOFMAOPFASOP";
-            drawPawn(getWindowAdd(), 'w', x, 8- y);
+            drawKing(getWindowAdd(), 'w', x, 8- y);
             break;
           case 'P':
             drawPawn(getWindowAdd(), 'w', x, 8- y);
@@ -244,16 +554,16 @@ void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to) {
       drawPawn(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
       break;
     case 'n':
-      drawPawn(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
+      drawKnight(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
       break;
     case 'b':
-      drawPawn(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
+      drawBishop(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
       break;
     case 'q':
-      drawPawn(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
+      drawQueen(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
       break;
     case 'k':
-      drawPawn(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
+      drawKing(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
       break;
     case 'p':
       drawPawn(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
@@ -262,16 +572,16 @@ void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to) {
       drawPawn(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
       break;
     case 'N':
-      drawPawn(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
+      drawKnight(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
       break;
     case 'B':
-      drawPawn(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
+      drawBishop(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
       break;
     case 'Q':
-      drawPawn(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
+      drawQueen(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
       break;
     case 'K':
-      drawPawn(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
+      drawKing(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
       break;
     case 'P':
       drawPawn(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);

@@ -4,12 +4,12 @@
 #include "piece.h"
 
 class Rook : public Piece {
-private:
+ private:
   /* We use this to determine whether or not
         the Rook is allowed to castle. */
   bool inStartingPosition;
 
-public:
+ public:
   Rook(char name, char color, bool inStartingPosition);
   ~Rook() = default;
 
