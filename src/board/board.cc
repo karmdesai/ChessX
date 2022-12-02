@@ -936,6 +936,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
                                 tmpBoard->whiteKingPosition)) {
             return false;
           }
+          delete tmpBoard;
         } else if (to.first == 'c' && to.second == 1) {
           // move king to e1, d1, and c1 on a copy of the board, and check if
           // any of them put the king in check
@@ -951,6 +952,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
                                 tmpBoard->whiteKingPosition)) {
             return false;
           }
+          delete tmpBoard;
         }
       }
     } else {
@@ -970,6 +972,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
                                 tmpBoard->blackKingPosition)) {
             return false;
           }
+          delete tmpBoard;
         } else if (to.first == 'c' && to.second == 8) {
           // move king to e8, d8, and c8 on a copy of the board, and check if
           // any of them put the king in check
@@ -985,6 +988,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
                                 tmpBoard->blackKingPosition)) {
             return false;
           }
+          delete tmpBoard;
         }
       }
     }
@@ -1000,19 +1004,24 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
         if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
                               tmpBoard->getBlackKingPosition()) == false) {
           this->movePieceBase(from, to);
+          delete tmpBoard;
           return true;
         } else {
+          delete tmpBoard;
           return false;
         }
       } else if (currentPiece->getColor() == 'w') {
         if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
                               tmpBoard->getWhiteKingPosition()) == false) {
           this->movePieceBase(from, to);
+          delete tmpBoard;
           return true;
         } else {
+          delete tmpBoard;
           return false;
         }
       }
+          delete tmpBoard;
     }
   }
 }
@@ -1191,3 +1200,4 @@ bool Board::isPieceCapturable(Piece *p, std::pair<char, int> position) {
 
   return false;
 }
+

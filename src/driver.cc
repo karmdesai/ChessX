@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <memory>
 
 #include "board/board.h"
 #include "computer/abstractPlayer.h"
@@ -203,6 +204,10 @@ int main(int argc, char *argv[]) {
     if (whiteChecker->calculateNextMove() ==
         std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1))) {
       std::cout << "Checkmate! Black wins!" << std::endl;
+      delete whiteChecker;
+      delete blackChecker;
+      delete b->getWhitePlayer();
+      delete b->getBlackPlayer();
       delete b;
       return 0;
     }
@@ -210,6 +215,10 @@ int main(int argc, char *argv[]) {
     else if (blackChecker->calculateNextMove() ==
              std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1))) {
       std::cout << "Checkmate! White wins!" << std::endl;
+      delete whiteChecker;
+      delete blackChecker;
+      delete b->getWhitePlayer();
+      delete b->getBlackPlayer();
       delete b;
       return 0;
     }
@@ -220,6 +229,10 @@ int main(int argc, char *argv[]) {
                  std::make_pair(std::make_pair('a', 0),
                                 std::make_pair('a', 0))) {
       std::cout << "Stalemate! It's a draw!" << std::endl;
+      delete whiteChecker;
+      delete blackChecker;
+      delete b->getWhitePlayer();
+      delete b->getBlackPlayer();
       delete b;
       return 0;
     }
@@ -231,6 +244,10 @@ int main(int argc, char *argv[]) {
                                 std::make_pair('a', 0))) {
       std::cout << "Stalemate! It's a draw!" << std::endl;
       delete b;
+      delete whiteChecker;
+      delete blackChecker;
+      delete b->getWhitePlayer();
+      delete b->getBlackPlayer();
       return 0;
     }
 
@@ -349,5 +366,9 @@ int main(int argc, char *argv[]) {
   }
   /* End Game Testing */
 
+  delete whiteChecker;
+  delete blackChecker;
+  delete b->getWhitePlayer();
+  delete b->getBlackPlayer();
   delete b;
 }

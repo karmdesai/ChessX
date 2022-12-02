@@ -1,7 +1,7 @@
 #include "computer1.h"
 
 #include <iostream>
-#include <random>
+#include <algorithm>
 
 #include "../board/board.h"
 #include "../pieces/piece.h"
