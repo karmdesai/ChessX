@@ -189,8 +189,8 @@ int main(int argc, char *argv[]) {
   AbstractPlayer *blackChecker = new Computer3('b', b);
 
   /* Start Game Testing */
-  b->setWhitePlayer(new Computer3('w', b));
-  b->setBlackPlayer(new Computer1('b', b));
+  b->setWhitePlayer(new Human('w', b));
+  b->setBlackPlayer(new Computer3('b', b));
 
   std::string command;
   // std::pair<char, int> position;
@@ -276,8 +276,8 @@ int main(int argc, char *argv[]) {
           break;
         }
 
-        if (count == 5) {
-          std::cout << "Computer is stuck. Exiting game." << std::endl;
+        if (count == MAX_TRIES) {
+          std::cout << "Player is stuck. Player resigns." << std::endl;
           delete b;
           return 0;
         }
@@ -298,12 +298,19 @@ int main(int argc, char *argv[]) {
         but it fucking seg faults for some reason, so we do it here. */
         if (oldX < 'a' || oldX > 'h' || oldY < 1 || oldY > 8 || newX < 'a' ||
             newX > 'h' || newY < 1 || newY > 8) {
-          std::cout << "Invalid move. Please try again." << std::endl;
+          std::cout << "Move is out of bounds. Try again!" << std::endl;
           continue;
         }
 
         std::pair<char, int> oldPosition = std::make_pair(oldX, oldY);
         std::pair<char, int> newPosition = std::make_pair(newX, newY);
+
+        // check if the player is trying to move a piece that isn't theirs.
+        if (b->getPieceAtPosition(oldPosition)->getColor() !=
+            b->getColourTurn()) {
+          std::cout << "You can't move that piece, it's not yours!" << std::endl;
+          continue;
+        }
 
         bool movedSucessfully = b->movePiece(oldPosition, newPosition);
 
