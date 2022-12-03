@@ -1,10 +1,12 @@
 #include "computer4.h"
 
+#include <climits>
 #include <iostream>
 #include <vector>
 
 #include "../board/board.h"
 #include "../pieces/piece.h"
+#include "computer1.h"
 
 /*
 We want to make this version of the computer much more intelligent
@@ -104,12 +106,39 @@ const int pawnTable[8][8] = {
     {5, 5, 10, 25, 25, 10, 5, 5},     {5, 5, 5, 5, 5, 7, 7, 7},
     {0, -5, -10, -20, -20, 5, 5, 5},  {0, 0, 0, 0, 0, 0, 0, 0}};
 
+const auto CHECKMATED =
+    std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
+
 // the constructor for Computer4
 Computer4::Computer4(char playerColor, Board *board)
     : AbstractPlayer{playerColor, board, true} {}
 
 // evaluate function
 int evaluate(Board *b, char playerColor) {
+  // if playerColor is checkmated, immediately return highest/lowest
+  Computer1 c1{playerColor, b};
+  auto move = c1.calculateNextMove();
+  if (move == CHECKMATED) {
+    if (playerColor == 'w') {
+      return INT_MIN;
+    } else {
+      return INT_MAX;
+    }
+  }
+
+  char otherPlayerColor = (playerColor == 'w') ? 'b' : 'w';
+
+  // if playerColor checkmates the opponent, immediately return highest/lowest
+  Computer1 c2{otherPlayerColor, b};
+  move = c2.calculateNextMove();
+  if (move == CHECKMATED) {
+    if (playerColor == 'w') {
+      return INT_MAX;
+    } else {
+      return INT_MIN;
+    }
+  }
+
   int totalWhitePieceValue = 0, totalBlackPieceValue = 0, whitePieces = 0,
       blackPieces = 0;
 
@@ -144,6 +173,28 @@ int evaluate(Board *b, char playerColor) {
       double(whitePieces + blackPieces) / double(32);
   double howMuchAreWeInEndGame = 1 - howMuchAreWeInOpeningAndMiddleGame;
 
+  bool useNewPieceTables = false;
+
+  // if player is black, we need to flip the piece tables
+  int **newKingTableOpening;
+  int **newKingTableEndGame;
+  int **newQueenTable;
+  int **newRookTable;
+  int **newBishopTable;
+  int **newKnightTable;
+  int **newPawnTable;
+
+  if (playerColor == 'b') {
+    useNewPieceTables = true;
+    newKingTableOpening = flipTable(kingTableOpening);
+    newKingTableEndGame = flipTable(kingTableEndgame);
+    newQueenTable = flipTable(queenTable);
+    newRookTable = flipTable(rookTable);
+    newBishopTable = flipTable(bishopTable);
+    newKnightTable = flipTable(knightTable);
+    newPawnTable = flipTable(pawnTable);
+  }
+
   // add values to delta based on piece tables for our pieces
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 8; j++) {
@@ -151,24 +202,69 @@ int evaluate(Board *b, char playerColor) {
       Piece *p = b->getPieceAtPosition(currentPos);
 
       if (p->getColor() == playerColor) {
-        if (tolower(p->getName()) == 'k') {
-          openingAndMiddleGame += kingTableOpening[i][j];
-          endGame += kingTableEndgame[i][j];
-        } else if (tolower(p->getName()) == 'q') {
-          openingAndMiddleGame += queenTable[i][j];
-          endGame += queenTable[i][j];
-        } else if (tolower(p->getName()) == 'r') {
-          openingAndMiddleGame += rookTable[i][j];
-          endGame += rookTable[i][j];
-        } else if (tolower(p->getName()) == 'b') {
-          openingAndMiddleGame += bishopTable[i][j];
-          endGame += bishopTable[i][j];
-        } else if (tolower(p->getName()) == 'n') {
-          openingAndMiddleGame += knightTable[i][j];
-          endGame += knightTable[i][j];
-        } else if (tolower(p->getName()) == 'p') {
-          openingAndMiddleGame += pawnTable[i][j];
-          endGame += pawnTable[i][j];
+        if (char(tolower(p->getName()) == 'k')) {
+          if (useNewPieceTables) {
+            openingAndMiddleGame +=
+                howMuchAreWeInOpeningAndMiddleGame * newKingTableOpening[i][j];
+            endGame +=
+                howMuchAreWeInEndGame * newKingTableEndGame[i][j];
+          } else {
+            openingAndMiddleGame +=
+                howMuchAreWeInOpeningAndMiddleGame * kingTableOpening[i][j];
+            endGame += howMuchAreWeInEndGame * kingTableEndgame[i][j];
+          }
+        } else if (char(tolower(p->getName()) == 'q')) {
+          if (useNewPieceTables) {
+            openingAndMiddleGame +=
+                howMuchAreWeInOpeningAndMiddleGame * newQueenTable[i][j];
+            endGame += howMuchAreWeInEndGame * newQueenTable[i][j];
+          } else {
+            openingAndMiddleGame +=
+                howMuchAreWeInOpeningAndMiddleGame * queenTable[i][j];
+            endGame += howMuchAreWeInEndGame * queenTable[i][j];
+          }
+        } else if (char(tolower(p->getName()) == 'r')) {
+          if (useNewPieceTables) {
+            openingAndMiddleGame +=
+                howMuchAreWeInOpeningAndMiddleGame * newRookTable[i][j];
+            endGame += howMuchAreWeInEndGame * newRookTable[i][j];
+          } else {
+            openingAndMiddleGame +=
+                howMuchAreWeInOpeningAndMiddleGame * rookTable[i][j];
+            endGame += howMuchAreWeInEndGame * rookTable[i][j];
+          }
+        } else if (char(tolower(p->getName()) == 'b')) {
+          if (useNewPieceTables) {
+            openingAndMiddleGame +=
+                howMuchAreWeInOpeningAndMiddleGame * newBishopTable[i][j];
+            endGame += howMuchAreWeInEndGame * newBishopTable[i][j];
+          } else {
+            openingAndMiddleGame +=
+                howMuchAreWeInOpeningAndMiddleGame * bishopTable[i][j];
+            endGame += howMuchAreWeInEndGame * bishopTable[i][j];
+          }
+        } else if (char(tolower(p->getName()) == 'n')) {
+          if (useNewPieceTables) {
+            openingAndMiddleGame +=
+                howMuchAreWeInOpeningAndMiddleGame * newKnightTable[i][j];
+
+            endGame += howMuchAreWeInEndGame * newKnightTable[i][j];
+          } else {
+            openingAndMiddleGame +=
+                howMuchAreWeInOpeningAndMiddleGame * knightTable[i][j];
+
+            endGame += howMuchAreWeInEndGame * knightTable[i][j];
+          }
+        } else if (char(tolower(p->getName()) == 'p')) {
+          if (useNewPieceTables) {
+            openingAndMiddleGame +=
+                howMuchAreWeInOpeningAndMiddleGame * newPawnTable[i][j];
+            endGame += howMuchAreWeInEndGame * newPawnTable[i][j];
+          } else {
+            openingAndMiddleGame +=
+                howMuchAreWeInOpeningAndMiddleGame * pawnTable[i][j];
+            endGame += howMuchAreWeInEndGame * pawnTable[i][j];
+          }
         }
       }
     }
@@ -197,7 +293,55 @@ int **flipTable(const int table[8][8]) {
 
 // minimax function
 int minimax(Board *b, int depth, bool isMaximizingPlayer, char playerColor) {
-  // TODO: implement this
+  if (depth == 0) {
+    return evaluate(b, playerColor);
+  }
+
+  if (isMaximizingPlayer) {
+    int maximumEvaluation = INT_MIN;
+    for (int i = 0; i < 8; ++i) {
+      for (int j = 0; j < 8; ++j) {
+        std::pair<char, int> currentPos = std::make_pair(char('a' + i), j + 1);
+        Piece *p = b->getPieceAtPosition(currentPos);
+
+        if (p->getColor() == playerColor) {
+          p->getAllPossibleMoves(currentPos);
+          b->parsePossibleMoves(*p, currentPos);
+
+          for (auto move : p->allPossibleMoves) {
+            Board *bCopy = b->clone();
+            bCopy->movePiece(currentPos, move);
+            int evaluation = minimax(bCopy, depth - 1, false, playerColor);
+            maximumEvaluation = std::max(maximumEvaluation, evaluation);
+            delete bCopy;
+          }
+          return maximumEvaluation;
+        }
+      }
+    }
+  } else {
+    int minimumEvaluation = INT_MAX;
+    for (int i = 0; i < 8; ++i) {
+      for (int j = 0; j < 8; ++j) {
+        std::pair<char, int> currentPos = std::make_pair(char('a' + i), j + 1);
+        Piece *p = b->getPieceAtPosition(currentPos);
+
+        if (p->getColor() != playerColor && p->getColor() != ' ') {
+          p->getAllPossibleMoves(currentPos);
+          b->parsePossibleMoves(*p, currentPos);
+
+          for (auto move : p->allPossibleMoves) {
+            Board *bCopy = b->clone();
+            bCopy->movePiece(currentPos, move);
+            int evaluation = minimax(bCopy, depth - 1, true, playerColor);
+            minimumEvaluation = std::min(minimumEvaluation, evaluation);
+            delete bCopy;
+          }
+        }
+        return minimumEvaluation;
+      }
+    }
+  }
 }
 
 // function to calculate the next move
