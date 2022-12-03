@@ -33,6 +33,8 @@ endgame)
 const auto CHECKMATED =
     std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
 
+const int MAX_DEPTH = 2;
+
 // the constructor for Computer4
 Computer4::Computer4(char playerColor, Board *board)
     : AbstractPlayer{playerColor, board, true} {}
@@ -154,6 +156,8 @@ int evaluate(Board *b, char playerColor) {
   delta += int((openingAndMiddleGame * howMuchAreWeInOpeningAndMiddleGame) +
                (endGame * howMuchAreWeInEndGame));
 
+  // std::cout << "delta: " << delta << std::endl;
+
   if (playerColor == 'w')
     return delta;
   else
@@ -161,8 +165,9 @@ int evaluate(Board *b, char playerColor) {
 }
 
 // minimax function
-int minimax(Board *b, int depth, bool isMaximizingPlayer, char playerColor) {
+int minimax(Board *b, int depth, int alpha, int beta, bool isMaximizingPlayer, char playerColor) {
   if (depth == 0) {
+    // std::cout << "GOT TO BASE CASE" << std::endl;
     return evaluate(b, playerColor);
   }
 
@@ -180,16 +185,18 @@ int minimax(Board *b, int depth, bool isMaximizingPlayer, char playerColor) {
           for (auto move : p->allPossibleMoves) {
             Board *bCopy = b->clone();
             bCopy->movePiece(currentPos, move);
-            int evaluation = minimax(bCopy, depth - 1, false, playerColor);
+            int evaluation = minimax(bCopy, depth - 1, alpha, beta, false, playerColor);
             maximumEvaluation = std::max(maximumEvaluation, evaluation);
+
             delete bCopy;
           }
-          return maximumEvaluation;
         }
       }
+      return maximumEvaluation;
     }
   } else {
     int minimumEvaluation = INT_MAX;
+    // std::cout << "got to minimizing player" << std::endl;
     for (int i = 0; i < 8; ++i) {
       for (int j = 0; j < 8; ++j) {
         std::pair<char, int> currentPos = std::make_pair(char('a' + i), j + 1);
@@ -202,14 +209,14 @@ int minimax(Board *b, int depth, bool isMaximizingPlayer, char playerColor) {
           for (auto move : p->allPossibleMoves) {
             Board *bCopy = b->clone();
             bCopy->movePiece(currentPos, move);
-            int evaluation = minimax(bCopy, depth - 1, true, playerColor);
+            int evaluation = minimax(bCopy, depth - 1, alpha, beta, true, playerColor);
             minimumEvaluation = std::min(minimumEvaluation, evaluation);
             delete bCopy;
           }
         }
-        return minimumEvaluation;
       }
     }
+    return minimumEvaluation;
   }
   return 0;
 }
@@ -217,5 +224,67 @@ int minimax(Board *b, int depth, bool isMaximizingPlayer, char playerColor) {
 // function to calculate the next move
 std::pair<std::pair<char, int>, std::pair<char, int>>
 Computer4::calculateNextMove() {
-  // TODO: implement this
+  // we run minimax for every possible move and choose the one with the highest
+  // evaluation
+  std::cout << "Computer is thinking..." << std::endl;
+  int eval;
+  if (playerColor == 'w')
+    eval = INT_MIN;
+  else
+    eval = INT_MAX;
+
+  auto bestMove =
+      std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
+
+  for (int i = 0; i < 8; ++i) {
+    for (int j = 0; j < 8; ++j) {
+      // std::cout << "got here" << std::endl;
+      std::pair<char, int> currentPos = std::make_pair(char('a' + i), j + 1);
+      Piece *p = board->getPieceAtPosition(currentPos);
+
+      if (p->getColor() == playerColor) {
+        // std::cout << "checking coordinate: " << currentPos.first <<
+        // currentPos.second
+        //           << std::endl;
+        p->getAllPossibleMoves(currentPos);
+        board->parsePossibleMoves(*p, currentPos);
+
+        for (auto move : p->allPossibleMoves) {
+          Board *boardCopy = board->clone();
+          boardCopy->movePiece(currentPos, move);
+          int evaluation;
+          if (playerColor == 'w') {
+            // std::cout << "calling minimax as white" << std::endl;
+            evaluation = minimax(boardCopy, MAX_DEPTH, INT_MIN, INT_MAX, true, playerColor);
+            if (evaluation > eval) {
+              eval = evaluation;
+              bestMove = std::make_pair(currentPos, move);
+            }
+          } else {
+            // std::cout << "calling minimax as black" << std::endl;
+            evaluation = minimax(boardCopy, MAX_DEPTH, INT_MIN, INT_MAX, false, playerColor);
+            if (evaluation < eval) {
+              eval = evaluation;
+              bestMove = std::make_pair(currentPos, move);
+            }
+          }
+          if (playerColor == 'w') {
+            if (evaluation > eval) {
+              eval = evaluation;
+              bestMove = std::make_pair(currentPos, move);
+            }
+          } else {
+            if (evaluation < eval) {
+              eval = evaluation;
+              bestMove = std::make_pair(currentPos, move);
+            }
+          }
+          // std::cout << "Evaluation: " << evaluation << std::endl;
+          delete boardCopy;
+        }
+      }
+    }
+  }
+
+  return bestMove;
 }
