@@ -37,3 +37,9 @@ int evaluate(Board *b, char playerColor) {
 int minimax(Board *b, int depth, bool isMaximizingPlayer, char playerColor) {
   // TODO: implement this
 }
+
+// function to calculate the next move
+std::pair<std::pair<char, int>, std::pair<char, int>>
+Computer4::calculateNextMove() {
+  // TODO: implement this
+}
