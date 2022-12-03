@@ -7,6 +7,7 @@
 #include "../board/board.h"
 #include "../pieces/piece.h"
 #include "computer1.h"
+#include "pieceTables.h"
 
 /*
 We want to make this version of the computer much more intelligent
@@ -27,84 +28,7 @@ finding the delta between the two players
 endgame)
 3. Whether it is checkmate or stalemate
 
-INSPIRATION:
-* https://www.chessprogramming.org/Evaluation
-* https://www.chessprogramming.org/Simplified_Evaluation_Function
-  * (we used the piece-tables from this, thank you Tomasz Michniewski!)
 */
-
-// piece-table for the king (opening/midgame)
-// in the opening and midgame, we prefer the king in the corners, protected by
-// its pawns and other pieces
-const int kingTableOpening[8][8] = {{-30, -40, -40, -50, -50, -40, -40, -30},
-                                    {-30, -40, -40, -50, -50, -40, -40, -30},
-                                    {-30, -40, -40, -50, -50, -40, -40, -30},
-                                    {-30, -40, -40, -50, -50, -40, -40, -30},
-                                    {-20, -30, -30, -40, -40, -30, -30, -20},
-                                    {-10, -20, -20, -20, -20, -20, -20, -10},
-                                    {20, 20, 0, 0, 0, 0, 20, 20},
-                                    {20, 30, 10, 0, 0, 10, 30, 20}};
-
-// piece-table for the king (endgame)
-// in the endgame, we prefer the king in the center of the board
-const int kingTableEndgame[8][8] = {{-50, -40, -30, -20, -20, -30, -40, -50},
-                                    {-30, -20, -10, 0, 0, -10, -20, -30},
-                                    {-30, -10, 20, 30, 30, 20, -10, -30},
-                                    {-30, -10, 30, 40, 40, 30, -10, -30},
-                                    {-30, -10, 30, 40, 40, 30, -10, -30},
-                                    {-30, -10, 20, 30, 30, 20, -10, -30},
-                                    {-30, -30, 0, 0, 0, 0, -30, -30},
-                                    {-50, -30, -30, -30, -30, -30, -30, -50}};
-
-// piece-table for the queen (opening/midgame/endgame)
-// we prefer the queen in the center of the board
-const int queenTable[8][8] = {{-20, -10, -10, -5, -5, -10, -10, -20},
-                              {-10, 0, 0, 0, 0, 0, 0, -10},
-                              {-10, 0, 5, 5, 5, 5, 0, -10},
-                              {-5, 0, 5, 5, 5, 5, 0, -5},
-                              {0, 0, 5, 5, 5, 5, 0, -5},
-                              {-10, 5, 5, 5, 5, 5, 0, -10},
-                              {-10, 0, 5, 0, 0, 0, 0, -10},
-                              {-20, -10, -10, -5, -5, -10, -10, -20}};
-
-// piece-table for the rook (opening/midgame/endgame)
-// we prefer the rook on the open files
-const int rookTable[8][8] = {
-    {0, 0, 0, 0, 0, 0, 0, 0},   {5, 10, 10, 10, 10, 10, 10, 5},
-    {-5, 0, 0, 0, 0, 0, 0, -5}, {-5, 0, 0, 0, 0, 0, 0, -5},
-    {-5, 0, 0, 0, 0, 0, 0, -5}, {-5, 0, 0, 0, 0, 0, 0, -5},
-    {-5, 0, 0, 0, 0, 0, 0, -5}, {3, 0, 0, 5, 5, 0, 0, 3}};
-
-// piece-table for the bishop (opening/midgame/endgame)
-// we prefer the bishop in the center to look in all directions
-const int bishopTable[8][8] = {{-20, -10, -10, -10, -10, -10, -10, -20},
-                               {-10, 0, 0, 0, 0, 0, 0, -10},
-                               {-10, 0, 5, 10, 10, 5, 0, -10},
-                               {-10, 5, 5, 10, 10, 5, 5, -10},
-                               {-10, 0, 10, 10, 10, 10, 0, -10},
-                               {-10, 10, 10, 10, 10, 10, 10, -10},
-                               {-10, 5, 0, 0, 0, 0, 5, -10},
-                               {-20, -10, -10, -10, -10, -10, -10, -20}};
-
-// piece-table for the knight (opening/midgame/endgame)
-// we prefer the knight in the center to look in all directions
-const int knightTable[8][8] = {{-50, -40, -30, -30, -30, -30, -40, -50},
-                               {-40, -20, 0, 0, 0, 0, -20, -40},
-                               {-30, 0, 10, 15, 15, 10, 0, -30},
-                               {-30, 5, 15, 20, 20, 15, 5, -30},
-                               {-30, 0, 15, 20, 20, 15, 0, -30},
-                               {-30, 5, 10, 15, 15, 10, 5, -30},
-                               {-40, -20, 0, 5, 5, 0, -20, -40},
-                               {-50, -40, -30, -30, -30, -30, -40, -50}};
-
-// piece-table for the pawn (opening/midgame/endgame)
-// we prefer the pawns up the board so that they can be promoted and attack
-// the enemy king
-const int pawnTable[8][8] = {
-    {0, 0, 0, 0, 0, 0, 0, 0},         {50, 50, 50, 50, 50, 50, 50, 50},
-    {10, 20, 30, 30, 30, 30, 20, 10}, {10, 10, 20, 20, 20, 10, 10, 10},
-    {5, 5, 10, 25, 25, 10, 5, 5},     {5, 5, 5, 5, 5, 7, 7, 7},
-    {0, -5, -10, -20, -20, 5, 5, 5},  {0, 0, 0, 0, 0, 0, 0, 0}};
 
 const auto CHECKMATED =
     std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
@@ -173,28 +97,6 @@ int evaluate(Board *b, char playerColor) {
       double(whitePieces + blackPieces) / double(32);
   double howMuchAreWeInEndGame = 1 - howMuchAreWeInOpeningAndMiddleGame;
 
-  bool useNewPieceTables = false;
-
-  // if player is black, we need to flip the piece tables
-  int **newKingTableOpening;
-  int **newKingTableEndGame;
-  int **newQueenTable;
-  int **newRookTable;
-  int **newBishopTable;
-  int **newKnightTable;
-  int **newPawnTable;
-
-  if (playerColor == 'b') {
-    useNewPieceTables = true;
-    newKingTableOpening = flipTable(kingTableOpening);
-    newKingTableEndGame = flipTable(kingTableEndgame);
-    newQueenTable = flipTable(queenTable);
-    newRookTable = flipTable(rookTable);
-    newBishopTable = flipTable(bishopTable);
-    newKnightTable = flipTable(knightTable);
-    newPawnTable = flipTable(pawnTable);
-  }
-
   // add values to delta based on piece tables for our pieces
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 8; j++) {
@@ -203,67 +105,46 @@ int evaluate(Board *b, char playerColor) {
 
       if (p->getColor() == playerColor) {
         if (char(tolower(p->getName()) == 'k')) {
-          if (useNewPieceTables) {
-            openingAndMiddleGame +=
-                howMuchAreWeInOpeningAndMiddleGame * newKingTableOpening[i][j];
-            endGame +=
-                howMuchAreWeInEndGame * newKingTableEndGame[i][j];
+          if (playerColor == 'w') {
+            openingAndMiddleGame += howMuchAreWeInOpeningAndMiddleGame *
+                                    kingWhiteTableOpening[i][j];
+            endGame += howMuchAreWeInEndGame * kingWhiteTableEndgame[i][j];
           } else {
-            openingAndMiddleGame +=
-                howMuchAreWeInOpeningAndMiddleGame * kingTableOpening[i][j];
-            endGame += howMuchAreWeInEndGame * kingTableEndgame[i][j];
+            openingAndMiddleGame += howMuchAreWeInOpeningAndMiddleGame *
+                                    kingBlackTableOpening[i][j];
+            endGame += howMuchAreWeInEndGame * kingBlackTableEndgame[i][j];
           }
         } else if (char(tolower(p->getName()) == 'q')) {
-          if (useNewPieceTables) {
-            openingAndMiddleGame +=
-                howMuchAreWeInOpeningAndMiddleGame * newQueenTable[i][j];
-            endGame += howMuchAreWeInEndGame * newQueenTable[i][j];
-          } else {
-            openingAndMiddleGame +=
-                howMuchAreWeInOpeningAndMiddleGame * queenTable[i][j];
-            endGame += howMuchAreWeInEndGame * queenTable[i][j];
-          }
+          openingAndMiddleGame +=
+              howMuchAreWeInOpeningAndMiddleGame * queenTable[i][j];
+          endGame += howMuchAreWeInEndGame * queenTable[i][j];
         } else if (char(tolower(p->getName()) == 'r')) {
-          if (useNewPieceTables) {
+          if (playerColor == 'w') {
             openingAndMiddleGame +=
-                howMuchAreWeInOpeningAndMiddleGame * newRookTable[i][j];
-            endGame += howMuchAreWeInEndGame * newRookTable[i][j];
+                howMuchAreWeInOpeningAndMiddleGame * rookWhiteTable[i][j];
+            endGame += howMuchAreWeInEndGame * rookWhiteTable[i][j];
           } else {
             openingAndMiddleGame +=
-                howMuchAreWeInOpeningAndMiddleGame * rookTable[i][j];
-            endGame += howMuchAreWeInEndGame * rookTable[i][j];
+                howMuchAreWeInOpeningAndMiddleGame * rookBlackTable[i][j];
+            endGame += howMuchAreWeInEndGame * rookBlackTable[i][j];
           }
         } else if (char(tolower(p->getName()) == 'b')) {
-          if (useNewPieceTables) {
-            openingAndMiddleGame +=
-                howMuchAreWeInOpeningAndMiddleGame * newBishopTable[i][j];
-            endGame += howMuchAreWeInEndGame * newBishopTable[i][j];
-          } else {
-            openingAndMiddleGame +=
-                howMuchAreWeInOpeningAndMiddleGame * bishopTable[i][j];
-            endGame += howMuchAreWeInEndGame * bishopTable[i][j];
-          }
+          openingAndMiddleGame +=
+              howMuchAreWeInOpeningAndMiddleGame * bishopTable[i][j];
+          endGame += howMuchAreWeInEndGame * bishopTable[i][j];
         } else if (char(tolower(p->getName()) == 'n')) {
-          if (useNewPieceTables) {
-            openingAndMiddleGame +=
-                howMuchAreWeInOpeningAndMiddleGame * newKnightTable[i][j];
-
-            endGame += howMuchAreWeInEndGame * newKnightTable[i][j];
-          } else {
-            openingAndMiddleGame +=
-                howMuchAreWeInOpeningAndMiddleGame * knightTable[i][j];
-
-            endGame += howMuchAreWeInEndGame * knightTable[i][j];
-          }
+          openingAndMiddleGame +=
+              howMuchAreWeInOpeningAndMiddleGame * knightTable[i][j];
+          endGame += howMuchAreWeInEndGame * knightTable[i][j];
         } else if (char(tolower(p->getName()) == 'p')) {
-          if (useNewPieceTables) {
+          if (playerColor == 'w') {
             openingAndMiddleGame +=
-                howMuchAreWeInOpeningAndMiddleGame * newPawnTable[i][j];
-            endGame += howMuchAreWeInEndGame * newPawnTable[i][j];
+                howMuchAreWeInOpeningAndMiddleGame * pawnWhiteTable[i][j];
+            endGame += howMuchAreWeInEndGame * pawnWhiteTable[i][j];
           } else {
             openingAndMiddleGame +=
-                howMuchAreWeInOpeningAndMiddleGame * pawnTable[i][j];
-            endGame += howMuchAreWeInEndGame * pawnTable[i][j];
+                howMuchAreWeInOpeningAndMiddleGame * pawnBlackTable[i][j];
+            endGame += howMuchAreWeInEndGame * pawnBlackTable[i][j];
           }
         }
       }
@@ -277,18 +158,6 @@ int evaluate(Board *b, char playerColor) {
     return delta;
   else
     return -delta;
-}
-
-// function to turn piece table from white's perspective to black's perspective
-int **flipTable(const int table[8][8]) {
-  int **tableFlipped = new int *[8];
-  for (int i = 0; i < 8; i++) {
-    tableFlipped[i] = new int[8];
-    for (int j = 0; j < 8; j++) {
-      tableFlipped[i][j] = table[7 - i][7 - j];
-    }
-  }
-  return tableFlipped;
 }
 
 // minimax function
@@ -342,6 +211,7 @@ int minimax(Board *b, int depth, bool isMaximizingPlayer, char playerColor) {
       }
     }
   }
+  return 0;
 }
 
 // function to calculate the next move
