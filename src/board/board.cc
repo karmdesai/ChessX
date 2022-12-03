@@ -1033,6 +1033,8 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
       delete tmpBoard;
     }
   }
+  // if all this fails, something bad happened, return false
+  return false;
 }
 
 void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {

@@ -454,6 +454,8 @@ Result playGame(Board *b) {
       b->setPlayerTurn(b->getWhitePlayer());
     }
   }
+  // something bad happened, return draw
+  return {'w', true};
 }
 
 int main() {
