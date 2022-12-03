@@ -509,6 +509,9 @@ int main() {
         ++stats.numWinsBlack;
       }
     }
+    delete obs;
+    delete guiobs;
+    delete s;
   }
   stats.printStats();
 }

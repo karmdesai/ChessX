@@ -1063,7 +1063,7 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     delete toPiece;
 
     currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
-    currentBoard[to.first - 1 - 'a'][to.second - 1] = rook;
+    currentBoard[to.first + 1 - 'a'][to.second - 1] = rook;
 
     currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
     currentBoard['a' - 'a'][7] = new NullPiece{'*', '*'};

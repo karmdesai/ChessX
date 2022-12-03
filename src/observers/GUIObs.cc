@@ -1,4 +1,4 @@
-#include "observer.h"
+ #include "observer.h"
 #include "studio.h"
 #include "GUIObs.h"
 #include <iostream>
@@ -547,11 +547,55 @@ void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to) {
       }
     }
   } else {
+    Piece* fromPiece = canvas->getState(from);
+    Piece* toPiece = canvas->getState(to);
+
+    cout << from.first << from.second << endl;
+    cout << to.first << to.second << endl;
+    cout << toPiece->getName() << endl;
+    cout << canvas->getState(std::make_pair('f', 1))->getName() << endl;
+    
+    if (toPiece->getColor() == 'b' && to == std::make_pair('g', 8) &&
+      toPiece->getName() == 'k' &&
+      canvas->getState(std::make_pair('f', 8))->getName() == 'r') {
+      drawBlank(getWindowAdd(), from.first - 'a', 8 - from.second);
+      drawBlank(getWindowAdd(), 'h' - 'a', 8 - from.second);
+      drawKing(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
+      drawRook(getWindowAdd(), 'b', to.first - 'a' - 1, 8 - to.second);
+      return;
+    } else if (toPiece->getColor() == 'b' && to == std::make_pair('c', 8) &&
+              toPiece->getName() == 'k' &&
+              canvas->getState(std::make_pair('d', 8))->getName() == 'r') {
+      drawBlank(getWindowAdd(), from.first - 'a', 8 - from.second);
+      drawBlank(getWindowAdd(), 'a' - 'a', 8 - from.second);
+      drawKing(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
+      drawRook(getWindowAdd(), 'b', to.first - 'a' + 1, 8 - to.second);
+      return;
+
+    } else if (toPiece->getColor() == 'w' && to.first == 'g' &&
+              to.second == 1 && toPiece->getName() == 'K' &&
+              canvas->getState(std::make_pair('f', 1))->getName() == 'R') {
+      cout << "WAS RAN" << endl;
+      drawBlank(getWindowAdd(), from.first - 'a', 8 - from.second);
+      drawBlank(getWindowAdd(), 'h' - 'a', 8 - from.second);
+      drawKing(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
+      drawRook(getWindowAdd(), 'w', to.first - 'a' - 1, 8 - to.second);
+      return;
+    } else if (toPiece->getColor() == 'w' && to == std::make_pair('c', 1) &&
+              toPiece->getName() == 'K' &&
+              canvas->getState(std::make_pair('d', 1))->getName() == 'R') {
+      drawBlank(getWindowAdd(), from.first - 'a', 8 - from.second);
+      drawBlank(getWindowAdd(), 'a' - 'a', 8 - from.second);
+      drawKing(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
+      drawRook(getWindowAdd(), 'w', to.first - 'a' + 1, 8 - to.second);
+      return;
+    }
+
     drawBlank(getWindowAdd(), from.first - 'a', 8 - from.second);
     switch (canvas->getState(to)->getName())
     {
     case 'r':
-      drawPawn(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
+      drawRook(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
       break;
     case 'n':
       drawKnight(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
@@ -569,7 +613,7 @@ void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to) {
       drawPawn(getWindowAdd(), 'b', to.first - 'a', 8 - to.second);
       break;
     case 'R':
-      drawPawn(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
+      drawRook(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
       break;
     case 'N':
       drawKnight(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);
