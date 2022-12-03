@@ -19,9 +19,21 @@ we will use a much simpler evaluation function. We don't want it
 to be too simple though. Here's a list of all the things we want
 our evaluation function to take into account:
 
-1. Total value of all the pieces on the board, and finding the difference
-between the two players. This will be the most important factor in our
-2. Placement of pieces depending on the stage of the game
-
-
+1. Total value of all the pieces on the board, and finding the delta between the two players
+2. Placement of pieces depending on the stage of the game (opening/midgame and endgame)
+3. Whether it is checkmate or stalemate
 */
+
+// the constructor for Computer4
+Computer4::Computer4(char playerColor, Board *board)
+    : AbstractPlayer{playerColor, board, true} {}
+
+// evaluate function
+int evaluate(Board *b, char playerColor) {
+  // TODO: implement this
+}
+
+// minimax function
+int minimax(Board *b, int depth, bool isMaximizingPlayer, char playerColor) {
+  // TODO: implement this
+}
