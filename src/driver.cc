@@ -508,8 +508,8 @@ int main() {
   Stats stats = {0, 0, 0, 0};
   while (!std::cin.eof()) {
     Board *b = new Board();
-    Studio *s = new Studio{b};
-    TextObs* obs = new TextObs{ s };
+    Studio s{b};
+    TextObs* obs = new TextObs{ &s };
     std::cout << "Please enter 'setup' immediately if you would like "
                  "to use a custom setup. Otherwise, enter 'done'."
               << std::endl
@@ -528,11 +528,12 @@ int main() {
     /* Start Board Setup */
     std::cin >> firstCommand;
     if (firstCommand == "exit") {
+      delete obs;
       delete b;
       break;
     }
     if (firstCommand == "setup") {
-      initializeBoard(b, s);
+      initializeBoard(b, &s);
     } else {
       b->defaultInitialization();
     }
@@ -540,9 +541,9 @@ int main() {
 
     setupPlayers(b);
 
-    // GraphObs* guiobs = new GraphObs{ s };
+    // GraphObs* guiobs = new GraphObs{ &s };
     // start the game.
-    Result result = playGame(b, s);
+    Result result = playGame(b, &s);
     
     if (result.isDraw) {
       ++stats.numDraws;
@@ -553,9 +554,8 @@ int main() {
         ++stats.numWinsBlack;
       }
     }
-
     delete obs;
-    delete guiobs;
+    // delete guiobs;
   }
   stats.printStats();
 }

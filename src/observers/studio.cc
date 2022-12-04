@@ -7,7 +7,7 @@ void Studio::render(std::pair<char, int> from, std::pair<char, int> to, bool enP
   notifyObservers(from, to, enPassant);
 }
 
-Studio::~Studio() { delete thePicture; }
+Studio::~Studio() { }
 
 Piece* Studio::getState(std::pair<char, int> coord) const {
   return thePicture->getPieceAtPosition(coord);
