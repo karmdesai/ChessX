@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <iostream>
 #include <memory>
+#include <cstring>
+#include <cctype> 
 
 #include "board/board.h"
 #include "computer/abstractPlayer.h"
@@ -339,6 +341,7 @@ Result playGame(Board *b) {
         std::cout << "move " << move.first.first << move.first.second << " "
                   << move.second.first << move.second.second << std::endl;
 
+        std::cout << "I WAS RAN 1" << std::endl;
         bool movedSucessfully = b->movePiece(move.first, move.second);
         int count = 0;
 
@@ -353,6 +356,7 @@ Result playGame(Board *b) {
           if (newMove == move) {
             count++;
           } else {
+            std::cout << "I WAS RAN" << std::endl;
             movedSucessfully = b->movePiece(newMove.first, newMove.second);
           }
           break;
@@ -403,7 +407,29 @@ Result playGame(Board *b) {
           continue;
         }
 
-        bool movedSucessfully = b->movePiece(oldPosition, newPosition);
+        bool movedSucessfully;
+
+        if (newY == 8 && b->getColourTurn() == 'w') {
+          char promote;
+          std::cin >> promote;
+
+          while(!isupper(promote)) {
+            std::cout << "not a valid piece" << std::endl;
+            std::cin >> promote;
+          }
+          movedSucessfully = b->movePieceBase(oldPosition, newPosition, promote);
+        } else if (newY == 1 && b->getColourTurn() == 'b') {
+          char promote;
+          std::cin >> promote;
+
+          while(!isupper(promote)) {
+            std::cout << "not a valid piece" << std::endl;
+            std::cin >> promote;
+          }
+          movedSucessfully = b->movePieceBase(oldPosition, newPosition, promote);
+        } else { 
+          movedSucessfully = b->movePiece(oldPosition, newPosition);
+        }
 
         // if the move was invalid in any way, retry the move.
         if (!movedSucessfully) {

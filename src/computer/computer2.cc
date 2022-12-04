@@ -125,7 +125,7 @@ Computer2::calculateNextMove() {
   for (auto move : movesThatDoNotPutOurKingInCheck) {
     // make the move on a copy of the board
     Board *boardCopy = board->clone();
-    boardCopy->movePieceBase(move.first, move.second);
+    boardCopy->movePieceBase(move.first, move.second, false);
 
     Piece *king;
     std::pair<char, int> kingPos;

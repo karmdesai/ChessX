@@ -596,7 +596,7 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
           If so, its invalid! */
         Board *tmpBoard = this->clone();
 
-        tmpBoard->movePieceBase(position, move);
+        tmpBoard->movePieceBase(position, move, false);
 
         if (king.getColor() == 'b') {
           if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
@@ -906,6 +906,44 @@ bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
   return false;
 }
 
+bool Board::movePieceBase(std::pair<char, int> oldPosition,
+  std::pair<char, int> newPosition, char promote) {
+  
+
+  Piece *currentPiece = this->getPieceAtPosition(oldPosition);
+  Board *tmpBoard = this->clone();
+
+  tmpBoard->movePieceBase(oldPosition, newPosition, false);
+
+  if (currentPiece->getColor() == 'b') {
+    if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
+                          tmpBoard->getBlackKingPosition()) == false) {
+    currentBoard[newPosition.first - 'a'][newPosition.second - 1] = createPiece(promote);
+
+    currentBoard[oldPosition.first - 'a'][oldPosition.second - 1] = new NullPiece{'*', '*'};
+    // set rook and king as moved
+      delete tmpBoard;
+      return true;
+    } else {
+      delete tmpBoard;
+      return false;
+    }
+  } else if (currentPiece->getColor() == 'w') {
+    if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
+                          tmpBoard->getWhiteKingPosition()) == false) {      
+      currentBoard[newPosition.first - 'a'][newPosition.second - 1] = createPiece(promote);
+
+      currentBoard[oldPosition.first - 'a'][oldPosition.second - 1] = new NullPiece{'*', '*'};
+      delete tmpBoard;
+      return true;
+    } else {
+      delete tmpBoard;
+      return false;
+    }
+  }
+  delete tmpBoard;
+}
+
 bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
   /* REMOVING THIS LINE REMOVES THE SEGFAULT, BUT THEN
     THE PROGRAM DOESN'T GENERATE ANY MOVES PAST THE FIRST ONE. (try with
@@ -925,14 +963,14 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           // move king to e1, f1, and g1 on a copy of the board, and check if
           // any of them put the king in check
           Board *tmpBoard = this->clone();
-          tmpBoard->movePieceBase(from, std::make_pair('f', 1));
+          tmpBoard->movePieceBase(from, std::make_pair('f', 1), false);
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
           delete tmpBoard;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('f', 1),
-                                  std::make_pair('g', 1));
+                                  std::make_pair('g', 1), false);
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
           delete tmpBoard;
@@ -943,7 +981,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           // move king to e1, d1, and c1 on a copy of the board, and check if
           // any of them put the king in check
           Board *tmpBoard = this->clone();
-          tmpBoard->movePieceBase(from, std::make_pair('d', 1));
+          tmpBoard->movePieceBase(from, std::make_pair('d', 1), false);
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
 
@@ -951,7 +989,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('d', 1),
-                                  std::make_pair('c', 1));
+                                  std::make_pair('c', 1), false);
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
           delete tmpBoard;
@@ -966,14 +1004,14 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           // move king to e8, f8, and g8 on a copy of the board, and check if
           // any of them put the king in check
           Board *tmpBoard = this->clone();
-          tmpBoard->movePieceBase(from, std::make_pair('f', 8));
+          tmpBoard->movePieceBase(from, std::make_pair('f', 8), false);
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
           delete tmpBoard;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('f', 8),
-                                  std::make_pair('g', 8));
+                                  std::make_pair('g', 8), false);
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
           delete tmpBoard;
@@ -984,14 +1022,14 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           // move king to e8, d8, and c8 on a copy of the board, and check if
           // any of them put the king in check
           Board *tmpBoard = this->clone();
-          tmpBoard->movePieceBase(from, std::make_pair('d', 8));
+          tmpBoard->movePieceBase(from, std::make_pair('d', 8), false);
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
           delete tmpBoard;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('d', 8),
-                                  std::make_pair('c', 8));
+                                  std::make_pair('c', 8), false);
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
           delete tmpBoard;
@@ -1007,12 +1045,12 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
     if (move == to) {
       Board *tmpBoard = this->clone();
 
-      tmpBoard->movePieceBase(from, to);
+      tmpBoard->movePieceBase(from, to, false);
 
       if (currentPiece->getColor() == 'b') {
         if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
                               tmpBoard->getBlackKingPosition()) == false) {
-          this->movePieceBase(from, to);
+          this->movePieceBase(from, to, false);
           delete tmpBoard;
           return true;
         } else {
@@ -1022,7 +1060,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
       } else if (currentPiece->getColor() == 'w') {
         if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
                               tmpBoard->getWhiteKingPosition()) == false) {
-          this->movePieceBase(from, to);
+          this->movePieceBase(from, to, false);
           delete tmpBoard;
           return true;
         } else {
@@ -1035,7 +1073,7 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
   }
 }
 
-void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
+void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to, bool playerMove) {
   Piece *fromPiece = getPieceAtPosition(from);
   Piece *toPiece = getPieceAtPosition(to);
 
