@@ -101,7 +101,7 @@ class Board {
   bool movePieceBase(std::pair<char, int> oldPosition,
                  std::pair<char, int> newPosition, char promote);
   void movePieceBase(std::pair<char, int> oldPosition,
-                     std::pair<char, int> newPosition, bool playerMove);
+                     std::pair<char, int> newPosition);
 
     void setEnPassantPawn(std::pair<char, int> pawn);
 

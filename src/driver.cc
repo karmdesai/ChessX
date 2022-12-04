@@ -413,7 +413,7 @@ Result playGame(Board *b) {
           char promote;
           std::cin >> promote;
 
-          while(!isupper(promote)) {
+          while(!isupper(promote) || promote == 'K') {
             std::cout << "not a valid piece" << std::endl;
             std::cin >> promote;
           }
@@ -422,7 +422,7 @@ Result playGame(Board *b) {
           char promote;
           std::cin >> promote;
 
-          while(!isupper(promote)) {
+          while(!isupper(promote) || promote == 'k') {
             std::cout << "not a valid piece" << std::endl;
             std::cin >> promote;
           }
