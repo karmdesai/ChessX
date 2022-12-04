@@ -495,7 +495,6 @@ void drawBlank(Xwindow *w, int startX, int startY) {
 }
 
 void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to, bool enPassant) {
-  cout << "IN RENDER ENPASSANT" << enPassant << endl;
   if (from.first == 'o') {
     for (int y = 1; y <= 8; y++) {
       for (int x = 0; x < 8; x++) {
