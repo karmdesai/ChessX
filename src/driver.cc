@@ -512,10 +512,10 @@ int main() {
 
     setupPlayers(b);
 
-    GraphObs* guiobs = new GraphObs{ s };
+    // GraphObs* guiobs = new GraphObs{ s };
     // start the game.
     Result result = playGame(b, s);
-
+    
     if (result.isDraw) {
       ++stats.numDraws;
     } else {
@@ -525,9 +525,9 @@ int main() {
         ++stats.numWinsBlack;
       }
     }
+
     delete obs;
     delete guiobs;
-    delete s;
   }
   stats.printStats();
 }
