@@ -500,6 +500,7 @@ int main() {
     /* Start Board Setup */
     std::cin >> firstCommand;
     if (firstCommand == "exit") {
+      delete obs;
       delete b;
       break;
     }
