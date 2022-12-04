@@ -101,7 +101,10 @@ class Board {
   void movePieceBase(std::pair<char, int> oldPosition,
                      std::pair<char, int> newPosition);
 
-    void setEnPassantPawn(std::pair<char, int> pawn);
+  void setEnPassantPawn(std::pair<char, int> pawn);
+
+  Piece* movePieceWithReturn(std::pair<char, int> from, std::pair<char, int> to);
+  void moveAndUndo(std::pair<char, int> from, std::pair<char, int> to, bool undo);
 
   bool isPieceCapturable(Piece *piece, std::pair<char, int> position);
 };

@@ -1211,3 +1211,67 @@ bool Board::isPieceCapturable(Piece *p, std::pair<char, int> position) {
 
   return false;
 }
+
+Piece* Board::movePieceWithReturn(std::pair<char, int> from, std::pair<char, int> to) {
+  Piece *fromPiece = getPieceAtPosition(from);
+  Piece *toPiece = getPieceAtPosition(to);
+
+  Piece *toClone = toPiece->clone();
+
+  if (fromPiece->getName() != '*' &&
+      (fromPiece->getColor() != toPiece->getColor())) {
+
+    // if the piece is NullPiece or opponent piece...
+    delete toPiece;
+
+    // move the piece
+    currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
+
+    if (this->currentBoard[to.first - 'a'][to.second - 1]->getName() == 'k') {
+      this->setBlackKingPosition(to);
+    } else if (currentBoard[to.first - 'a'][to.second - 1]->getName() == 'K') {
+      this->setWhiteKingPosition(to);
+    }
+
+    // set old position to a new null piece
+    currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*', '*'};
+  }
+
+  return toClone;
+}
+
+/* Don't know how/where to test this, so its just a test implementation. */
+void Board::moveAndUndo(std::pair<char, int> from, std::pair<char, int> to, bool toUndo) {
+  Piece* returnedPiece = this->movePieceWithReturn(from, to);
+  bool allChecksPassed = toUndo;
+
+  /* Here we copy/paste all the checks (without using tmpBoard). If any
+    check fails set allChecksPassed to false. */
+
+  std::cout << "Making Move: " << std::endl;
+  std::cout << this << std::endl;
+
+  if (!allChecksPassed) {
+    if (returnedPiece->getName() == '*') {
+      delete returnedPiece;
+
+      Piece* r = this->movePieceWithReturn(to, from);
+      delete r;
+    } else {
+      if (this->getPieceAtPosition(from)) {
+        delete this->getPieceAtPosition(from);
+      }
+      this->currentBoard[from.first - 'a'][from.second - 1] = this->getPieceAtPosition(to);
+
+      if (this->getPieceAtPosition(to)) {
+        delete this->getPieceAtPosition(to);
+      }
+      this->currentBoard[to.first - 'a'][to.second - 1] = returnedPiece;
+    }
+
+    std::cout << "Undoing Move: " << std::endl;
+    std::cout << this << std::endl;
+  } else {
+    std::cout << "All checks passed, won't undo the move!" << std::endl;
+  }
+}

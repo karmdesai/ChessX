@@ -335,6 +335,8 @@ Result playGame(Board *b) {
       char newX;
       int newY;
 
+      int toUndo;
+
       // if its the computer's move, tell it to calculate its move
       if (currentPlayer->isComputer()) {
         // std::cout << "GOT HEREE??" << std::endl;
@@ -386,7 +388,7 @@ Result playGame(Board *b) {
           std::cout << "The White King is in check!" << std::endl;
         }
       } else {
-        std::cin >> oldX >> oldY >> newX >> newY;
+        std::cin >> oldX >> oldY >> newX >> newY >> toUndo;
 
         /* if any of the values read are out of bounds, retry the move.
         usually we would want this to happen in the movePiece function
@@ -408,13 +410,9 @@ Result playGame(Board *b) {
           continue;
         }
 
-        bool movedSucessfully = b->movePiece(oldPosition, newPosition);
+        b->moveAndUndo(oldPosition, newPosition, toUndo);
 
         // if the move was invalid in any way, retry the move.
-        if (!movedSucessfully) {
-          std::cout << "Invalid move. Please try again." << std::endl;
-          continue;
-        }
 
         std::cout << b << std::endl;
 
