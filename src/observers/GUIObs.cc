@@ -497,9 +497,10 @@ void drawBlank(Xwindow *w, int startX, int startY) {
 
 void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to, bool enPassant) {
   if (from.first == 'o') {
-    for (int y = 1; y <= 8; y++) {
+    for (int y = 8; y > 0; y--) {
       for (int x = 0; x < 8; x++) {
         Piece *currentSpace = canvas->getState(make_pair(x + 'a', y));
+        cout << currentSpace->getName() << " AT: " << char(x + 'a') << y << endl;
         if (currentSpace->getName() != '*') {
           switch (currentSpace->getName())
           {
@@ -543,7 +544,7 @@ void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to, bool e
             break;
           }
         } else {
-          drawBlank(w, x, y - 1);
+          drawBlank(getWindowAdd(), x, y - 1);
         }
       }
     }
