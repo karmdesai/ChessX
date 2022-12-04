@@ -494,7 +494,7 @@ void drawBlank(Xwindow *w, int startX, int startY) {
   }
 }
 
-void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to) {
+void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to, bool enPassant) {
   if (from.first == 'o') {
     for (int y = 1; y <= 8; y++) {
       for (int x = 0; x < 8; x++) {
@@ -546,14 +546,22 @@ void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to) {
         }
       }
     }
+  } else if (enPassant) {
+    Piece* toPiece = canvas->getState(to);
+    std::pair<char, int> captureCord;
+    if (toPiece->getColor() == 'w') {
+      captureCord = std::make_pair(to.first, to.second - 1);
+    } else if (toPiece->getColor() == 'b') {
+      captureCord = std::make_pair(to.first, to.second + 1);
+    }
+
+    drawBlank(getWindowAdd(), captureCord.first - 'a', 8 - captureCord.second);
+    drawBlank(getWindowAdd(), from.first - 'a', 8 - from.second);
+    drawPawn(getWindowAdd(), toPiece->getColor(), to.first - 'a', 8 - to.second);
+    return;
   } else {
     Piece* fromPiece = canvas->getState(from);
     Piece* toPiece = canvas->getState(to);
-
-    cout << from.first << from.second << endl;
-    cout << to.first << to.second << endl;
-    cout << toPiece->getName() << endl;
-    cout << canvas->getState(std::make_pair('f', 1))->getName() << endl;
     
     if (toPiece->getColor() == 'b' && to == std::make_pair('g', 8) &&
       toPiece->getName() == 'k' &&
@@ -575,7 +583,6 @@ void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to) {
     } else if (toPiece->getColor() == 'w' && to.first == 'g' &&
               to.second == 1 && toPiece->getName() == 'K' &&
               canvas->getState(std::make_pair('f', 1))->getName() == 'R') {
-      cout << "WAS RAN" << endl;
       drawBlank(getWindowAdd(), from.first - 'a', 8 - from.second);
       drawBlank(getWindowAdd(), 'h' - 'a', 8 - from.second);
       drawKing(getWindowAdd(), 'w', to.first - 'a', 8 - to.second);

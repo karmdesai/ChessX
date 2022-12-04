@@ -18,8 +18,8 @@ void Subject::detach( Observer *o ) {
   }
 }
 
-void Subject::notifyObservers(std::pair<char, int> from, std::pair<char, int> to) {
+void Subject::notifyObservers(std::pair<char, int> from, std::pair<char, int> to, bool enPassant) {
   for (auto ob: observers) {
-    ob->notify(from, to);
+    ob->notify(from, to, enPassant);
   }
 }

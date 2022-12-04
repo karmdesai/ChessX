@@ -11,7 +11,7 @@ class TextObs: public Observer {
 
   public:
     TextObs(Studio *canvas);
-    void notify(std::pair<char, int> from, std::pair<char, int> to) override;
+    void notify(std::pair<char, int> from, std::pair<char, int> to, bool enPassant) override;
     ~TextObs();
 };
 
