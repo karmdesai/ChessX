@@ -3,8 +3,8 @@
 #include "board.h"
 #include "piece.h"
 
-void Studio::render(std::pair<char, int> from, std::pair<char, int> to) {
-  notifyObservers(from, to);
+void Studio::render(std::pair<char, int> from, std::pair<char, int> to, bool enPassant) {
+  notifyObservers(from, to, enPassant);
 }
 
 Studio::~Studio() { delete thePicture; }

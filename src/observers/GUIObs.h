@@ -10,7 +10,7 @@ class GraphObs: public Observer {
   Xwindow *w = new Xwindow{640, 640};
   public:
     GraphObs(Studio *canvas);
-    void notify(std::pair<char, int> from, std::pair<char, int> to) override;
+    void notify(std::pair<char, int> from, std::pair<char, int> to, bool enPassant) override;
     ~GraphObs();
     Xwindow* getWindowAdd();
 };

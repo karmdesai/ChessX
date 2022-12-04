@@ -56,7 +56,7 @@ void cleanup(Board &b, AbstractPlayer &whiteChecker,
 }
 
 void initializeBoard(Board *b, Studio *s) {
-  s->render(std::make_pair('o', 0), std::make_pair('o', 0));
+  s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
 
   std::string setupCommand;
 
@@ -266,7 +266,7 @@ void setupPlayers(Board *b) {
 Result playGame(Board *b, Studio *s) {
   std::cout << std::endl;
   std::cout << "Start the Game!" << std::endl;
-  s->render(std::make_pair('o', 0), std::make_pair('o', 0));
+  s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
 
   // we always have two computers in the background, which check for
   // checkmate or stalemate. They don't actually play the game.
@@ -381,7 +381,7 @@ Result playGame(Board *b, Studio *s) {
           }
         }
 
-        s->render(std::make_pair(move.first.first, move.first.second), std::make_pair(move.second.first, move.second.second));
+        s->render(std::make_pair(move.first.first, move.first.second), std::make_pair(move.second.first, move.second.second), false);
 
         if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
           std::cout << "The Black King is in check!" << std::endl;
@@ -412,6 +412,18 @@ Result playGame(Board *b, Studio *s) {
           continue;
         }
 
+        bool enPassant = false;
+
+        std::pair<char, int> startPos = std::make_pair(oldX, oldY);
+        std::pair<char, int> endPos = std::make_pair(newX, newY);
+
+        if (b->getPieceAtPosition(startPos)->getName() == 'P' && endPos.first != startPos.first
+            && b->getPieceAtPosition(std::make_pair(endPos.first, endPos.second - 1))->getName() == 'p') {
+            enPassant = true;
+        } else if (b->getPieceAtPosition(startPos)->getName() == 'p' && endPos.first != startPos.first
+            && b->getPieceAtPosition(std::make_pair(endPos.first, endPos.second + 1))->getName() == 'P') {
+            enPassant = true;
+        }
         bool movedSucessfully = b->movePiece(oldPosition, newPosition);
 
         // if the move was invalid in any way, retry the move.
@@ -419,8 +431,7 @@ Result playGame(Board *b, Studio *s) {
           std::cout << "Invalid move. Please try again." << std::endl;
           continue;
         }
-
-        s->render(std::make_pair(oldX, oldY), std::make_pair(newX,  newY));
+        s->render(std::make_pair(oldX, oldY), std::make_pair(newX,  newY), enPassant);
 
         if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
           std::cout << "The Black King is in check!" << std::endl;
