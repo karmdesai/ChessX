@@ -513,7 +513,7 @@ int main() {
 
     setupPlayers(b);
 
-    // GraphObs* guiobs = new GraphObs{ &s };
+    GraphObs* guiobs = new GraphObs{ &s };
     // start the game.
     Result result = playGame(b, &s);
     
@@ -527,7 +527,7 @@ int main() {
       }
     }
     delete obs;
-    // delete guiobs;
+    delete guiobs;
   }
   stats.printStats();
 }
