@@ -1,0 +1,44 @@
+setup
++ K e1
++ k e8
++ R a1
+done
+game human human
+move a1 a8
+move e8 e7
+move a8 e8
+move e7 e8
+
+setup
++ K e1
++ k e8
++ b a1
+done
+game human human
+
+setup
++ K e1
++ k e8
++ b a1
++ b a2
+done
+game human human
+resign
+
+setup
++ K e1
++ k e8
++ Q a1
+done
+game human human
+resign
+
+setup
++ K e1
++ k e8
++ b a1
++ r a2
+done
+game human human
+resign
+exit

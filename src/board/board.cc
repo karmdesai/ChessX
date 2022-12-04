@@ -928,14 +928,14 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           tmpBoard->movePieceBase(from, std::make_pair('f', 1));
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
-          delete tmpBoard;
+            delete tmpBoard;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('f', 1),
                                   std::make_pair('g', 1));
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
-          delete tmpBoard;
+            delete tmpBoard;
             return false;
           }
           delete tmpBoard;
@@ -946,15 +946,14 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           tmpBoard->movePieceBase(from, std::make_pair('d', 1));
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
-
-          delete tmpBoard;
+            delete tmpBoard;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('d', 1),
                                   std::make_pair('c', 1));
           if (tmpBoard->inCheck(*(tmpBoard->whiteKing),
                                 tmpBoard->whiteKingPosition)) {
-          delete tmpBoard;
+            delete tmpBoard;
             return false;
           }
           delete tmpBoard;
@@ -969,14 +968,14 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           tmpBoard->movePieceBase(from, std::make_pair('f', 8));
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
-          delete tmpBoard;
+            delete tmpBoard;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('f', 8),
                                   std::make_pair('g', 8));
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
-          delete tmpBoard;
+            delete tmpBoard;
             return false;
           }
           delete tmpBoard;
@@ -987,14 +986,14 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           tmpBoard->movePieceBase(from, std::make_pair('d', 8));
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
-          delete tmpBoard;
+            delete tmpBoard;
             return false;
           }
           tmpBoard->movePieceBase(std::make_pair('d', 8),
                                   std::make_pair('c', 8));
           if (tmpBoard->inCheck(*(tmpBoard->blackKing),
                                 tmpBoard->blackKingPosition)) {
-          delete tmpBoard;
+            delete tmpBoard;
             return false;
           }
           delete tmpBoard;
@@ -1121,7 +1120,6 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
         currentBoard[enPassantPawn.first - 'a'][enPassantPawn.second - 1] =
             new NullPiece{'*', '*'};
         enPassantValid = false;
-        std::cout << "ENPASSANT" << std::endl;
         return;
       }
     } else if (this->getPieceAtPosition(from)->getName() == 'p' &&
@@ -1138,7 +1136,6 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
         currentBoard[enPassantPawn.first - 'a'][enPassantPawn.second - 1] =
             new NullPiece{'*', '*'};
         enPassantValid = false;
-        std::cout << "ENPASSANT" << std::endl;
         return;
       }
     }
@@ -1208,4 +1205,101 @@ bool Board::isPieceCapturable(Piece *p, std::pair<char, int> position) {
   }
 
   return false;
+}
+
+// check if there is insufficient material to checkmate
+bool Board::isInsufficientMaterial() {
+  /*
+    1. King vs King
+    2. King and Bishop vs King
+    3. King and Knight vs King
+    5. King and Bishop vs King and Bishop
+    6. King and Knight vs King and Knight
+    7. King and Bishop vs King and Knight
+  */
+
+  // keep track of number of pieces
+  int numBlackPawns = 0;
+  int numBlackQueens = 0;
+  int numBlackRook = 0;
+  int numBlackBishops = 0;
+  int numBlackKnights = 0;
+
+  int numWhitePawns = 0;
+  int numWhiteQueens = 0;
+  int numWhiteRook = 0;
+  int numWhiteBishops = 0;
+  int numWhiteKnights = 0;
+
+  // count number of pieces
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 8; j++) {
+      if (currentBoard[i][j]->getName() == 'P') {
+        ++numWhitePawns;
+      } else if (currentBoard[i][j]->getName() == 'Q') {
+        ++numWhiteQueens;
+      } else if (currentBoard[i][j]->getName() == 'R') {
+        ++numWhiteRook;
+      } else if (currentBoard[i][j]->getName() == 'B') {
+        ++numWhiteBishops;
+      } else if (currentBoard[i][j]->getName() == 'N') {
+        ++numWhiteKnights;
+      } else if (currentBoard[i][j]->getName() == 'p') {
+        ++numBlackPawns;
+      } else if (currentBoard[i][j]->getName() == 'q') {
+        ++numBlackQueens;
+      } else if (currentBoard[i][j]->getName() == 'r') {
+        ++numBlackRook;
+      } else if (currentBoard[i][j]->getName() == 'b') {
+        ++numBlackBishops;
+      } else if (currentBoard[i][j]->getName() == 'n') {
+        ++numBlackKnights;
+      }
+    }
+  }
+
+  // check if there is insufficient material
+
+  // we only check if there are no queens, or rooks
+  if (numBlackQueens != 0 || numWhiteQueens != 0 || numBlackRook != 0 ||
+      numWhiteRook != 0) {
+    return false;
+  }
+
+  // check if there are no pawns
+  if (numBlackPawns != 0 || numWhitePawns != 0) {
+    return false;
+  }
+
+  // if there are two bishops, its sufficient material
+  if (numBlackBishops >= 2 || numWhiteBishops >= 2) {
+    return false;
+  }
+
+  // if there is one bishop and one knight, its sufficient material
+  if ((numBlackBishops == 1 && numBlackKnights >= 1) ||
+      (numWhiteBishops == 1 && numWhiteKnights >= 1)) {
+    return false;
+  }
+
+  // if there are no bishops and less than three knights, its insufficient
+  // material
+  if ((numBlackBishops == 0 && numBlackKnights < 3) ||
+      (numWhiteBishops == 0 && numWhiteKnights < 3)) {
+    return true;
+  }
+
+  // if there are no bishops and more than two knights, its sufficient material
+  if ((numBlackBishops == 0 && numBlackKnights >= 3) ||
+      (numWhiteBishops == 0 && numWhiteKnights >= 3)) {
+    return false;
+  }
+
+  // if there are pieces besides the king, its insufficient material
+  if ((numBlackBishops != 0 || numBlackKnights != 0) ||
+      (numWhiteBishops != 0 || numWhiteKnights != 0)) {
+    return true;
+  }
+
+  return true;
 }

@@ -198,7 +198,7 @@ void initializeBoard(Board *b) {
 void setupPlayers(Board *b) {
   std::string command, whitePlayer, blackPlayer;
 
-  while (true) {
+  while (!std::cin.eof()) {
     std::cout << "To start a new game, enter 'game white-player "
                  "black-player', where white-player and black-player are "
                  "either 'human' or one of 'computer[1-4]'."
@@ -281,6 +281,15 @@ Result playGame(Board *b) {
 
   while (!std::cin.eof()) {
     b->generateCompleteMoves();
+    
+    // check for insufficient material
+    if (b->isInsufficientMaterial()) {
+      std::cout << "Insufficient material. Game is a draw." << std::endl;
+      cleanup(*b, *whiteChecker, *blackChecker, *b->getWhitePlayer(),
+              *b->getBlackPlayer());
+      return {'w', true};
+    }
+
     // check for checkmate or stalemate on both sides.
     if (whiteChecker->calculateNextMove() ==
         std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1))) {
