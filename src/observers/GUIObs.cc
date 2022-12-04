@@ -276,9 +276,9 @@ void drawQueen(Xwindow *w, char col, int startX, int startY) {
 
 void drawBlank(Xwindow *w, int startX, int startY) {
   if ((startX + startY) % 2 == 0) {
-    w->fillRectangle(startX * 80, startY * 80, 80, 80, Xwindow::Blue);
+    w->fillRectangle(startX * 80, startY * 80, 80, 80, Xwindow::Peru);
   } else {
-    w->fillRectangle(startX * 80, startY * 80, 80, 80, Xwindow::Red);
+    w->fillRectangle(startX * 80, startY * 80, 80, 80, Xwindow::Sienna);
   }
 }
 
