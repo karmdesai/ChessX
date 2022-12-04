@@ -908,7 +908,6 @@ bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
 
 bool Board::movePieceBase(std::pair<char, int> oldPosition,
   std::pair<char, int> newPosition, char promote) {
-  
 
   Piece *currentPiece = this->getPieceAtPosition(oldPosition);
   Board *tmpBoard = this->clone();
