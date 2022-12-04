@@ -18,6 +18,10 @@
 #include "pieces/queen.h"
 #include "pieces/rook.h"
 
+#include "observers/studio.h"
+#include "observers/GUIObs.h"
+#include "observers/textObserver.h"
+
 const int MAX_TRIES = 10;
 
 // struct to keep track of number of games played and the results
@@ -51,8 +55,8 @@ void cleanup(Board &b, AbstractPlayer &whiteChecker,
   return;
 }
 
-void initializeBoard(Board *b) {
-  std::cout << b << std::endl;
+void initializeBoard(Board *b, Studio *s) {
+  s->render(std::make_pair('o', 0), std::make_pair('o', 0));
 
   std::string setupCommand;
 
@@ -257,10 +261,10 @@ void setupPlayers(Board *b) {
 }
 
 // function to play a game of chess
-Result playGame(Board *b) {
+Result playGame(Board *b, Studio *s) {
   std::cout << std::endl;
   std::cout << "Start the Game!" << std::endl;
-  std::cout << b << std::endl;
+  s->render(std::make_pair('o', 0), std::make_pair('o', 0));
 
   // we always have two computers in the background, which check for
   // checkmate or stalemate. They don't actually play the game.
@@ -377,7 +381,7 @@ Result playGame(Board *b) {
           }
         }
 
-        std::cout << b << std::endl;
+        s->render(std::make_pair(move.first.first, move.first.second), std::make_pair(move.second.first, move.second.second));
 
         if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
           std::cout << "The Black King is in check!" << std::endl;
@@ -416,7 +420,7 @@ Result playGame(Board *b) {
           continue;
         }
 
-        std::cout << b << std::endl;
+        s->render(std::make_pair(oldX, oldY), std::make_pair(newX,  newY));
 
         if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
           std::cout << "The Black King is in check!" << std::endl;
@@ -467,6 +471,8 @@ int main() {
   Stats stats = {0, 0, 0, 0};
   while (!std::cin.eof()) {
     Board *b = new Board();
+    Studio *s = new Studio{b};
+    TextObs* obs = new TextObs{ s };
     std::cout << "Please enter 'setup' immediately if you would like "
                  "to use a custom setup. Otherwise, enter 'done'."
               << std::endl
@@ -489,7 +495,7 @@ int main() {
       break;
     }
     if (firstCommand == "setup") {
-      initializeBoard(b);
+      initializeBoard(b, s);
     } else {
       b->defaultInitialization();
     }
@@ -497,8 +503,9 @@ int main() {
 
     setupPlayers(b);
 
+    GraphObs* guiobs = new GraphObs{ s };
     // start the game.
-    Result result = playGame(b);
+    Result result = playGame(b, s);
 
     if (result.isDraw) {
       ++stats.numDraws;
@@ -509,6 +516,9 @@ int main() {
         ++stats.numWinsBlack;
       }
     }
+    delete obs;
+    delete guiobs;
+    delete s;
   }
   stats.printStats();
 }
