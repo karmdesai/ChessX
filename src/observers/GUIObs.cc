@@ -11,6 +11,7 @@ GraphObs::GraphObs(Studio *canvas): canvas{canvas} {
 
 GraphObs::~GraphObs() {
   canvas->detach(this);
+  delete w;
 }
 
 Xwindow* GraphObs::getWindowAdd() {
