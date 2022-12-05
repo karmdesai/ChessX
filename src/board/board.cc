@@ -34,6 +34,7 @@ Board::~Board() {
   }
 }
 
+//f
 void Board::defaultInitialization() {
   // Initialize white pieces
   delete this->currentBoard[0][0];
@@ -919,7 +920,6 @@ bool Board::movePieceBase(std::pair<char, int> oldPosition,
 }
 
 bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
-
   Piece *currentPiece = this->getPieceAtPosition(from);
   this->parsePossibleMoves(*currentPiece, from);
 
@@ -958,7 +958,6 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           }
         } else if (to.first == 'c' && to.second == 1 &&
                    !currentPiece->getHasMoved()) {
-
           if (this->getPieceAtPosition(std::make_pair('a', 1))->getName() !=
               'R') {
             return false;

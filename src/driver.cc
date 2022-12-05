@@ -353,8 +353,9 @@ Result playGame(Board *b, Studio *s) {
       if (currentPlayer->isComputer()) {
         auto move = currentPlayer->calculateNextMove();
         // print out the move
-        std::cout << "Computer plays " << move.first.first << move.first.second << " -> "
-                  << move.second.first << move.second.second << std::endl;
+        std::cout << "Computer plays " << move.first.first << move.first.second
+                  << " -> " << move.second.first << move.second.second
+                  << std::endl;
 
         bool movedSuccessfully;
 
