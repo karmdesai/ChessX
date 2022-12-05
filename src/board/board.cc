@@ -920,9 +920,10 @@ bool Board::movePieceBase(std::pair<char, int> oldPosition,
   if (currentPiece->getColor() == 'b') {
     if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
                           tmpBoard->getBlackKingPosition()) == false) {
+      
       Piece *caputerdPiece = getPieceAtPosition(newPosition);
       delete caputerdPiece;
-      // delete getPieceAtPosition(newPosition);
+      delete getPieceAtPosition(oldPosition);
       currentBoard[newPosition.first - 'a'][newPosition.second - 1] =
           createPiece(promote);
 
@@ -940,7 +941,7 @@ bool Board::movePieceBase(std::pair<char, int> oldPosition,
                           tmpBoard->getWhiteKingPosition()) == false) {
       Piece *caputerdPiece = getPieceAtPosition(newPosition);
       delete caputerdPiece;
-      // delete getPieceAtPosition(oldPosition);
+      delete getPieceAtPosition(oldPosition);
       currentBoard[newPosition.first - 'a'][newPosition.second - 1] =
           createPiece(promote);
 
