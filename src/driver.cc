@@ -380,9 +380,13 @@ Result playGame(Board *b, Studio *s) {
             return {'w', false};
           }
         }
-
-        s->render(std::make_pair(move.first.first, move.first.second), std::make_pair(move.second.first, move.second.second), false);
-
+        
+        if (b->getEnPassantMade()) {
+          s->render(std::make_pair(move.first.first, move.first.second), std::make_pair(move.second.first, move.second.second), true);
+          b->setEnPassantFalse();
+        } else {
+          s->render(std::make_pair(move.first.first, move.first.second), std::make_pair(move.second.first, move.second.second), false);
+        }
         if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
           std::cout << "The Black King is in check!" << std::endl;
         } else if (b->inCheck(*(b->getWhiteKing()),

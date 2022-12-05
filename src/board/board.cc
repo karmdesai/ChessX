@@ -1122,6 +1122,7 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
             new NullPiece{'*', '*'};
         enPassantValid = false;
         std::cout << "ENPASSANT" << std::endl;
+        enPassantMade = true;
         return;
       }
     } else if (this->getPieceAtPosition(from)->getName() == 'p' &&
@@ -1139,6 +1140,7 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
             new NullPiece{'*', '*'};
         enPassantValid = false;
         std::cout << "ENPASSANT" << std::endl;
+        enPassantMade = true;
         return;
       }
     }
@@ -1208,4 +1210,12 @@ bool Board::isPieceCapturable(Piece *p, std::pair<char, int> position) {
   }
 
   return false;
+}
+
+bool Board::getEnPassantMade() {
+  return enPassantMade;
+}
+
+void Board::setEnPassantFalse() {
+  enPassantMade = false;
 }
