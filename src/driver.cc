@@ -246,8 +246,7 @@ void setupPlayers(Board *b) {
   } else if (whitePlayer == "computer3") {
     b->setWhitePlayer(new Computer3('w', b));
   } else if (whitePlayer == "computer4") {
-    // not implemented yet
-    // b->setWhitePlayer(new Computer4('w', b));
+    b->setWhitePlayer(new Computer4('w', b));
   }
 
   if (blackPlayer == "human") {
@@ -259,8 +258,7 @@ void setupPlayers(Board *b) {
   } else if (blackPlayer == "computer3") {
     b->setBlackPlayer(new Computer3('b', b));
   } else if (blackPlayer == "computer4") {
-    // not implemented yet
-    // b->setBlackPlayer(new Computer4('b', b));
+    b->setBlackPlayer(new Computer4('b', b));
   }
 }
 
@@ -315,7 +313,7 @@ Result playGame(Board *b, Studio *s) {
 
     // if it's black turn and there are no moves, it's stalemate.
     else if (b->getColourTurn() == 'b' &&
-             b->getBlackPlayer()->calculateNextMove() ==
+             blackChecker->calculateNextMove() ==
                  std::make_pair(std::make_pair('a', 0),
                                 std::make_pair('a', 0))) {
       std::cout << "Stalemate! It's a draw!" << std::endl;
@@ -326,7 +324,7 @@ Result playGame(Board *b, Studio *s) {
 
     // if it's white turn and there are no moves, it's stalemate.
     else if (b->getColourTurn() == 'w' &&
-             b->getWhitePlayer()->calculateNextMove() ==
+             whiteChecker->calculateNextMove() ==
                  std::make_pair(std::make_pair('a', 0),
                                 std::make_pair('a', 0))) {
       std::cout << "Stalemate! It's a draw!" << std::endl;
@@ -354,7 +352,9 @@ Result playGame(Board *b, Studio *s) {
 
       // if its the computer's move, tell it to calculate its move
       if (currentPlayer->isComputer()) {
+        // std::cout << "GOT HEREE??" << std::endl;
         auto move = currentPlayer->calculateNextMove();
+        // std::cout << "GOT HEREE?2?" << std::endl;
         // print out the move
         std::cout << "move " << move.first.first << move.first.second << " "
                   << move.second.first << move.second.second << std::endl;
@@ -508,6 +508,8 @@ Result playGame(Board *b, Studio *s) {
       b->setPlayerTurn(b->getWhitePlayer());
     }
   }
+  // something bad happened, return draw
+  return {'w', true};
 }
 
 int main() {
