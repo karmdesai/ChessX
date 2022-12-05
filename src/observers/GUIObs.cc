@@ -349,7 +349,7 @@ void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to,
              8 - to.second);
     return;
   } else {
-    Piece *fromPiece = canvas->getState(from);
+    // Piece *fromPiece = canvas->getState(from);
     Piece *toPiece = canvas->getState(to);
 
     if (toPiece->getColor() == 'b' && to == std::make_pair('g', 8) &&

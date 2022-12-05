@@ -13,7 +13,7 @@ TextObs::~TextObs() {
   canvas->detach(this);
 }
 
-void TextObs::notify(std::pair<char, int> from, std::pair<char, int> to, bool enPassant) {
+void TextObs::notify(std::pair<char, int>, std::pair<char, int>, bool) {
   for (int y = 8; y > 0; y--) {
     cout << y << " ";
 
