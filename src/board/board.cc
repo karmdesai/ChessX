@@ -1,6 +1,5 @@
 #include "board.h"
 
-#include <iostream>
 #include <vector>
 
 #include "../pieces/bishop.h"
@@ -221,13 +220,6 @@ Piece *Board::getPieceAtPosition(std::pair<char, int> position) {
   int x = convertAlphaToNum(position.first);
   int y = position.second;
 
-  /* Check if position is out of bounds first?
-
-  if (x == -1 || y < 1 || y > 8) {
-      return false;
-  }
-  */
-
   // input is always from 1 to 8 but array indexing is from 0 to 7.
   y -= 1;
 
@@ -251,12 +243,6 @@ std::pair<char, int> Board::getBlackKingPosition() {
 void Board::setPieceAtPosition(std::pair<char, int> position, Piece *p) {
   int x = convertAlphaToNum(position.first);
   int y = position.second;
-  /* Check if position is out of bounds first?
-
-  if (x == -1 || y < 1 || y > 8) {
-      return false;
-  }
-  */
 
   // input is always from 1 to 8 but array indexing is from 0 to 7.
   y -= 1;
@@ -281,7 +267,6 @@ void Board::setWhiteKingPosition(std::pair<char, int> position) {
 void Board::setBlackKingPosition(std::pair<char, int> position) {
   this->blackKingPosition = position;
 }
-/* End Setters */
 
 char Board::getColourTurn() { return this->whosColourTurn; }
 
@@ -503,9 +488,6 @@ void Board::parsePossibleMovesKnight(Piece &knight, std::pair<char, int>) {
       tmp.push_back(move);
     }
   }
-  /* this is not ideal, we should have Piece.allPossibleMoves is a pointer to
-    the vector, and tmp is a pointer to a vector. Then we can just swap the
-    memory of the two vectors for optimal performance. */
   knight.allPossibleMoves = tmp;
 }
 
@@ -568,9 +550,6 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
       }
     }
   }
-  /* this is not ideal, we should have Piece.allPossibleMoves is a pointer to
-    the vector, and tmp is a pointer to a vector. Then we can just swap the
-    memory of the two vectors for optimal performance. */
   pawn.allPossibleMoves = tmp;
 }
 
@@ -597,10 +576,6 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
         Board *tmpBoard = this->clone();
 
         tmpBoard->movePieceBase(position, move);
-
-        // if (success) {
-        //   tmp.push_back(move);
-        // }
 
         if (king.getColor() == 'b') {
           if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
@@ -802,9 +777,6 @@ void Board::parsePossibleMovesQueen(Piece &queen,
   queen.allPossibleMoves = tmp;
 }
 
-// Brutally inefficient, there are better ways to do this and
-//  usually you only need to re-calculate the parsed move list for certain
-//  pieces.
 void Board::generateCompleteMoves() {
   std::pair<char, int> position;
 
@@ -854,16 +826,6 @@ std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
           this->currentBoard[x][y]->getAllPossibleMoves(
               std::make_pair(this->convertNumToAlpha(x), y + 1));
 
-          /* If we allow parsePossibleMoves for King:
-              - We get a segmentation fault (due to infinite recursion)
-              If we allow parsePossibleMoves for Pawn:
-              - The parser will remove all diagonal moves (since those
-                squares are empty). But we don't want the King to move
-                to those squares, since the Pawn can capture it.
-              - Note that the King won't be able to move there (since we
-                implemented the tmpBoard checking functionality), but the
-                movelist will allow these moves.
-          */
           if (this->currentBoard[x][y]->getName() != 'k' &&
               this->currentBoard[x][y]->getName() != 'K' &&
               this->currentBoard[x][y]->getName() != 'p' &&
@@ -899,7 +861,6 @@ bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
   if ((king.getName() != 'k') && (king.getName() != 'K')) {
     return false;
   } else {
-    // O(n^3) efficiency 💀 let's think of some optimization later.
     for (auto move : allLegalMoves) {
       if (move == currentPosition) {
         return true;
@@ -958,11 +919,6 @@ bool Board::movePieceBase(std::pair<char, int> oldPosition,
 }
 
 bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
-  /* REMOVING THIS LINE REMOVES THE SEGFAULT, BUT THEN
-    THE PROGRAM DOESN'T GENERATE ANY MOVES PAST THE FIRST ONE. (try with
-    main.in)
-  */
-  // generateCompleteMoves();
 
   Piece *currentPiece = this->getPieceAtPosition(from);
   this->parsePossibleMoves(*currentPiece, from);
@@ -973,7 +929,6 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
     if (currentPiece->getColor() == 'w') {
       if (from.first == 'e' && from.second == 1) {
         if (to.first == 'g' && to.second == 1 && !currentPiece->getHasMoved()) {
-          std::cout << "got here" << std::endl;
           if (this->getPieceAtPosition(std::make_pair('h', 1))->getName() !=
               'R') {
             return false;
@@ -1003,7 +958,6 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           }
         } else if (to.first == 'c' && to.second == 1 &&
                    !currentPiece->getHasMoved()) {
-          std::cout << "got here3" << std::endl;
 
           if (this->getPieceAtPosition(std::make_pair('a', 1))->getName() !=
               'R') {
@@ -1040,7 +994,6 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
     } else {
       if (from.first == 'e' && from.second == 8) {
         if (to.first == 'g' && to.second == 8 && !currentPiece->getHasMoved()) {
-          std::cout << "got here2" << std::endl;
           if (this->getPieceAtPosition(std::make_pair('h', 8))->getName() !=
               'r') {
             return false;
@@ -1070,7 +1023,6 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           }
         } else if (to.first == 'c' && to.second == 8 &&
                    !currentPiece->getHasMoved()) {
-          std::cout << "got here4" << std::endl;
           if (this->getPieceAtPosition(std::make_pair('a', 8))->getName() !=
               'r') {
             return false;
@@ -1157,20 +1109,6 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     setPieceAtPosition(std::make_pair('g', 8), fromPiece);
     setPieceAtPosition(std::make_pair('e', 8), new NullPiece('*', '*'));
 
-    // set rook and king as moved
-    // getPieceAtPosition(std::make_pair('f', 8))->setPieceAsMoved();
-    // getPieceAtPosition(std::make_pair('g', 8))->setPieceAsMoved();
-
-    // return;
-
-    // delete toPiece;
-
-    // currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
-    // currentBoard[to.first - 1 - 'a'][to.second - 1] = rook;
-
-    // currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*',
-    // '*'}; currentBoard['h' - 'a'][7] = new NullPiece{'*', '*'};
-    // // set rook and king as moved
     fromPiece->setPieceAsMoved();
     rook->setPieceAsMoved();
     return;
@@ -1190,21 +1128,6 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     setPieceAtPosition(std::make_pair('e', 8), new NullPiece('*', '*'));
     setPieceAtPosition(std::make_pair('b', 8), new NullPiece('*', '*'));
 
-    // set rook and king as moved
-    // getPieceAtPosition(std::make_pair('d', 8))->setPieceAsMoved();
-    // getPieceAtPosition(std::make_pair('c', 8))->setPieceAsMoved();
-
-    // return;
-
-    // Piece *rook = getPieceAtPosition(std::make_pair('a', 8));
-    // // delete toPiece;
-
-    // currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
-    // currentBoard[to.first + 1 - 'a'][to.second - 1] = rook;
-
-    // currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*',
-    // '*'}; currentBoard['a' - 'a'][7] = new NullPiece{'*', '*'};
-    // // set rook and king as moved
     fromPiece->setPieceAsMoved();
     rook->setPieceAsMoved();
     return;
@@ -1221,20 +1144,6 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     setPieceAtPosition(std::make_pair('h', 1), new NullPiece('*', '*'));
     setPieceAtPosition(std::make_pair('g', 1), fromPiece);
     setPieceAtPosition(std::make_pair('e', 1), new NullPiece('*', '*'));
-
-    // set rook and king as moved
-    // getPieceAtPosition(std::make_pair('f', 1))->setPieceAsMoved();
-    // getPieceAtPosition(std::make_pair('g', 1))->setPieceAsMoved();
-
-    // return;
-    // delete toPiece;
-
-    // currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
-    // currentBoard[to.first - 'a' - 1][to.second - 1] = rook;
-
-    // currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*',
-    // '*'}; currentBoard['h' - 'a'][1 - 1] = new NullPiece{'*', '*'};
-    // // set rook and king as moved
 
     fromPiece->setPieceAsMoved();
     rook->setPieceAsMoved();
@@ -1255,19 +1164,6 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     setPieceAtPosition(std::make_pair('e', 1), new NullPiece('*', '*'));
     setPieceAtPosition(std::make_pair('b', 1), new NullPiece('*', '*'));
 
-    // set rook and king as moved
-    // getPieceAtPosition(std::make_pair('d', 1))->setPieceAsMoved();
-    // getPieceAtPosition(std::make_pair('c', 1))->setPieceAsMoved();
-
-    // return;
-    // delete toPiece;
-
-    // currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
-    // currentBoard[to.first + 1 - 'a'][to.second - 1] = rook;
-
-    // currentBoard[from.first - 'a'][from.second - 1] = new NullPiece{'*',
-    // '*'}; currentBoard['a' - 'a'][0] = new NullPiece{'*', '*'};
-    // // set rook and king as moved
     fromPiece->setPieceAsMoved();
     rook->setPieceAsMoved();
     return;

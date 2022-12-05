@@ -1,8 +1,8 @@
 /*
 INSPIRATION:
-* https://www.chessprogramming.org/Evaluation
 * https://www.chessprogramming.org/Simplified_Evaluation_Function
   * (we used the piece-tables from this, thank you Tomasz Michniewski!)
+  * we used our own values where we felt appropriate to do so
 */
 
 // piece-table for the king (opening/midgame)
