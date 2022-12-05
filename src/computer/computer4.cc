@@ -29,10 +29,10 @@ endgame)
 3. Whether it is checkmate or stalemate
 */
 
-const auto CHECKMATED =
-    std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
-
 const int MAX_DEPTH = 1;
+
+const auto IS_CHECKMATE =
+    std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
 
 // the constructor for Computer4
 Computer4::Computer4(char playerColor, Board *board)
@@ -43,7 +43,7 @@ int evaluate(Board *b, char playerColor) {
   // if playerColor is checkmated, immediately return highest/lowest
   Computer1 c1{playerColor, b};
   auto move = c1.calculateNextMove();
-  if (move == CHECKMATED) {
+  if (move == IS_CHECKMATE) {
     if (playerColor == 'w') {
       return INT_MIN;
     } else {
@@ -56,7 +56,7 @@ int evaluate(Board *b, char playerColor) {
   // if playerColor checkmates the opponent, immediately return highest/lowest
   Computer1 c2{otherPlayerColor, b};
   move = c2.calculateNextMove();
-  if (move == CHECKMATED) {
+  if (move == IS_CHECKMATE) {
     if (playerColor == 'w') {
       return INT_MAX;
     } else {
@@ -162,7 +162,8 @@ int evaluate(Board *b, char playerColor) {
 }
 
 // minimax function
-int minimax(Board *b, int depth, int alpha, int beta, bool isMaximizingPlayer, char playerColor) {
+int minimax(Board *b, int depth, int alpha, int beta, bool isMaximizingPlayer,
+            char playerColor) {
   if (depth == 0) {
     return evaluate(b, playerColor);
   }
@@ -181,7 +182,8 @@ int minimax(Board *b, int depth, int alpha, int beta, bool isMaximizingPlayer, c
           for (auto move : p->allPossibleMoves) {
             Board *bCopy = b->clone();
             bCopy->movePiece(currentPos, move);
-            int evaluation = minimax(bCopy, depth - 1, alpha, beta, false, playerColor);
+            int evaluation =
+                minimax(bCopy, depth - 1, alpha, beta, false, playerColor);
             maximumEvaluation = std::max(maximumEvaluation, evaluation);
 
             delete bCopy;
@@ -204,7 +206,8 @@ int minimax(Board *b, int depth, int alpha, int beta, bool isMaximizingPlayer, c
           for (auto move : p->allPossibleMoves) {
             Board *bCopy = b->clone();
             bCopy->movePiece(currentPos, move);
-            int evaluation = minimax(bCopy, depth - 1, alpha, beta, true, playerColor);
+            int evaluation =
+                minimax(bCopy, depth - 1, alpha, beta, true, playerColor);
             minimumEvaluation = std::min(minimumEvaluation, evaluation);
             delete bCopy;
           }
@@ -228,8 +231,7 @@ Computer4::calculateNextMove() {
   else
     eval = INT_MAX;
 
-  auto bestMove =
-      std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
+  auto bestMove = CHECKMATE;
 
   for (int i = 0; i < 8; ++i) {
     for (int j = 0; j < 8; ++j) {
@@ -245,13 +247,15 @@ Computer4::calculateNextMove() {
           boardCopy->movePiece(currentPos, move);
           int evaluation;
           if (playerColor == 'w') {
-            evaluation = minimax(boardCopy, MAX_DEPTH, INT_MIN, INT_MAX, true, playerColor);
+            evaluation = minimax(boardCopy, MAX_DEPTH, INT_MIN, INT_MAX, true,
+                                 playerColor);
             if (evaluation > eval) {
               eval = evaluation;
               bestMove = std::make_pair(currentPos, move);
             }
           } else {
-            evaluation = minimax(boardCopy, MAX_DEPTH, INT_MIN, INT_MAX, false, playerColor);
+            evaluation = minimax(boardCopy, MAX_DEPTH, INT_MIN, INT_MAX, false,
+                                 playerColor);
             if (evaluation < eval) {
               eval = evaluation;
               bestMove = std::make_pair(currentPos, move);

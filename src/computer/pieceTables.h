@@ -53,13 +53,13 @@ const int kingBlackTableEndgame[8][8] = {
 // piece-table for the queen (opening/midgame/endgame)
 // we prefer the queen in the center of the board
 const int queenTable[8][8] = {{-20, -10, -10, -5, -5, -10, -10, -20},
-                                   {-10, 0, 0, 0, 0, 0, 0, -10},
-                                   {-10, 0, 5, 5, 5, 5, 0, -10},
-                                   {-5, 0, 5, 5, 5, 5, 0, -5},
-                                   {0, 0, 5, 5, 5, 5, 0, -5},
-                                   {-10, 5, 5, 5, 5, 5, 0, -10},
-                                   {-10, 0, 5, 0, 0, 0, 0, -10},
-                                   {-20, -10, -10, -5, -5, -10, -10, -20}};
+                              {-10, 0, 0, 0, 0, 0, 0, -10},
+                              {-10, 0, 5, 5, 5, 5, 0, -10},
+                              {-5, 0, 5, 5, 5, 5, 0, -5},
+                              {0, 0, 5, 5, 5, 5, 0, -5},
+                              {-10, 5, 5, 5, 5, 5, 0, -10},
+                              {-10, 0, 5, 0, 0, 0, 0, -10},
+                              {-20, -10, -10, -5, -5, -10, -10, -20}};
 
 // piece-table for the rook (opening/midgame/endgame)
 // we prefer the rook on the open files

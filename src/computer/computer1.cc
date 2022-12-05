@@ -1,7 +1,7 @@
 #include "computer1.h"
 
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
 #include "../board/board.h"
 #include "../pieces/piece.h"
@@ -84,7 +84,7 @@ Computer1::calculateNextMove() {
       return movesThatGetKingOutOfCheck[randomIndex];
     } else {
       // we've lost, as there are no moves that get the king out of check
-      return std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
+      return CHECKMATE;
     }
   }
 
@@ -96,10 +96,14 @@ Computer1::calculateNextMove() {
   for (auto move : allMoves) {
     // make the move on a copy of the board
     // if its a castling move, we don't consider it
-    if ((move.first == std::make_pair('e', 1) && move.second == std::make_pair('g', 1)) ||
-        (move.first == std::make_pair('e', 1) && move.second == std::make_pair('c', 1)) ||
-        (move.first == std::make_pair('e', 8) && move.second == std::make_pair('g', 8)) ||
-        (move.first == std::make_pair('e', 8) && move.second == std::make_pair('c', 8))) {
+    if ((move.first == std::make_pair('e', 1) &&
+         move.second == std::make_pair('g', 1)) ||
+        (move.first == std::make_pair('e', 1) &&
+         move.second == std::make_pair('c', 1)) ||
+        (move.first == std::make_pair('e', 8) &&
+         move.second == std::make_pair('g', 8)) ||
+        (move.first == std::make_pair('e', 8) &&
+         move.second == std::make_pair('c', 8))) {
       continue;
     }
 
@@ -121,6 +125,6 @@ Computer1::calculateNextMove() {
     return allMoves[randomIndex];
   } else {
     // it's a stalemate, as we're not in check and there are no moves
-    return std::make_pair(std::make_pair('a', 0), std::make_pair('a', 0));
+    return STALEMATE;
   }
 }

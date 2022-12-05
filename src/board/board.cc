@@ -11,21 +11,17 @@
 #include "../pieces/queen.h"
 #include "../pieces/rook.h"
 
-using namespace std;
-
-/* Board class */
+// Board constructor
 Board::Board() {
-  // start with board of nullpieces
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
       this->currentBoard[x][y] = new NullPiece('*', '*');
     }
   }
-
   this->whosColourTurn = 'w';
 }
 
-// Destructor
+// Board destructor
 Board::~Board() {
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
@@ -34,6 +30,7 @@ Board::~Board() {
   }
 }
 
+// if 'setup' is not called, we use the default board setup
 void Board::defaultInitialization() {
   // Initialize white pieces
   delete this->currentBoard[0][0];
@@ -92,8 +89,6 @@ void Board::defaultInitialization() {
     delete this->currentBoard[i][6];
     this->currentBoard[i][6] = new Pawn('p', 'b', true);
   }
-
-  this->generateCompleteMoves();
 }
 
 // Overload the << operator for the Board class
@@ -131,9 +126,6 @@ std::ostream &operator<<(std::ostream &out, const Board *myBoard) {
 
 // convertAlphaToNum() converts a character ranging from a to h
 //  to a number ranging from 0 to 7.
-// requires:
-//  - alpha is a character ranging from a to h.
-// time: O(1)
 int Board::convertAlphaToNum(char alpha) {
   if (alpha >= 'a' && alpha <= 'h') {
     return alpha - 'a';
@@ -144,9 +136,6 @@ int Board::convertAlphaToNum(char alpha) {
 
 // convertNumToAlpha() converts a number ranging from 0 to 7
 //  to a character ranging from a to h.
-// requires:
-//  - num is an integer ranging from 0 to 7.
-// time: O(1)
 char Board::convertNumToAlpha(int num) {
   if (num >= 0 && num <= 7) {
     return num + 'a';
@@ -157,9 +146,6 @@ char Board::convertNumToAlpha(int num) {
 
 // createPiece(c) takes a character c and creates a new Piece
 //  of name c. It returns a pointer to the newly created piece.
-// Requires:
-//  - c is a valid character
-// Time: O(1)
 Piece *Board::createPiece(char c) {
   if (c == 'R') {
     return new Rook('R', 'w', false);
@@ -190,7 +176,7 @@ Piece *Board::createPiece(char c) {
   }
 }
 
-// clone() creates a new Board that is a deep copy of the current Board.
+// creates a deep copy of the current board and returns a pointer to it
 Board *Board::clone() {
   Board *newBoard = new Board();
 
@@ -215,7 +201,7 @@ Board *Board::clone() {
   return newBoard;
 }
 
-/* Start Getters */
+// returns a pointer to the piece at the given coordinates
 Piece *Board::getPieceAtPosition(std::pair<char, int> position) {
   int x = convertAlphaToNum(position.first);
   int y = position.second;
@@ -226,20 +212,23 @@ Piece *Board::getPieceAtPosition(std::pair<char, int> position) {
   return this->currentBoard[x][y];
 }
 
+// returns a pointer to the white king on the board
 Piece *Board::getWhiteKing() { return this->whiteKing; }
 
+// returns a pointer to the black king on the board
 Piece *Board::getBlackKing() { return this->blackKing; }
 
+// returns the position of the white king on the board
 std::pair<char, int> Board::getWhiteKingPosition() {
   return this->whiteKingPosition;
 }
 
+// returns the position of the black king on the board
 std::pair<char, int> Board::getBlackKingPosition() {
   return this->blackKingPosition;
 }
-/* End Getters */
 
-/* Start Setters */
+// sets the piece at a given position to a given piece
 void Board::setPieceAtPosition(std::pair<char, int> position, Piece *p) {
   int x = convertAlphaToNum(position.first);
   int y = position.second;
@@ -250,26 +239,34 @@ void Board::setPieceAtPosition(std::pair<char, int> position, Piece *p) {
   this->currentBoard[x][y] = p;
 }
 
+// sets who's turn it is
 void Board::setColourTurn(char player) {
   if (player == 'w' || player == 'b') {
     this->whosColourTurn = player;
   }
 }
 
+// sets the current white king for the board
 void Board::setWhiteKing(Piece *wk) { this->whiteKing = wk; }
 
+// sets the current black king for the board
 void Board::setBlackKing(Piece *bk) { this->blackKing = bk; }
 
+// sets the position of the white king on the board
 void Board::setWhiteKingPosition(std::pair<char, int> position) {
   this->whiteKingPosition = position;
 }
 
+// sets the position of the black king on the board
 void Board::setBlackKingPosition(std::pair<char, int> position) {
   this->blackKingPosition = position;
 }
 
+// get the colour of the piece at a given position
 char Board::getColourTurn() { return this->whosColourTurn; }
 
+// given a board, a piece, and it's current position, parse all the possible
+// legal moves for that piece, modifying the possible moves vector for the piece
 void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
   // pawn
   if (piece.getName() == 'p' || piece.getName() == 'P') {
@@ -297,6 +294,7 @@ void Board::parsePossibleMoves(Piece &piece, std::pair<char, int> position) {
   }
 }
 
+// parsePossibleMoves for a rook
 void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
   std::vector<std::pair<char, int>> tmp;
   int x = position.first;
@@ -384,7 +382,7 @@ void Board::parsePossibleMovesRook(Piece &rook, std::pair<char, int> position) {
   rook.allPossibleMoves = tmp;
 }
 
-// bishop move parser
+// parsePossibleMoves for a bishop
 void Board::parsePossibleMovesBishop(Piece &bishop,
                                      std::pair<char, int> position) {
   std::vector<std::pair<char, int>> tmp;
@@ -479,6 +477,7 @@ void Board::parsePossibleMovesBishop(Piece &bishop,
   bishop.allPossibleMoves = tmp;
 }
 
+// parsePossibleMoves for a knight
 void Board::parsePossibleMovesKnight(Piece &knight, std::pair<char, int>) {
   std::vector<std::pair<char, int>> tmp;
 
@@ -491,6 +490,7 @@ void Board::parsePossibleMovesKnight(Piece &knight, std::pair<char, int>) {
   knight.allPossibleMoves = tmp;
 }
 
+// parsePossibleMoves for a pawn
 void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
   std::vector<std::pair<char, int>> tmp;
 
@@ -553,6 +553,7 @@ void Board::parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position) {
   pawn.allPossibleMoves = tmp;
 }
 
+// parsePossibleMoves for a king
 void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
   std::vector<std::pair<char, int>> tmp;
   std::vector<std::pair<char, int>> threatMap = this->generateThreatMap(&king);
@@ -597,7 +598,7 @@ void Board::parsePossibleMovesKing(Piece &king, std::pair<char, int> position) {
   king.allPossibleMoves = tmp;
 }
 
-// queen move parser
+// parsePossibleMoves for a queen
 void Board::parsePossibleMovesQueen(Piece &queen,
                                     std::pair<char, int> position) {
   std::vector<std::pair<char, int>> tmp;
@@ -777,6 +778,8 @@ void Board::parsePossibleMovesQueen(Piece &queen,
   queen.allPossibleMoves = tmp;
 }
 
+// given the current state of a board, recalculate all possible moves for all
+// pieces on the board
 void Board::generateCompleteMoves() {
   std::pair<char, int> position;
 
@@ -816,6 +819,7 @@ void Board::generateCompleteMoves() {
   }
 }
 
+// generates all the possible squares that the opponent can move to
 std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
   std::vector<std::pair<char, int>> tmp;
 
@@ -854,6 +858,8 @@ std::vector<std::pair<char, int>> Board::generateThreatMap(Piece *p) {
   return tmp;
 }
 
+
+// returns a boolean representing whether the king passed in is in check
 bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
   std::vector<std::pair<char, int>> allLegalMoves =
       this->generateThreatMap(&king);
@@ -871,6 +877,7 @@ bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
   return false;
 }
 
+// overloaded movePieceBase function for when the player is promoting a pawn
 bool Board::movePieceBase(std::pair<char, int> oldPosition,
                           std::pair<char, int> newPosition, char promote) {
   Piece *currentPiece = this->getPieceAtPosition(oldPosition);
@@ -918,8 +925,10 @@ bool Board::movePieceBase(std::pair<char, int> oldPosition,
   return false;
 }
 
+// entrance function which does checks to make sure that the move that is trying
+// to be made is legal. If it is, it will call the corresponding movePieceBase
+// function
 bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
-
   Piece *currentPiece = this->getPieceAtPosition(from);
   this->parsePossibleMoves(*currentPiece, from);
 
@@ -958,7 +967,6 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
           }
         } else if (to.first == 'c' && to.second == 1 &&
                    !currentPiece->getHasMoved()) {
-
           if (this->getPieceAtPosition(std::make_pair('a', 1))->getName() !=
               'R') {
             return false;
@@ -1091,6 +1099,8 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
   return false;
 }
 
+// if the move is not promotion, this is the handler function
+  // supports castling and en passant, as well as normal moves
 void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   Piece *fromPiece = getPieceAtPosition(from);
   Piece *toPiece = getPieceAtPosition(to);
@@ -1147,8 +1157,8 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
 
     fromPiece->setPieceAsMoved();
     rook->setPieceAsMoved();
-
     return;
+
   } else if (fromPiece->getColor() == 'w' && from == std::make_pair('e', 1) &&
              to == std::make_pair('c', 1) && fromPiece->getName() == 'K' &&
              getPieceAtPosition(std::make_pair('a', 1))->getName() == 'R') {
@@ -1167,9 +1177,10 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     fromPiece->setPieceAsMoved();
     rook->setPieceAsMoved();
     return;
+
   }
 
-  // EnPassant
+  // En Passant
   if (enPassantPawn.first) {
     if (this->getPieceAtPosition(from)->getName() == 'P' &&
         (this->getPieceAtPosition(from)->getName() !=
@@ -1238,27 +1249,34 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   }
 }
 
+// sets whether an en passant pawn is possible
 void Board::setEnPassantPawn(std::pair<char, int> pawn) {
   this->enPassantPawn.first = pawn.first;
   this->enPassantPawn.second = pawn.second;
 }
 
+// sets the next player whos turn is next
 void Board::setPlayerTurn(AbstractPlayer *player) {
   this->whosPlayerTurn = player;
 }
 
+// sets the white player for the current game
 void Board::setWhitePlayer(AbstractPlayer *player) {
   this->whitePlayer = player;
 }
 
+// sets the black player for the current game
 void Board::setBlackPlayer(AbstractPlayer *player) {
   this->blackPlayer = player;
 }
 
+// returns a pointer to the white player AbstractPlayer
 AbstractPlayer *Board::getWhitePlayer() { return this->whitePlayer; }
 
+// returns a pointer to the black player AbstractPlayer
 AbstractPlayer *Board::getBlackPlayer() { return this->blackPlayer; }
 
+// returns a pointer to the player whose turn it is
 AbstractPlayer *Board::getWhosPlayerTurn() { return this->whosPlayerTurn; }
 
 // function to check whether piece can be captured by opponent
@@ -1371,6 +1389,6 @@ bool Board::isInsufficientMaterial() {
   return true;
 }
 
+// helper functions for observers
 bool Board::getEnPassantMade() { return enPassantMade; }
-
 void Board::setEnPassantFalse() { enPassantMade = false; }

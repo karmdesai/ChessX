@@ -40,11 +40,13 @@ struct Stats {
   }
 };
 
+// struct to hold the result of a particular game
 struct Result {
   char winnerColour;
   bool isDraw;
 };
 
+// deletes all heap-allocated memory after a game is finished
 void cleanup(Board &b, AbstractPlayer &whiteChecker,
              AbstractPlayer &blackChecker, AbstractPlayer &whitePlayer,
              AbstractPlayer &blackPlayer) {
@@ -56,6 +58,7 @@ void cleanup(Board &b, AbstractPlayer &whiteChecker,
   return;
 }
 
+// initializes a custom board setup according to how the user wants it
 void initializeBoard(Board *b, Studio *s) {
   s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
 
@@ -200,6 +203,7 @@ void initializeBoard(Board *b, Studio *s) {
   }
 }
 
+// sets up the players for a game (human or computer)
 void setupPlayers(Board *b) {
   std::string command, whitePlayer, blackPlayer;
 
@@ -235,7 +239,6 @@ void setupPlayers(Board *b) {
   }
 
   // create new players according to what the user specified.
-
   if (whitePlayer == "human") {
     b->setWhitePlayer(new Human('w', b));
   } else if (whitePlayer == "computer1") {
@@ -272,7 +275,6 @@ Result playGame(Board *b, Studio *s) {
   AbstractPlayer *whiteChecker = new Computer1('w', b);
   AbstractPlayer *blackChecker = new Computer1('b', b);
 
-  /* Start Game Testing */
   std::string command;
   // set next player's turn
   char nextTurn = b->getColourTurn();
@@ -343,18 +345,16 @@ Result playGame(Board *b, Studio *s) {
     std::cin >> command;
 
     if (command == "move") {
-      char oldX;
-      int oldY;
-
-      char newX;
-      int newY;
+      char oldX, newX;
+      int oldY, newY;
 
       // if its the computer's move, tell it to calculate its move
       if (currentPlayer->isComputer()) {
         auto move = currentPlayer->calculateNextMove();
         // print out the move
-        std::cout << "Computer plays " << move.first.first << move.first.second << " -> "
-                  << move.second.first << move.second.second << std::endl;
+        std::cout << "Computer plays " << move.first.first << move.first.second
+                  << " -> " << move.second.first << move.second.second
+                  << std::endl;
 
         bool movedSuccessfully;
 
@@ -548,7 +548,7 @@ Result playGame(Board *b, Studio *s) {
 int main() {
   std::cout << "**** WELCOME TO CHESS ****" << std::endl;
 
-  // you can only setup on the very first command for now.
+  // you can only setup in the beginning
   std::string firstCommand;
 
   Stats stats = {0, 0, 0, 0};
@@ -572,7 +572,6 @@ int main() {
 
     std::cout << std::endl;
 
-    /* Start Board Setup */
     std::cin >> firstCommand;
     if (firstCommand == "exit") {
       delete obs;
@@ -585,11 +584,9 @@ int main() {
     } else {
       b->defaultInitialization();
     }
-    /* End Board Setup */
 
     setupPlayers(b);
 
-    // GraphObs *guiobs = new GraphObs{&s};
     // start the game.
     Result result = playGame(b, &s);
 
@@ -604,8 +601,6 @@ int main() {
     }
     delete obs;
     delete guiobs;
-    // delete b;
   }
   stats.printStats();
-  // delete b;
 }
