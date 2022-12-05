@@ -18,6 +18,10 @@
 #include "pieces/queen.h"
 #include "pieces/rook.h"
 
+#include "observers/studio.h"
+#include "observers/GUIObs.h"
+#include "observers/textObserver.h"
+
 const int MAX_TRIES = 10;
 
 // struct to keep track of number of games played and the results
@@ -51,8 +55,8 @@ void cleanup(Board &b, AbstractPlayer &whiteChecker,
   return;
 }
 
-void initializeBoard(Board *b) {
-  std::cout << b << std::endl;
+void initializeBoard(Board *b, Studio *s) {
+  s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
 
   std::string setupCommand;
 
@@ -259,10 +263,10 @@ void setupPlayers(Board *b) {
 }
 
 // function to play a game of chess
-Result playGame(Board *b) {
+Result playGame(Board *b, Studio *s) {
   std::cout << std::endl;
   std::cout << "Start the Game!" << std::endl;
-  std::cout << b << std::endl;
+  s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
 
   // we always have two computers in the background, which check for
   // checkmate or stalemate. They don't actually play the game.
@@ -385,9 +389,13 @@ Result playGame(Board *b) {
             return {'w', false};
           }
         }
-
-        std::cout << b << std::endl;
-
+        
+        if (b->getEnPassantMade()) {
+          s->render(std::make_pair(move.first.first, move.first.second), std::make_pair(move.second.first, move.second.second), true);
+          b->setEnPassantFalse();
+        } else {
+          s->render(std::make_pair(move.first.first, move.first.second), std::make_pair(move.second.first, move.second.second), false);
+        }
         if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
           std::cout << "The Black King is in check!" << std::endl;
         } else if (b->inCheck(*(b->getWhiteKing()),
@@ -417,6 +425,18 @@ Result playGame(Board *b) {
           continue;
         }
 
+        bool enPassant = false;
+
+        std::pair<char, int> startPos = std::make_pair(oldX, oldY);
+        std::pair<char, int> endPos = std::make_pair(newX, newY);
+
+        if (b->getPieceAtPosition(startPos)->getName() == 'P' && endPos.first != startPos.first
+            && b->getPieceAtPosition(std::make_pair(endPos.first, endPos.second - 1))->getName() == 'p') {
+            enPassant = true;
+        } else if (b->getPieceAtPosition(startPos)->getName() == 'p' && endPos.first != startPos.first
+            && b->getPieceAtPosition(std::make_pair(endPos.first, endPos.second + 1))->getName() == 'P') {
+            enPassant = true;
+        }
         bool movedSucessfully = b->movePiece(oldPosition, newPosition);
 
         // if the move was invalid in any way, retry the move.
@@ -424,8 +444,7 @@ Result playGame(Board *b) {
           std::cout << "Invalid move. Please try again." << std::endl;
           continue;
         }
-
-        std::cout << b << std::endl;
+        s->render(std::make_pair(oldX, oldY), std::make_pair(newX,  newY), enPassant);
 
         if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
           std::cout << "The Black King is in check!" << std::endl;
@@ -474,6 +493,8 @@ int main() {
   Stats stats = {0, 0, 0, 0};
   while (!std::cin.eof()) {
     Board *b = new Board();
+    Studio s{b};
+    TextObs* obs = new TextObs{ &s };
     std::cout << "Please enter 'setup' immediately if you would like "
                  "to use a custom setup. Otherwise, enter 'done'."
               << std::endl
@@ -492,11 +513,12 @@ int main() {
     /* Start Board Setup */
     std::cin >> firstCommand;
     if (firstCommand == "exit") {
+      delete obs;
       delete b;
       break;
     }
     if (firstCommand == "setup") {
-      initializeBoard(b);
+      initializeBoard(b, &s);
     } else {
       b->defaultInitialization();
     }
@@ -504,9 +526,10 @@ int main() {
 
     setupPlayers(b);
 
+    GraphObs* guiobs = new GraphObs{ &s };
     // start the game.
-    Result result = playGame(b);
-
+    Result result = playGame(b, &s);
+    
     if (result.isDraw) {
       ++stats.numDraws;
     } else {
@@ -516,6 +539,8 @@ int main() {
         ++stats.numWinsBlack;
       }
     }
+    delete obs;
+    delete guiobs;
   }
   stats.printStats();
 }
