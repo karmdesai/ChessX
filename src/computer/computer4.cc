@@ -156,8 +156,6 @@ int evaluate(Board *b, char playerColor) {
   delta += int((openingAndMiddleGame * howMuchAreWeInOpeningAndMiddleGame) +
                (endGame * howMuchAreWeInEndGame));
 
-  // std::cout << "delta: " << delta << std::endl;
-
   if (playerColor == 'w')
     return delta;
   else
@@ -167,7 +165,6 @@ int evaluate(Board *b, char playerColor) {
 // minimax function
 int minimax(Board *b, int depth, int alpha, int beta, bool isMaximizingPlayer, char playerColor) {
   if (depth == 0) {
-    // std::cout << "GOT TO BASE CASE" << std::endl;
     return evaluate(b, playerColor);
   }
 
@@ -196,7 +193,6 @@ int minimax(Board *b, int depth, int alpha, int beta, bool isMaximizingPlayer, c
     }
   } else {
     int minimumEvaluation = INT_MAX;
-    // std::cout << "got to minimizing player" << std::endl;
     for (int i = 0; i < 8; ++i) {
       for (int j = 0; j < 8; ++j) {
         std::pair<char, int> currentPos = std::make_pair(char('a' + i), j + 1);
@@ -238,14 +234,10 @@ Computer4::calculateNextMove() {
 
   for (int i = 0; i < 8; ++i) {
     for (int j = 0; j < 8; ++j) {
-      // std::cout << "got here" << std::endl;
       std::pair<char, int> currentPos = std::make_pair(char('a' + i), j + 1);
       Piece *p = board->getPieceAtPosition(currentPos);
 
       if (p->getColor() == playerColor) {
-        // std::cout << "checking coordinate: " << currentPos.first <<
-        // currentPos.second
-        //           << std::endl;
         p->getAllPossibleMoves(currentPos);
         board->parsePossibleMoves(*p, currentPos);
 
@@ -254,14 +246,12 @@ Computer4::calculateNextMove() {
           boardCopy->movePiece(currentPos, move);
           int evaluation;
           if (playerColor == 'w') {
-            // std::cout << "calling minimax as white" << std::endl;
             evaluation = minimax(boardCopy, MAX_DEPTH, INT_MIN, INT_MAX, true, playerColor);
             if (evaluation > eval) {
               eval = evaluation;
               bestMove = std::make_pair(currentPos, move);
             }
           } else {
-            // std::cout << "calling minimax as black" << std::endl;
             evaluation = minimax(boardCopy, MAX_DEPTH, INT_MIN, INT_MAX, false, playerColor);
             if (evaluation < eval) {
               eval = evaluation;
@@ -279,7 +269,6 @@ Computer4::calculateNextMove() {
               bestMove = std::make_pair(currentPos, move);
             }
           }
-          // std::cout << "Evaluation: " << evaluation << std::endl;
           delete boardCopy;
         }
       }

@@ -97,13 +97,17 @@ void initializeBoard(Board *b, Studio *s) {
       } else {
         // Piece *newPiece = b->createPiece(piece);
         // check if piece is a valid piece
-        if (tolower(piece) == 'p' || tolower(piece) == 'r' || tolower(piece) == 'n' || tolower(piece) == 'b' ||
+        if (tolower(piece) == 'p' || tolower(piece) == 'r' ||
+            tolower(piece) == 'n' || tolower(piece) == 'b' ||
             tolower(piece) == 'q' || tolower(piece) == 'k') {
           Piece *newPiece = b->createPiece(piece);
+          // delete what is currently at the position
+          delete pieceCurrent;
           b->setPieceAtPosition(position, newPiece);
           s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
         } else {
-          std::cout << "Invalid piece. Please enter a valid piece." << std::endl;
+          std::cout << "Invalid piece. Please enter a valid piece."
+                    << std::endl;
         }
 
         std::cout << b << std::endl;
@@ -177,7 +181,7 @@ void initializeBoard(Board *b, Studio *s) {
 
       if (errors.size() == 0) {
         std::cout << "Successfully configured board." << std::endl;
-        b->generateCompleteMoves();
+        // b->generateCompleteMoves();
         if (!choseWhoGoesFirst) {
           // set to white by default.
           b->setColourTurn('w');
@@ -349,10 +353,7 @@ Result playGame(Board *b, Studio *s) {
 
       // if its the computer's move, tell it to calculate its move
       if (currentPlayer->isComputer()) {
-        std::cout << "got to computer move" << std::endl;
-        // std::cout << "GOT HEREE??" << std::endl;
         auto move = currentPlayer->calculateNextMove();
-        // std::cout << "GOT HEREE?2?" << std::endl;
         // print out the move
         std::cout << "move " << move.first.first << move.first.second << " "
                   << move.second.first << move.second.second << std::endl;
@@ -364,10 +365,8 @@ Result playGame(Board *b, Studio *s) {
             move.second.second == 8) {
           // if piece is pawn, promote to queen
           if (b->getPieceAtPosition(move.first)->getName() == 'P') {
-            std::cout << "promote to queen" << std::endl;
             movedSuccessfully = b->movePieceBase(move.first, move.second, 'Q');
           } else {
-            std::cout << "promote to queen2" << std::endl;
             movedSuccessfully = b->movePiece(move.first, move.second);
           }
         }
@@ -377,18 +376,14 @@ Result playGame(Board *b, Studio *s) {
                  move.second.second == 1) {
           // if piece is pawn, promote to queen
           if (b->getPieceAtPosition(move.first)->getName() == 'p') {
-            std::cout << "promote to quee4n2" << std::endl;
             movedSuccessfully = b->movePieceBase(move.first, move.second, 'q');
           } else {
-            std::cout << "promo2te to queen2" << std::endl;
             movedSuccessfully = b->movePiece(move.first, move.second);
           }
         }
 
         else {
           movedSuccessfully = b->movePiece(move.first, move.second);
-          std::cout << "promofrefee to queen2" << std::endl;
-          std::cout << "movedSucessfully: " << movedSuccessfully << std::endl;
         }
         int count = 0;
 
@@ -398,7 +393,6 @@ Result playGame(Board *b, Studio *s) {
         just assume the computer has lost its mind and force it to resign.
       */
         while (count < MAX_TRIES && !movedSuccessfully) {
-          std::cout << "I SHOULD NOT BE HERE" << std::endl;
           // tell the computer to calculate its move again.
           auto newMove = currentPlayer->calculateNextMove();
           if (newMove == move) {
@@ -440,7 +434,6 @@ Result playGame(Board *b, Studio *s) {
           std::cout << "The White King is in check!" << std::endl;
         }
       } else {
-        std::cout << "got to player move" << std::endl;
         std::cin >> oldX >> oldY >> newX >> newY;
 
         /* if any of the values read are out of bounds, retry the move.
@@ -562,7 +555,6 @@ int main() {
 
   Stats stats = {0, 0, 0, 0};
   while (!std::cin.eof()) {
-    std::cout << "created board" << std::endl;
     Board *b = new Board();
     Studio s{b};
     TextObs *obs = new TextObs{&s};
