@@ -558,6 +558,7 @@ int main() {
     Board *b = new Board();
     Studio s{b};
     TextObs *obs = new TextObs{&s};
+    GraphObs *guiobs = new GraphObs{&s};
     std::cout << "Please enter 'setup' immediately if you would like "
                  "to use a custom setup. Otherwise, enter 'done'."
               << std::endl
@@ -577,6 +578,7 @@ int main() {
     std::cin >> firstCommand;
     if (firstCommand == "exit") {
       delete obs;
+      delete guiobs;
       delete b;
       break;
     }
@@ -589,7 +591,7 @@ int main() {
 
     setupPlayers(b);
 
-    GraphObs *guiobs = new GraphObs{&s};
+    // GraphObs *guiobs = new GraphObs{&s};
     // start the game.
     Result result = playGame(b, &s);
 

@@ -12,6 +12,17 @@ move
 move
 move
 move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
 resign
 done
 game computer2 computer3
@@ -29,4 +40,50 @@ move
 move
 move
 resign 
+done
+game computer3 computer1
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+resign
+setup
++ K e1
++ k e8
++ R a1
++ R a2
++ P a7
++ q h2
+done
+game computer2 computer3
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+move
+resign
 exit

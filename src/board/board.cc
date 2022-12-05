@@ -920,7 +920,6 @@ bool Board::movePieceBase(std::pair<char, int> oldPosition,
   if (currentPiece->getColor() == 'b') {
     if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
                           tmpBoard->getBlackKingPosition()) == false) {
-      
       Piece *caputerdPiece = getPieceAtPosition(newPosition);
       delete caputerdPiece;
       delete getPieceAtPosition(oldPosition);
@@ -975,7 +974,8 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
       if (from.first == 'e' && from.second == 1) {
         if (to.first == 'g' && to.second == 1 && !currentPiece->getHasMoved()) {
           std::cout << "got here" << std::endl;
-          if (this->getPieceAtPosition(std::make_pair('h', 1))->getName() != 'R') {
+          if (this->getPieceAtPosition(std::make_pair('h', 1))->getName() !=
+              'R') {
             return false;
           }
           // move king to e1, f1, and g1 on a copy of the board, and check if
@@ -1001,10 +1001,12 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
               return false;
             }
           }
-        } else if (to.first == 'c' && to.second == 1 && !currentPiece->getHasMoved()) {
+        } else if (to.first == 'c' && to.second == 1 &&
+                   !currentPiece->getHasMoved()) {
           std::cout << "got here3" << std::endl;
 
-          if (this->getPieceAtPosition(std::make_pair('a', 1))->getName() != 'R') {
+          if (this->getPieceAtPosition(std::make_pair('a', 1))->getName() !=
+              'R') {
             return false;
           }
 
@@ -1039,7 +1041,8 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
       if (from.first == 'e' && from.second == 8) {
         if (to.first == 'g' && to.second == 8 && !currentPiece->getHasMoved()) {
           std::cout << "got here2" << std::endl;
-          if (this->getPieceAtPosition(std::make_pair('h', 8))->getName() != 'r') {
+          if (this->getPieceAtPosition(std::make_pair('h', 8))->getName() !=
+              'r') {
             return false;
           }
           // move king to e8, f8, and g8 on a copy of the board, and check if
@@ -1065,9 +1068,11 @@ bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
               return false;
             }
           }
-        } else if (to.first == 'c' && to.second == 8 && !currentPiece->getHasMoved()) {
+        } else if (to.first == 'c' && to.second == 8 &&
+                   !currentPiece->getHasMoved()) {
           std::cout << "got here4" << std::endl;
-          if (this->getPieceAtPosition(std::make_pair('a', 8))->getName() != 'r') {
+          if (this->getPieceAtPosition(std::make_pair('a', 8))->getName() !=
+              'r') {
             return false;
           }
           // move king to e8, d8, and c8 on a copy of the board, and check if
@@ -1139,10 +1144,9 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   Piece *toPiece = getPieceAtPosition(to);
 
   // Castling
-  if (fromPiece->getColor() == 'b' && to == std::make_pair('g', 8) &&
-      fromPiece->getName() == 'k' &&
+  if (fromPiece->getColor() == 'b' && from == std::make_pair('e', 8) &&
+      to == std::make_pair('g', 8) && fromPiece->getName() == 'k' &&
       getPieceAtPosition(std::make_pair('h', 8))->getName() == 'r') {
-
     // delete whats on f8 and g8
     delete getPieceAtPosition(std::make_pair('f', 8));
     delete getPieceAtPosition(std::make_pair('g', 8));
@@ -1171,8 +1175,8 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     rook->setPieceAsMoved();
     return;
 
-  } else if (fromPiece->getColor() == 'b' && to == std::make_pair('c', 8) &&
-             fromPiece->getName() == 'k' &&
+  } else if (fromPiece->getColor() == 'b' && from == std::make_pair('e', 8) &&
+             to == std::make_pair('c', 8) && fromPiece->getName() == 'k' &&
              getPieceAtPosition(std::make_pair('a', 8))->getName() == 'r') {
     // delete whats on b8, c8, and d8
     delete getPieceAtPosition(std::make_pair('b', 8));
@@ -1205,10 +1209,9 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     rook->setPieceAsMoved();
     return;
 
-  } else if (fromPiece->getColor() == 'w' && to.first == 'g' &&
-             to.second == 1 && fromPiece->getName() == 'K' &&
+  } else if (fromPiece->getColor() == 'w' && from == std::make_pair('e', 1) &&
+             to == std::make_pair('g', 1) && fromPiece->getName() == 'K' &&
              getPieceAtPosition(std::make_pair('h', 1))->getName() == 'R') {
-
     // delete whats on f1 and g1
     delete getPieceAtPosition(std::make_pair('f', 1));
     delete getPieceAtPosition(std::make_pair('g', 1));
@@ -1237,10 +1240,9 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
     rook->setPieceAsMoved();
 
     return;
-  } else if (fromPiece->getColor() == 'w' && to == std::make_pair('c', 1) &&
-             fromPiece->getName() == 'K' &&
+  } else if (fromPiece->getColor() == 'w' && from == std::make_pair('e', 1) &&
+             to == std::make_pair('c', 1) && fromPiece->getName() == 'K' &&
              getPieceAtPosition(std::make_pair('a', 1))->getName() == 'R') {
-
     // delete whats on b1, c1, and d1
     delete getPieceAtPosition(std::make_pair('b', 1));
     delete getPieceAtPosition(std::make_pair('c', 1));
