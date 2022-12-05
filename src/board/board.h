@@ -28,6 +28,7 @@ class Board {
   std::pair<char, int> blackKingPosition;
     std::pair<char, int> enPassantPawn;
     bool enPassantValid = false;
+  bool enPassantMade = false;
     
   // keep track of players
   AbstractPlayer *whitePlayer;
@@ -98,12 +99,17 @@ class Board {
   bool inCheck(Piece &king, std::pair<char, int> currentPosition);
   bool movePiece(std::pair<char, int> oldPosition,
                  std::pair<char, int> newPosition);
+  bool movePieceBase(std::pair<char, int> oldPosition,
+                 std::pair<char, int> newPosition, char promote);
   void movePieceBase(std::pair<char, int> oldPosition,
                      std::pair<char, int> newPosition);
 
     void setEnPassantPawn(std::pair<char, int> pawn);
 
   bool isPieceCapturable(Piece *piece, std::pair<char, int> position);
+
+  bool getEnPassantMade();
+  void setEnPassantFalse();
 
   bool isInsufficientMaterial();
 };

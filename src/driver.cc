@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <cctype>
+#include <cstring>
 #include <iostream>
 #include <memory>
 
@@ -9,6 +11,9 @@
 #include "computer/computer3.h"
 #include "computer/computer4.h"
 #include "computer/human.h"
+#include "observers/GUIObs.h"
+#include "observers/studio.h"
+#include "observers/textObserver.h"
 #include "pieces/bishop.h"
 #include "pieces/king.h"
 #include "pieces/knight.h"
@@ -51,8 +56,8 @@ void cleanup(Board &b, AbstractPlayer &whiteChecker,
   return;
 }
 
-void initializeBoard(Board *b) {
-  std::cout << b << std::endl;
+void initializeBoard(Board *b, Studio *s) {
+  s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
 
   std::string setupCommand;
 
@@ -90,17 +95,19 @@ void initializeBoard(Board *b) {
                      "position."
                   << std::endl;
       } else {
-        Piece *newPiece = b->createPiece(piece);
-
-        // if they give an invalid character, just delete the
-        // returned Piece.
-        if (newPiece->getName() == '*') {
-          delete newPiece;
-        } else {
-          // since the piece is a NullPiece, we must delete before placing a
-          // new one.
-          delete b->getPieceAtPosition(position);
+        // Piece *newPiece = b->createPiece(piece);
+        // check if piece is a valid piece
+        if (tolower(piece) == 'p' || tolower(piece) == 'r' ||
+            tolower(piece) == 'n' || tolower(piece) == 'b' ||
+            tolower(piece) == 'q' || tolower(piece) == 'k') {
+          Piece *newPiece = b->createPiece(piece);
+          // delete what is currently at the position
+          delete pieceCurrent;
           b->setPieceAtPosition(position, newPiece);
+          s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
+        } else {
+          std::cout << "Invalid piece. Please enter a valid piece."
+                    << std::endl;
         }
 
         std::cout << b << std::endl;
@@ -119,7 +126,6 @@ void initializeBoard(Board *b) {
         std::cout << b << std::endl;
       }
     } else if (setupCommand == "done") {
-      b->generateCompleteMoves();
       // Check if the Board has a valid setup.
       std::vector<std::string> errors;
 
@@ -175,6 +181,11 @@ void initializeBoard(Board *b) {
 
       if (errors.size() == 0) {
         std::cout << "Successfully configured board." << std::endl;
+        // b->generateCompleteMoves();
+        if (!choseWhoGoesFirst) {
+          // set to white by default.
+          b->setColourTurn('w');
+        }
         break;
       } else {
         std::cout << "You must fix the following errors before "
@@ -186,10 +197,6 @@ void initializeBoard(Board *b) {
         }
 
         std::cout << std::endl;
-      }
-      if (!choseWhoGoesFirst) {
-        // set to white by default.
-        b->setColourTurn('w');
       }
     }
   }
@@ -240,8 +247,7 @@ void setupPlayers(Board *b) {
   } else if (whitePlayer == "computer3") {
     b->setWhitePlayer(new Computer3('w', b));
   } else if (whitePlayer == "computer4") {
-    // not implemented yet
-    // b->setWhitePlayer(new Computer4('w', b));
+    b->setWhitePlayer(new Computer4('w', b));
   }
 
   if (blackPlayer == "human") {
@@ -253,16 +259,15 @@ void setupPlayers(Board *b) {
   } else if (blackPlayer == "computer3") {
     b->setBlackPlayer(new Computer3('b', b));
   } else if (blackPlayer == "computer4") {
-    // not implemented yet
-    // b->setBlackPlayer(new Computer4('b', b));
+    b->setBlackPlayer(new Computer4('b', b));
   }
 }
 
 // function to play a game of chess
-Result playGame(Board *b) {
+Result playGame(Board *b, Studio *s) {
   std::cout << std::endl;
   std::cout << "Start the Game!" << std::endl;
-  std::cout << b << std::endl;
+  s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
 
   // we always have two computers in the background, which check for
   // checkmate or stalemate. They don't actually play the game.
@@ -281,7 +286,7 @@ Result playGame(Board *b) {
 
   while (!std::cin.eof()) {
     b->generateCompleteMoves();
-    
+
     // check for insufficient material
     if (b->isInsufficientMaterial()) {
       std::cout << "Insufficient material. Game is a draw." << std::endl;
@@ -309,7 +314,7 @@ Result playGame(Board *b) {
 
     // if it's black turn and there are no moves, it's stalemate.
     else if (b->getColourTurn() == 'b' &&
-             b->getBlackPlayer()->calculateNextMove() ==
+             blackChecker->calculateNextMove() ==
                  std::make_pair(std::make_pair('a', 0),
                                 std::make_pair('a', 0))) {
       std::cout << "Stalemate! It's a draw!" << std::endl;
@@ -320,7 +325,7 @@ Result playGame(Board *b) {
 
     // if it's white turn and there are no moves, it's stalemate.
     else if (b->getColourTurn() == 'w' &&
-             b->getWhitePlayer()->calculateNextMove() ==
+             whiteChecker->calculateNextMove() ==
                  std::make_pair(std::make_pair('a', 0),
                                 std::make_pair('a', 0))) {
       std::cout << "Stalemate! It's a draw!" << std::endl;
@@ -353,7 +358,33 @@ Result playGame(Board *b) {
         std::cout << "move " << move.first.first << move.first.second << " "
                   << move.second.first << move.second.second << std::endl;
 
-        bool movedSucessfully = b->movePiece(move.first, move.second);
+        bool movedSuccessfully;
+
+        // if piece is white and being promoted, auto promote to queen
+        if (b->getPieceAtPosition(move.first)->getColor() == 'w' &&
+            move.second.second == 8) {
+          // if piece is pawn, promote to queen
+          if (b->getPieceAtPosition(move.first)->getName() == 'P') {
+            movedSuccessfully = b->movePieceBase(move.first, move.second, 'Q');
+          } else {
+            movedSuccessfully = b->movePiece(move.first, move.second);
+          }
+        }
+
+        // if the piece is black and being promoted, auto promote to queen
+        else if (b->getPieceAtPosition(move.first)->getColor() == 'b' &&
+                 move.second.second == 1) {
+          // if piece is pawn, promote to queen
+          if (b->getPieceAtPosition(move.first)->getName() == 'p') {
+            movedSuccessfully = b->movePieceBase(move.first, move.second, 'q');
+          } else {
+            movedSuccessfully = b->movePiece(move.first, move.second);
+          }
+        }
+
+        else {
+          movedSuccessfully = b->movePiece(move.first, move.second);
+        }
         int count = 0;
 
         /* So there's this weird bug where the computer might try to move
@@ -361,13 +392,13 @@ Result playGame(Board *b) {
         choose a new move, and give it 10 tries. If it still fails, then I
         just assume the computer has lost its mind and force it to resign.
       */
-        while (count < MAX_TRIES && !movedSucessfully) {
+        while (count < MAX_TRIES && !movedSuccessfully) {
           // tell the computer to calculate its move again.
           auto newMove = currentPlayer->calculateNextMove();
           if (newMove == move) {
             count++;
           } else {
-            movedSucessfully = b->movePiece(newMove.first, newMove.second);
+            movedSuccessfully = b->movePiece(newMove.first, newMove.second);
           }
           break;
         }
@@ -386,8 +417,16 @@ Result playGame(Board *b) {
           }
         }
 
-        std::cout << b << std::endl;
-
+        if (b->getEnPassantMade()) {
+          s->render(std::make_pair(move.first.first, move.first.second),
+                    std::make_pair(move.second.first, move.second.second),
+                    true);
+          b->setEnPassantFalse();
+        } else {
+          s->render(std::make_pair(move.first.first, move.first.second),
+                    std::make_pair(move.second.first, move.second.second),
+                    false);
+        }
         if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
           std::cout << "The Black King is in check!" << std::endl;
         } else if (b->inCheck(*(b->getWhiteKing()),
@@ -417,15 +456,57 @@ Result playGame(Board *b) {
           continue;
         }
 
-        bool movedSucessfully = b->movePiece(oldPosition, newPosition);
+        bool enPassant = false;
+
+        std::pair<char, int> startPos = std::make_pair(oldX, oldY);
+        std::pair<char, int> endPos = std::make_pair(newX, newY);
+
+        if (b->getPieceAtPosition(startPos)->getName() == 'P' &&
+            endPos.first != startPos.first &&
+            b->getPieceAtPosition(
+                 std::make_pair(endPos.first, endPos.second - 1))
+                    ->getName() == 'p') {
+          enPassant = true;
+        } else if (b->getPieceAtPosition(startPos)->getName() == 'p' &&
+                   endPos.first != startPos.first &&
+                   b->getPieceAtPosition(
+                        std::make_pair(endPos.first, endPos.second + 1))
+                           ->getName() == 'P') {
+          enPassant = true;
+        }
+        bool movedSucessfully;
+
+        if (newY == 8 && b->getColourTurn() == 'w') {
+          char promote;
+          std::cin >> promote;
+
+          while (!isupper(promote) || promote == 'K' || promote == 'P') {
+            std::cout << "You can't promote to this piece!" << std::endl;
+            std::cin >> promote;
+          }
+          movedSucessfully =
+              b->movePieceBase(oldPosition, newPosition, promote);
+        } else if (newY == 1 && b->getColourTurn() == 'b') {
+          char promote;
+          std::cin >> promote;
+
+          while (!islower(promote) || promote == 'k' || promote == 'p') {
+            std::cout << "You can't promote to this piece!" << std::endl;
+            std::cin >> promote;
+          }
+          movedSucessfully =
+              b->movePieceBase(oldPosition, newPosition, promote);
+        } else {
+          movedSucessfully = b->movePiece(oldPosition, newPosition);
+        }
 
         // if the move was invalid in any way, retry the move.
         if (!movedSucessfully) {
           std::cout << "Invalid move. Please try again." << std::endl;
           continue;
         }
-
-        std::cout << b << std::endl;
+        s->render(std::make_pair(oldX, oldY), std::make_pair(newX, newY),
+                  enPassant);
 
         if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
           std::cout << "The Black King is in check!" << std::endl;
@@ -434,7 +515,6 @@ Result playGame(Board *b) {
           std::cout << "The White King is in check!" << std::endl;
         }
       }
-
     } else if (command == "resign") {
       // increment the score of the color that won.
       if (b->getColourTurn() == 'w') {
@@ -463,6 +543,8 @@ Result playGame(Board *b) {
       b->setPlayerTurn(b->getWhitePlayer());
     }
   }
+  // something bad happened, return draw
+  return {'w', true};
 }
 
 int main() {
@@ -474,6 +556,9 @@ int main() {
   Stats stats = {0, 0, 0, 0};
   while (!std::cin.eof()) {
     Board *b = new Board();
+    Studio s{b};
+    TextObs *obs = new TextObs{&s};
+    GraphObs *guiobs = new GraphObs{&s};
     std::cout << "Please enter 'setup' immediately if you would like "
                  "to use a custom setup. Otherwise, enter 'done'."
               << std::endl
@@ -492,11 +577,13 @@ int main() {
     /* Start Board Setup */
     std::cin >> firstCommand;
     if (firstCommand == "exit") {
+      delete obs;
+      delete guiobs;
       delete b;
       break;
     }
     if (firstCommand == "setup") {
-      initializeBoard(b);
+      initializeBoard(b, &s);
     } else {
       b->defaultInitialization();
     }
@@ -504,8 +591,9 @@ int main() {
 
     setupPlayers(b);
 
+    // GraphObs *guiobs = new GraphObs{&s};
     // start the game.
-    Result result = playGame(b);
+    Result result = playGame(b, &s);
 
     if (result.isDraw) {
       ++stats.numDraws;
@@ -516,6 +604,10 @@ int main() {
         ++stats.numWinsBlack;
       }
     }
+    delete obs;
+    delete guiobs;
+    // delete b;
   }
   stats.printStats();
+  // delete b;
 }

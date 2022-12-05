@@ -95,6 +95,14 @@ Computer1::calculateNextMove() {
   // loop through all the moves
   for (auto move : allMoves) {
     // make the move on a copy of the board
+    // if its a castling move, we don't consider it
+    if ((move.first == std::make_pair('e', 1) && move.second == std::make_pair('g', 1)) ||
+        (move.first == std::make_pair('e', 1) && move.second == std::make_pair('c', 1)) ||
+        (move.first == std::make_pair('e', 8) && move.second == std::make_pair('g', 8)) ||
+        (move.first == std::make_pair('e', 8) && move.second == std::make_pair('c', 8))) {
+      continue;
+    }
+
     Board *boardCopy = board->clone();
     bool success = boardCopy->movePiece(move.first, move.second);
 
