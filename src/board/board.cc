@@ -1131,8 +1131,13 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   if (fromPiece->getColor() == 'b' && to == std::make_pair('g', 8) &&
       fromPiece->getName() == 'k' &&
       getPieceAtPosition(std::make_pair('h', 8))->getName() == 'r') {
+
+    // delete whats on f8 and g8
+    delete getPieceAtPosition(std::make_pair('f', 8));
+    delete getPieceAtPosition(std::make_pair('g', 8));
+    
     Piece *rook = getPieceAtPosition(std::make_pair('h', 8));
-    delete toPiece;
+    // delete toPiece;
 
     currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
     currentBoard[to.first - 1 - 'a'][to.second - 1] = rook;
@@ -1147,8 +1152,15 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   } else if (fromPiece->getColor() == 'b' && to == std::make_pair('c', 8) &&
              fromPiece->getName() == 'k' &&
              getPieceAtPosition(std::make_pair('a', 8))->getName() == 'r') {
+
+    // delete whats on b8, c8, and d8
+    delete getPieceAtPosition(std::make_pair('b', 8));
+    delete getPieceAtPosition(std::make_pair('c', 8));
+    delete getPieceAtPosition(std::make_pair('d', 8));
+
+
     Piece *rook = getPieceAtPosition(std::make_pair('a', 8));
-    delete toPiece;
+    // delete toPiece;
 
     currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
     currentBoard[to.first + 1 - 'a'][to.second - 1] = rook;
@@ -1163,8 +1175,13 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   } else if (fromPiece->getColor() == 'w' && to.first == 'g' &&
              to.second == 1 && fromPiece->getName() == 'K' &&
              getPieceAtPosition(std::make_pair('h', 1))->getName() == 'R') {
+    
+    // delete whats on f1 and g1
+    delete getPieceAtPosition(std::make_pair('f', 1));
+    delete getPieceAtPosition(std::make_pair('g', 1));
+
     Piece *rook = getPieceAtPosition(std::make_pair('h', 1));
-    delete toPiece;
+    // delete toPiece;
 
     currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
     currentBoard[to.first - 'a' - 1][to.second - 1] = rook;
@@ -1179,8 +1196,14 @@ void Board::movePieceBase(std::pair<char, int> from, std::pair<char, int> to) {
   } else if (fromPiece->getColor() == 'w' && to == std::make_pair('c', 1) &&
              fromPiece->getName() == 'K' &&
              getPieceAtPosition(std::make_pair('a', 1))->getName() == 'R') {
+
+    // delete whats on b1, c1, and d1
+    delete getPieceAtPosition(std::make_pair('b', 1));
+    delete getPieceAtPosition(std::make_pair('c', 1));
+    delete getPieceAtPosition(std::make_pair('d', 1));
+
     Piece *rook = getPieceAtPosition(std::make_pair('a', 1));
-    delete toPiece;
+    // delete toPiece;
 
     currentBoard[to.first - 'a'][to.second - 1] = fromPiece;
     currentBoard[to.first + 1 - 'a'][to.second - 1] = rook;
