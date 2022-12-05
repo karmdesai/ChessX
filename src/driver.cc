@@ -95,17 +95,15 @@ void initializeBoard(Board *b, Studio *s) {
                      "position."
                   << std::endl;
       } else {
-        Piece *newPiece = b->createPiece(piece);
-
-        // if they give an invalid character, just delete the
-        // returned Piece.
-        if (newPiece->getName() == '*') {
-          delete newPiece;
-        } else {
-          // since the piece is a NullPiece, we must delete before placing a
-          // new one.
-          delete b->getPieceAtPosition(position);
+        // Piece *newPiece = b->createPiece(piece);
+        // check if piece is a valid piece
+        if (tolower(piece) == 'p' || tolower(piece) == 'r' || tolower(piece) == 'n' || tolower(piece) == 'b' ||
+            tolower(piece) == 'q' || tolower(piece) == 'k') {
+          Piece *newPiece = b->createPiece(piece);
           b->setPieceAtPosition(position, newPiece);
+          s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
+        } else {
+          std::cout << "Invalid piece. Please enter a valid piece." << std::endl;
         }
 
         std::cout << b << std::endl;
@@ -564,6 +562,7 @@ int main() {
 
   Stats stats = {0, 0, 0, 0};
   while (!std::cin.eof()) {
+    std::cout << "created board" << std::endl;
     Board *b = new Board();
     Studio s{b};
     TextObs *obs = new TextObs{&s};
@@ -613,6 +612,8 @@ int main() {
     }
     delete obs;
     delete guiobs;
+    // delete b;
   }
   stats.printStats();
+  // delete b;
 }
