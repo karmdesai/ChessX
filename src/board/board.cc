@@ -13,19 +13,17 @@
 
 using namespace std;
 
-/* Board class */
+// Board constructor
 Board::Board() {
-  // start with board of nullpieces
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
       this->currentBoard[x][y] = new NullPiece('*', '*');
     }
   }
-
   this->whosColourTurn = 'w';
 }
 
-// Destructor
+// Board destructor
 Board::~Board() {
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
@@ -34,7 +32,7 @@ Board::~Board() {
   }
 }
 
-//f
+// if 'setup' is not called, we use the default board setup
 void Board::defaultInitialization() {
   // Initialize white pieces
   delete this->currentBoard[0][0];
@@ -94,8 +92,9 @@ void Board::defaultInitialization() {
     this->currentBoard[i][6] = new Pawn('p', 'b', true);
   }
 
-  this->generateCompleteMoves();
+  // this->generateCompleteMoves();
 }
+
 
 // Overload the << operator for the Board class
 std::ostream &operator<<(std::ostream &out, const Board *myBoard) {
