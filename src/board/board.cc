@@ -20,7 +20,7 @@ Board::Board() {
   // start with board of nullpieces
   for (int x = 0; x < 8; x++) {
     for (int y = 0; y < 8; y++) {
-      this->currentBoard[x][y] = new NullPiece('*', '*');
+      this->currentBoard[x][y] = std::unique_ptr<NullPiece> (new NullPiece('*', '*'));
     }
   }
 
@@ -29,27 +29,13 @@ Board::Board() {
 
 // Destructor
 Board::~Board() {
-  for (int x = 0; x < 8; x++) {
-    for (int y = 0; y < 8; y++) {
-      delete this->currentBoard[x][y];
-    }
-  }
 }
 
 void Board::defaultInitialization() {
   // Initialize white pieces
-  delete this->currentBoard[0][0];
-  delete this->currentBoard[1][0];
-  delete this->currentBoard[2][0];
-  delete this->currentBoard[3][0];
-  delete this->currentBoard[4][0];
-  delete this->currentBoard[5][0];
-  delete this->currentBoard[6][0];
-  delete this->currentBoard[7][0];
-
-  this->currentBoard[0][0] = new Rook('R', 'w', true);
-  this->currentBoard[1][0] = new Knight('N', 'w');
-  this->currentBoard[2][0] = new Bishop('B', 'w');
+  this->currentBoard[0][0] = std::unique_ptr<Rook> (new Rook('R', 'w', true));
+  this->currentBoard[1][0] = std::unique_ptr<Knight> (new Knight('N', 'w'));
+  this->currentBoard[2][0] = std::unique_ptr<Bishop> (new Bishop('B', 'w'));
   this->currentBoard[3][0] = new Queen('Q', 'w');
 
   Piece *newWhiteKing = new King('K', 'w', true);
@@ -62,19 +48,8 @@ void Board::defaultInitialization() {
   this->currentBoard[7][0] = new Rook('R', 'w', true);
 
   for (int i = 0; i < 8; i++) {
-    delete this->currentBoard[i][1];
     this->currentBoard[i][1] = new Pawn('P', 'w', true);
   }
-
-  // Initialize black pieces
-  delete this->currentBoard[0][7];
-  delete this->currentBoard[1][7];
-  delete this->currentBoard[2][7];
-  delete this->currentBoard[3][7];
-  delete this->currentBoard[4][7];
-  delete this->currentBoard[5][7];
-  delete this->currentBoard[6][7];
-  delete this->currentBoard[7][7];
 
   this->currentBoard[0][7] = new Rook('r', 'b', true);
   this->currentBoard[1][7] = new Knight('n', 'b');
@@ -91,7 +66,6 @@ void Board::defaultInitialization() {
   this->currentBoard[7][7] = new Rook('r', 'b', true);
 
   for (int i = 0; i < 8; i++) {
-    delete this->currentBoard[i][6];
     this->currentBoard[i][6] = new Pawn('p', 'b', true);
   }
 
@@ -271,9 +245,9 @@ void Board::setColourTurn(char player) {
   }
 }
 
-void Board::setWhiteKing(Piece *wk) { this->whiteKing = wk; }
+void Board::setWhiteKing(std::unique_ptr<Piece> wk) { this->whiteKing = wk; }
 
-void Board::setBlackKing(Piece *bk) { this->blackKing = bk; }
+void Board::setBlackKing(std::unique_ptr<Piece> bk) { this->blackKing = bk; }
 
 void Board::setWhiteKingPosition(std::pair<char, int> position) {
   this->whiteKingPosition = position;
@@ -1177,23 +1151,23 @@ void Board::setEnPassantPawn(std::pair<char, int> pawn) {
   this->enPassantPawn.second = pawn.second;
 }
 
-void Board::setPlayerTurn(AbstractPlayer *player) {
+void Board::setPlayerTurn(std::unique_ptr<AbstractPlayer> player) {
   this->whosPlayerTurn = player;
 }
 
-void Board::setWhitePlayer(AbstractPlayer *player) {
+void Board::setWhitePlayer(std::unique_ptr<AbstractPlayer> player) {
   this->whitePlayer = player;
 }
 
-void Board::setBlackPlayer(AbstractPlayer *player) {
+void Board::setBlackPlayer(std::unique_ptr<AbstractPlayer> player) {
   this->blackPlayer = player;
 }
 
-AbstractPlayer *Board::getWhitePlayer() { return this->whitePlayer; }
+std::unique_ptr<AbstractPlayer> Board::getWhitePlayer() { return this->whitePlayer; }
 
-AbstractPlayer *Board::getBlackPlayer() { return this->blackPlayer; }
+std::unique_ptr<AbstractPlayer> Board::getBlackPlayer() { return this->blackPlayer; }
 
-AbstractPlayer *Board::getWhosPlayerTurn() { return this->whosPlayerTurn; }
+std::unique_ptr<AbstractPlayer> Board::getWhosPlayerTurn() { return this->whosPlayerTurn; }
 
 // function to check whether piece can be captured by opponent
 bool Board::isPieceCapturable(Piece *p, std::pair<char, int> position) {

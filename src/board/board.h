@@ -13,7 +13,7 @@ class Board {
   // The first index is the x-coordinate (which ranges from 0 to 7).
   //  The first index represents the alphabetical column of the board (a-h).
   // The second index is the y-coordinate (which ranges from 0 to 7).
-  Piece *currentBoard[8][8];
+  std::unique_ptr<Piece> currentBoard[8][8];
 
   // keep track of current player and color
   char whosColourTurn;
@@ -31,8 +31,8 @@ class Board {
     bool enPassantValid = false;
     
   // keep track of players
-  AbstractPlayer *whitePlayer;
-  AbstractPlayer *blackPlayer;
+  std::unique_ptr<AbstractPlayer> whitePlayer;
+  std::unique_ptr<AbstractPlayer> blackPlayer;
 
  public:
   Board();
@@ -65,25 +65,25 @@ class Board {
   std::pair<char, int> getWhiteKingPosition();
   std::pair<char, int> getBlackKingPosition();
 
-  AbstractPlayer *getWhitePlayer();
-  AbstractPlayer *getBlackPlayer();
+  std::unique_ptr<AbstractPlayer> getWhitePlayer();
+  std::unique_ptr<AbstractPlayer> getBlackPlayer();
 
-  AbstractPlayer *getWhosPlayerTurn();
+  std::unique_ptr<AbstractPlayer> getWhosPlayerTurn();
 
   // Setters
   void setPieceAtPosition(std::pair<char, int> position, Piece *p);
   void setColourTurn(char player);
-  void setPlayerTurn(AbstractPlayer *player);
+  void setPlayerTurn(std::unique_ptr<AbstractPlayer> player);
 
-  void setWhiteKing(Piece *wk);
-  void setBlackKing(Piece *bk);
+  void setWhiteKing(std::unique_ptr<Piece> wk);
+  void setBlackKing(std::unique_ptr<Piece> bk);
 
   void setWhiteKingPosition(std::pair<char, int> position);
   void setBlackKingPosition(std::pair<char, int> position);
 
   // Set players
-  void setWhitePlayer(AbstractPlayer *wp);
-  void setBlackPlayer(AbstractPlayer *bp);
+  void setWhitePlayer(std::unique_ptr<AbstractPlayer> player);
+  void setBlackPlayer(std::unique_ptr<AbstractPlayer> player);
 
   // Move parsers/validators
   void parsePossibleMoves(Piece &piece, std::pair<char, int> position);
