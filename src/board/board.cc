@@ -921,7 +921,7 @@ bool Board::movePieceBase(std::pair<char, int> oldPosition,
 
     Piece *caputerdPiece = getPieceAtPosition(newPosition);
     delete caputerdPiece;
-    delete getPieceAtPosition(newPosition);
+    // delete getPieceAtPosition(newPosition);
     currentBoard[newPosition.first - 'a'][newPosition.second - 1] = createPiece(promote);
 
     currentBoard[oldPosition.first - 'a'][oldPosition.second - 1] = new NullPiece{'*', '*'};
@@ -938,7 +938,7 @@ bool Board::movePieceBase(std::pair<char, int> oldPosition,
       
       Piece *caputerdPiece = getPieceAtPosition(newPosition);
       delete caputerdPiece;
-      delete getPieceAtPosition(oldPosition);
+      // delete getPieceAtPosition(oldPosition);
       currentBoard[newPosition.first - 'a'][newPosition.second - 1] = createPiece(promote);
 
       currentBoard[oldPosition.first - 'a'][oldPosition.second - 1] = new NullPiece{'*', '*'};

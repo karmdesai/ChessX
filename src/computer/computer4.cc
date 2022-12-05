@@ -33,7 +33,7 @@ endgame)
 const auto CHECKMATED =
     std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
 
-const int MAX_DEPTH = 2;
+const int MAX_DEPTH = 1;
 
 // the constructor for Computer4
 Computer4::Computer4(char playerColor, Board *board)
