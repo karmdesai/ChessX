@@ -906,6 +906,53 @@ bool Board::inCheck(Piece &king, std::pair<char, int> currentPosition) {
   return false;
 }
 
+bool Board::movePieceBase(std::pair<char, int> oldPosition,
+  std::pair<char, int> newPosition, char promote) {
+  
+
+  Piece *currentPiece = this->getPieceAtPosition(oldPosition);
+  Board *tmpBoard = this->clone();
+
+  tmpBoard->movePieceBase(oldPosition, newPosition);
+
+  if (currentPiece->getColor() == 'b') {
+    if (tmpBoard->inCheck(*(tmpBoard->getBlackKing()),
+                          tmpBoard->getBlackKingPosition()) == false) {
+
+    Piece *caputerdPiece = getPieceAtPosition(newPosition);
+    delete caputerdPiece;
+    delete getPieceAtPosition(newPosition);
+    currentBoard[newPosition.first - 'a'][newPosition.second - 1] = createPiece(promote);
+
+    currentBoard[oldPosition.first - 'a'][oldPosition.second - 1] = new NullPiece{'*', '*'};
+    // set rook and king as moved
+      delete tmpBoard;
+      return true;
+    } else {
+      delete tmpBoard;
+      return false;
+    }
+  } else if (currentPiece->getColor() == 'w') {
+    if (tmpBoard->inCheck(*(tmpBoard->getWhiteKing()),
+                          tmpBoard->getWhiteKingPosition()) == false) {      
+      
+      Piece *caputerdPiece = getPieceAtPosition(newPosition);
+      delete caputerdPiece;
+      delete getPieceAtPosition(oldPosition);
+      currentBoard[newPosition.first - 'a'][newPosition.second - 1] = createPiece(promote);
+
+      currentBoard[oldPosition.first - 'a'][oldPosition.second - 1] = new NullPiece{'*', '*'};
+      delete tmpBoard;
+      return true;
+    } else {
+      delete tmpBoard;
+      return false;
+    }
+  }
+  delete tmpBoard;
+  return false;
+}
+
 bool Board::movePiece(std::pair<char, int> from, std::pair<char, int> to) {
   /* REMOVING THIS LINE REMOVES THE SEGFAULT, BUT THEN
     THE PROGRAM DOESN'T GENERATE ANY MOVES PAST THE FIRST ONE. (try with

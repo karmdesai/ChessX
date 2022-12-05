@@ -99,6 +99,8 @@ class Board {
   bool inCheck(Piece &king, std::pair<char, int> currentPosition);
   bool movePiece(std::pair<char, int> oldPosition,
                  std::pair<char, int> newPosition);
+  bool movePieceBase(std::pair<char, int> oldPosition,
+                 std::pair<char, int> newPosition, char promote);
   void movePieceBase(std::pair<char, int> oldPosition,
                      std::pair<char, int> newPosition);
 
