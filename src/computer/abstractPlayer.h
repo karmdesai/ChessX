@@ -2,22 +2,23 @@
 #define ABSTRACT_PLAYER_H
 
 #include <vector>
-
-class Board;
+#include <memory>
+#include "../board/board.h"
 
 class AbstractPlayer {
  protected:
   char playerColor;
-  Board *board;
+  std::unique_ptr<Board> board;
   bool isAComputer;
 
  public:
-  AbstractPlayer(char playerColor, Board *board, bool isAComputer);
+  friend class Board;
+  AbstractPlayer(char playerColor, std::unique_ptr<Board> board, bool isAComputer);
   virtual ~AbstractPlayer() = default;
 
   // Getters
   char getPlayerColor();
-  Board *getBoard();
+  std::unique_ptr<Board> getBoard();
   bool isComputer();
 
   // calculate the next move, returns a pair of moves

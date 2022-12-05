@@ -2,8 +2,9 @@
 #define BOARD_H
 
 #include <ostream>
+#include <memory>
 
-#include "../computer/abstractPlayer.h"
+class AbstractPlayer;
 #include "../pieces/piece.h"
 
 class Board {
@@ -43,7 +44,8 @@ class Board {
   Board *clone();
 
   // Overloaded operator<< to print board
-  friend std::ostream &operator<<(std::ostream &out, const Board *myBoard);
+  friend std::ostream &operator<<(std::ostream &out, std::unique_ptr<Board> myBoard);
+  friend class AbstractPlayer;
 
   // Helpers
   int convertAlphaToNum(char alpha);

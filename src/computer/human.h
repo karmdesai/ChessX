@@ -5,7 +5,7 @@
 
 class Human : public AbstractPlayer {
  public:
-  Human(char playerColor, Board *board);
+  Human(char playerColor, std::unique_ptr<Board> board);
   ~Human() = default;
 
   // calculate the next move, returns a pair of moves

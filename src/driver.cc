@@ -51,8 +51,8 @@ void cleanup(Board &b, AbstractPlayer &whiteChecker,
   return;
 }
 
-void initializeBoard(Board *b) {
-  std::cout << b << std::endl;
+void initializeBoard(std::unique_ptr<Board> b) {
+  std::cout << std::move(b) << std::endl;
 
   std::string setupCommand;
 
@@ -103,7 +103,7 @@ void initializeBoard(Board *b) {
           b->setPieceAtPosition(position, newPiece);
         }
 
-        std::cout << b << std::endl;
+        std::cout << std::move(b) << std::endl;
       }
     } else if (setupCommand == "-") {
       char x;
@@ -116,7 +116,7 @@ void initializeBoard(Board *b) {
         delete b->getPieceAtPosition(position);
         b->setPieceAtPosition(position, new NullPiece('*', '*'));
 
-        std::cout << b << std::endl;
+        std::cout << std::move(b) << std::endl;
       }
     } else if (setupCommand == "done") {
       b->generateCompleteMoves();
@@ -195,7 +195,7 @@ void initializeBoard(Board *b) {
   }
 }
 
-void setupPlayers(Board *b) {
+void setupPlayers(std::unique_ptr<Board> b) {
   std::string command, whitePlayer, blackPlayer;
 
   while (!std::cin.eof()) {
@@ -232,26 +232,26 @@ void setupPlayers(Board *b) {
   // create new players according to what the user specified.
 
   if (whitePlayer == "human") {
-    b->setWhitePlayer(new Human('w', b));
+    b->setWhitePlayer(new Human('w', std::move(b)));
   } else if (whitePlayer == "computer1") {
-    b->setWhitePlayer(new Computer1('w', b));
+    b->setWhitePlayer(new Computer1('w', std::move(b)));
   } else if (whitePlayer == "computer2") {
-    b->setWhitePlayer(new Computer2('w', b));
+    b->setWhitePlayer(new Computer2('w', std::move(b)));
   } else if (whitePlayer == "computer3") {
-    b->setWhitePlayer(new Computer3('w', b));
+    b->setWhitePlayer(new Computer3('w', std::move(b)));
   } else if (whitePlayer == "computer4") {
     // not implemented yet
     // b->setWhitePlayer(new Computer4('w', b));
   }
 
   if (blackPlayer == "human") {
-    b->setBlackPlayer(new Human('b', b));
+    b->setBlackPlayer(new Human('b', std::move(b)));
   } else if (blackPlayer == "computer1") {
-    b->setBlackPlayer(new Computer1('b', b));
+    b->setBlackPlayer(new Computer1('b', std::move(b)));
   } else if (blackPlayer == "computer2") {
-    b->setBlackPlayer(new Computer2('b', b));
+    b->setBlackPlayer(new Computer2('b', std::move(b)));
   } else if (blackPlayer == "computer3") {
-    b->setBlackPlayer(new Computer3('b', b));
+    b->setBlackPlayer(new Computer3('b', std::move(b)));
   } else if (blackPlayer == "computer4") {
     // not implemented yet
     // b->setBlackPlayer(new Computer4('b', b));
@@ -259,15 +259,15 @@ void setupPlayers(Board *b) {
 }
 
 // function to play a game of chess
-Result playGame(Board *b) {
+Result playGame(std::unique_ptr<Board> b) {
   std::cout << std::endl;
   std::cout << "Start the Game!" << std::endl;
-  std::cout << b << std::endl;
+  std::cout << std::move(b) << std::endl;
 
   // we always have two computers in the background, which check for
   // checkmate or stalemate. They don't actually play the game.
-  AbstractPlayer *whiteChecker = new Computer1('w', b);
-  AbstractPlayer *blackChecker = new Computer1('b', b);
+  std::unique_ptr<AbstractPlayer> whiteChecker(new Computer1('w', std::move(b)));
+  std::unique_ptr<AbstractPlayer> blackChecker(new Computer1('b', std::move(b)));
 
   /* Start Game Testing */
   std::string command;
@@ -386,7 +386,7 @@ Result playGame(Board *b) {
           }
         }
 
-        std::cout << b << std::endl;
+        std::cout << std::move(b) << std::endl;
 
         if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
           std::cout << "The Black King is in check!" << std::endl;
@@ -425,7 +425,7 @@ Result playGame(Board *b) {
           continue;
         }
 
-        std::cout << b << std::endl;
+        std::cout << std::move(b) << std::endl;
 
         if (b->inCheck(*(b->getBlackKing()), b->getBlackKingPosition())) {
           std::cout << "The Black King is in check!" << std::endl;
@@ -473,7 +473,8 @@ int main() {
 
   Stats stats = {0, 0, 0, 0};
   while (!std::cin.eof()) {
-    Board *b = new Board();
+    std::unique_ptr<Board> b(new Board());
+
     std::cout << "Please enter 'setup' immediately if you would like "
                  "to use a custom setup. Otherwise, enter 'done'."
               << std::endl
@@ -492,20 +493,19 @@ int main() {
     /* Start Board Setup */
     std::cin >> firstCommand;
     if (firstCommand == "exit") {
-      delete b;
       break;
     }
     if (firstCommand == "setup") {
-      initializeBoard(b);
+      initializeBoard(std::move(b));
     } else {
       b->defaultInitialization();
     }
     /* End Board Setup */
 
-    setupPlayers(b);
+    setupPlayers(std::move(b));
 
     // start the game.
-    Result result = playGame(b);
+    Result result = playGame(std::move(b));
 
     if (result.isDraw) {
       ++stats.numDraws;

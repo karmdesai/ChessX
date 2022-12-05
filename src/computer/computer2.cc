@@ -7,8 +7,8 @@
 #include "../pieces/piece.h"
 
 // the constructor for Computer1
-Computer2::Computer2(char playerColor, Board *board)
-    : AbstractPlayer{playerColor, board, true} {}
+Computer2::Computer2(char playerColor, std::unique_ptr<Board> board)
+    : AbstractPlayer{playerColor, std::move(board), true} {}
 
 // calculate the next move, returns a pair of moves
 std::pair<std::pair<char, int>, std::pair<char, int>>

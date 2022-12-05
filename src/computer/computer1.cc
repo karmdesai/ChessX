@@ -2,13 +2,14 @@
 
 #include <iostream>
 #include <algorithm>
+#include <memory>
 
 #include "../board/board.h"
 #include "../pieces/piece.h"
 
 // the constructor for Computer1
-Computer1::Computer1(char playerColor, Board *board)
-    : AbstractPlayer{playerColor, board, true} {}
+Computer1::Computer1(char playerColor, std::unique_ptr<Board> board)
+    : AbstractPlayer{playerColor, std::move(board), true} {}
 
 // calculate the next move
 std::pair<std::pair<char, int>, std::pair<char, int>>

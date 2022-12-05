@@ -2,16 +2,14 @@
 
 #include <random>
 
-#include "../board/board.h"
-
 // constructor
-AbstractPlayer::AbstractPlayer(char playerColor, Board *board, bool isAComputer)
-    : playerColor{playerColor}, board{board}, isAComputer{isAComputer} {}
+AbstractPlayer::AbstractPlayer(char playerColor, std::unique_ptr<Board> board, bool isAComputer)
+    : playerColor{playerColor}, board{std::move(board)}, isAComputer{isAComputer} {}
 
 // Getters
 char AbstractPlayer::getPlayerColor() { return this->playerColor; }
 
-Board *AbstractPlayer::getBoard() { return this->board; }
+std::unique_ptr<Board> AbstractPlayer::getBoard() { return std::move(this->board); }
 
 bool AbstractPlayer::isComputer() { return this->isAComputer; }
 

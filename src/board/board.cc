@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <memory>
 
 #include "../pieces/bishop.h"
 #include "../pieces/king.h"
@@ -98,7 +99,7 @@ void Board::defaultInitialization() {
 }
 
 // Overload the << operator for the Board class
-std::ostream &operator<<(std::ostream &out, const Board *myBoard) {
+std::ostream &operator<<(std::ostream &out, std::unique_ptr<Board> myBoard) {
   for (int y = 7; y >= 0; y--) {
     out << y + 1 << " ";
 

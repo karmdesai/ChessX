@@ -7,7 +7,7 @@
 
 class Computer2 : public AbstractPlayer {
  public:
-  Computer2(char playerColor, Board *board);
+  Computer2(char playerColor, std::unique_ptr<Board> board);
   ~Computer2() = default;
 
   // calculate the next move, returns a pair of moves
