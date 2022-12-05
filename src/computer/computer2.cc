@@ -155,9 +155,6 @@ Computer2::calculateNextMove() {
   std::vector<std::pair<std::pair<char, int>, std::pair<char, int>>>
       movesThatCaptureAndPutOpponentInCheck;
 
-  // using std::set_intersection
-  // source:
-  // https://stackoverflow.com/questions/19483663/vector-intersection-in-c
   std::set_intersection(
       movesThatCapture.begin(), movesThatCapture.end(),
       movesThatPutOpponentInCheck.begin(), movesThatPutOpponentInCheck.end(),

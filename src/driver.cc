@@ -109,8 +109,6 @@ void initializeBoard(Board *b, Studio *s) {
           std::cout << "Invalid piece. Please enter a valid piece."
                     << std::endl;
         }
-
-        std::cout << b << std::endl;
       }
     } else if (setupCommand == "-") {
       char x;
@@ -123,7 +121,7 @@ void initializeBoard(Board *b, Studio *s) {
         delete b->getPieceAtPosition(position);
         b->setPieceAtPosition(position, new NullPiece('*', '*'));
 
-        std::cout << b << std::endl;
+        s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
       }
     } else if (setupCommand == "done") {
       // Check if the Board has a valid setup.
@@ -355,7 +353,7 @@ Result playGame(Board *b, Studio *s) {
       if (currentPlayer->isComputer()) {
         auto move = currentPlayer->calculateNextMove();
         // print out the move
-        std::cout << "move " << move.first.first << move.first.second << " "
+        std::cout << "Computer plays " << move.first.first << move.first.second << " -> "
                   << move.second.first << move.second.second << std::endl;
 
         bool movedSuccessfully;

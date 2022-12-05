@@ -27,7 +27,6 @@ finding the delta between the two players
 2. Placement of pieces depending on the stage of the game (opening/midgame and
 endgame)
 3. Whether it is checkmate or stalemate
-
 */
 
 const auto CHECKMATED =

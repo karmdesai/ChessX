@@ -5,7 +5,6 @@
 #include "observer.h"
 #include "studio.h"
 #include "window.h"
-using namespace std;
 
 GraphObs::GraphObs(Studio *canvas) : canvas{canvas} { canvas->attach(this); }
 
@@ -287,7 +286,7 @@ void GraphObs::notify(std::pair<char, int> from, std::pair<char, int> to,
   if (from.first == 'o') {
     for (int y = 8; y > 0; y--) {
       for (int x = 0; x < 8; x++) {
-        Piece *currentSpace = canvas->getState(make_pair(x + 'a', y));
+        Piece *currentSpace = canvas->getState(std::make_pair(x + 'a', y));
         if (currentSpace->getName() != '*') {
           switch (currentSpace->getName()) {
             case 'r':
