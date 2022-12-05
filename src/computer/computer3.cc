@@ -1,7 +1,7 @@
 #include "computer3.h"
 
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
 #include "../board/board.h"
 #include "../pieces/piece.h"
@@ -89,7 +89,7 @@ Computer3::calculateNextMove() {
       return movesThatGetKingOutOfCheck[randomIndex];
     } else {
       // we've been checkmated
-      return std::make_pair(std::make_pair('a', -1), std::make_pair('a', -1));
+      return CHECKMATE;
     }
   }
 
@@ -329,5 +329,5 @@ Computer3::calculateNextMove() {
   // if there are no moves AT ALL its a stalemate, as the king isn't in check
   // (otherwise we would have returned a move that gets the king out of check
   // or would have realized that we've been checkmated)
-  return std::make_pair(std::make_pair('a', 0), std::make_pair('a', 0));
+  return STALEMATE;
 }

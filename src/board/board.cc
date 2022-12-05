@@ -11,8 +11,6 @@
 #include "../pieces/queen.h"
 #include "../pieces/rook.h"
 
-using namespace std;
-
 // Board constructor
 Board::Board() {
   for (int x = 0; x < 8; x++) {

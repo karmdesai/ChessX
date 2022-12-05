@@ -9,7 +9,8 @@ class Human : public AbstractPlayer {
   ~Human() = default;
 
   // calculate the next move, returns a pair of moves
-  std::pair<std::pair<char, int>, std::pair<char, int>> calculateNextMove() override;
+  std::pair<std::pair<char, int>, std::pair<char, int>> calculateNextMove()
+      override;
 };
 
 #endif
