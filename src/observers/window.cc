@@ -59,6 +59,7 @@ Xwindow::Xwindow(int width, int height) {
     XNextEvent(d, &ev);
     if(ev.type == Expose) break;
   }
+
 }
 
 Xwindow::~Xwindow() {
@@ -74,4 +75,23 @@ void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
 
 void Xwindow::drawString(int x, int y, string msg) {
   XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
+}
+
+void Xwindow::DrawBishop(int startX, int startY) {
+  unsigned int bitmap_width, bitmap_height;
+  bitmap_width = 80;
+  bitmap_height = 80;
+
+  Pixmap bitmap;
+  int hotspot_x, hotspot_y;
+  int rc = XReadBitmapFile(d, w, "BBishop.xbm",
+				&bitmap_width, &bitmap_height, &bitmap, &hotspot_x, &hotspot_y);
+
+  XCopyPlane(d, bitmap, w, gc,
+          0, 0,
+          bitmap_width, bitmap_height,
+          startX*bitmap_width, startY*bitmap_height,
+          1);
+  
+  XSync(d, False);
 }
