@@ -107,7 +107,7 @@ void initializeBoard(Board *b, Studio *s) {
           // delete what is currently at the position
           delete pieceCurrent;
           b->setPieceAtPosition(position, newPiece);
-          s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
+          s->render(position, position, false);
         } else {
           std::cout << "Invalid piece. Please enter a valid piece."
                     << std::endl;
@@ -124,7 +124,7 @@ void initializeBoard(Board *b, Studio *s) {
         delete b->getPieceAtPosition(position);
         b->setPieceAtPosition(position, new NullPiece('*', '*'));
 
-        s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
+        s->render(position, position, false);
       }
     } else if (setupCommand == "done") {
       // Check if the Board has a valid setup.
@@ -265,10 +265,12 @@ void setupPlayers(Board *b) {
 }
 
 // function to play a game of chess
-Result playGame(Board *b, Studio *s) {
+Result playGame(Board *b, Studio *s, bool defaultInit) {
   std::cout << std::endl;
   std::cout << "Start the Game!" << std::endl;
-  s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
+  if (defaultInit) {
+    s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
+  }
 
   // we always have two computers in the background, which check for
   // checkmate or stalemate. They don't actually play the game.
@@ -553,6 +555,7 @@ int main() {
 
   Stats stats = {0, 0, 0, 0};
   while (!std::cin.eof()) {
+    bool defaultInit = true;
     Board *b = new Board();
     Studio s{b};
     TextObs *obs = new TextObs{&s};
@@ -581,6 +584,7 @@ int main() {
     }
     if (firstCommand == "setup") {
       initializeBoard(b, &s);
+      defaultInit = false;
     } else {
       b->defaultInitialization();
     }
@@ -588,7 +592,7 @@ int main() {
     setupPlayers(b);
 
     // start the game.
-    Result result = playGame(b, &s);
+    Result result = playGame(b, &s, defaultInit);
 
     if (result.isDraw) {
       ++stats.numDraws;
