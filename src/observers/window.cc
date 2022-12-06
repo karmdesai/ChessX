@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <string>
 #include <unistd.h>
+#include <stdio.h>
 #include "window.h"
 
 using namespace std;
@@ -78,20 +79,34 @@ void Xwindow::drawString(int x, int y, string msg) {
 }
 
 void Xwindow::DrawBishop(int startX, int startY) {
+
   unsigned int bitmap_width, bitmap_height;
-  bitmap_width = 80;
-  bitmap_height = 80;
 
   Pixmap bitmap;
   int hotspot_x, hotspot_y;
   int rc = XReadBitmapFile(d, w, "BBishop.xbm",
 				&bitmap_width, &bitmap_height, &bitmap, &hotspot_x, &hotspot_y);
-
+      std::cout << "I WAS RAN";
+ switch (rc) {
+        case BitmapOpenFailed:
+            fprintf(stderr, "XReadBitmapFile - could not open file 'icon.bmp'.\n");
+	    exit(1);
+            break;
+        case BitmapFileInvalid:
+            fprintf(stderr,
+                    "XReadBitmapFile - file '%s' doesn't contain a valid bitmap.\n",
+                    "icon.bmp");
+	    exit(1);
+            break;
+        case BitmapNoMemory:
+            fprintf(stderr, "XReadBitmapFile - not enough memory.\n");
+	    exit(1);
+            break;
+    }
   XCopyPlane(d, bitmap, w, gc,
           0, 0,
           bitmap_width, bitmap_height,
           startX*bitmap_width, startY*bitmap_height,
           1);
-  
   XSync(d, False);
 }
