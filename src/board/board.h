@@ -72,7 +72,10 @@ class Board {
 
   // Move parsers/validators
   void generateCompleteMoves();
+
   void parsePossibleMoves(Piece &piece, std::pair<char, int> position);
+
+ private:
   void parsePossibleMovesKing(Piece &king, std::pair<char, int> position);
   void parsePossibleMovesKnight(Piece &knight, std::pair<char, int> position);
   void parsePossibleMovesQueen(Piece &queen, std::pair<char, int> position);
@@ -81,6 +84,7 @@ class Board {
   void parsePossibleMovesPawn(Piece &pawn, std::pair<char, int> position);
   std::vector<std::pair<char, int>> generateThreatMap(Piece *p);
 
+ public:
   // Condition managers (check, checkmate, draw, win, etc.)
   bool isPieceCapturable(Piece *piece, std::pair<char, int> position);
   bool inCheck(Piece &king, std::pair<char, int> currentPosition);
