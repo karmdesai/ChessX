@@ -17,13 +17,13 @@ class Board {
 
   // keep track of current player and color
   char whosColourTurn;
-  AbstractPlayer *whosPlayerTurn;
+  std::unique_ptr<AbstractPlayer> whosPlayerTurn;
 
   // We keep track of this because we are going to be calling
   //  inCheck atleast once every turn. So instead of calling a nested
   //  for loop every time, we just deal with tracking this manually instead.
-  Piece *whiteKing;
-  Piece *blackKing;
+  std::unique_ptr<King> whiteKing;
+  std::unique_ptr<King> blackKing;
 
   std::pair<char, int> whiteKingPosition;
   std::pair<char, int> blackKingPosition;
@@ -56,11 +56,11 @@ class Board {
   std::vector<std::pair<char, int>> generateThreatMap(Piece *p);
 
   // Getters
-  Piece *getPieceAtPosition(std::pair<char, int> position);
+  std::unique_ptr<Piece> getPieceAtPosition(std::pair<char, int> position);
   char getColourTurn();
 
-  Piece *getWhiteKing();
-  Piece *getBlackKing();
+  std::unique_ptr<Piece> getWhiteKing();
+  std::unique_ptr<Piece> getBlackKing();
 
   std::pair<char, int> getWhiteKingPosition();
   std::pair<char, int> getBlackKingPosition();

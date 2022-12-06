@@ -232,28 +232,28 @@ void setupPlayers(std::unique_ptr<Board> b) {
   // create new players according to what the user specified.
 
   if (whitePlayer == "human") {
-    b->setWhitePlayer(new Human('w', std::move(b)));
+    b->setWhitePlayer(std::unique_ptr<Human> (new Human('b', std::move(b))));
   } else if (whitePlayer == "computer1") {
-    b->setWhitePlayer(new Computer1('w', std::move(b)));
+    b->setWhitePlayer(std::unique_ptr<Computer1> (new Computer1('b', std::move(b))));
   } else if (whitePlayer == "computer2") {
-    b->setWhitePlayer(new Computer2('w', std::move(b)));
+    b->setWhitePlayer(std::unique_ptr<Computer2> (new Computer2('b', std::move(b))));
   } else if (whitePlayer == "computer3") {
-    b->setWhitePlayer(new Computer3('w', std::move(b)));
+    b->setWhitePlayer(std::unique_ptr<Computer3> (new Computer3('b', std::move(b))));
   } else if (whitePlayer == "computer4") {
     // not implemented yet
     // b->setWhitePlayer(new Computer4('w', b));
   }
 
   if (blackPlayer == "human") {
-    b->setBlackPlayer(new Human('b', std::move(b)));
+    b->setBlackPlayer(std::unique_ptr<Human> (new Human('b', std::move(b))));
   } else if (blackPlayer == "computer1") {
-    b->setBlackPlayer(new Computer1('b', std::move(b)));
+    b->setBlackPlayer(std::unique_ptr<Computer1> (new Computer1('b', std::move(b))));
   } else if (blackPlayer == "computer2") {
-    b->setBlackPlayer(new Computer2('b', std::move(b)));
+    b->setBlackPlayer(std::unique_ptr<Computer2> (new Computer2('b', std::move(b))));
   } else if (blackPlayer == "computer3") {
-    b->setBlackPlayer(new Computer3('b', std::move(b)));
+    b->setBlackPlayer(std::unique_ptr<Computer3> (new Computer3('b', std::move(b))));
   } else if (blackPlayer == "computer4") {
-    // not implemented yet
+    // not implemented yetstd::unique_ptr
     // b->setBlackPlayer(new Computer4('b', b));
   }
 }

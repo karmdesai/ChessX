@@ -36,37 +36,37 @@ void Board::defaultInitialization() {
   this->currentBoard[0][0] = std::unique_ptr<Rook> (new Rook('R', 'w', true));
   this->currentBoard[1][0] = std::unique_ptr<Knight> (new Knight('N', 'w'));
   this->currentBoard[2][0] = std::unique_ptr<Bishop> (new Bishop('B', 'w'));
-  this->currentBoard[3][0] = new Queen('Q', 'w');
+  this->currentBoard[3][0] = std::unique_ptr<Queen> (new Queen('Q', 'w'));
 
-  Piece *newWhiteKing = new King('K', 'w', true);
-  this->whiteKing = newWhiteKing;
-  this->currentBoard[4][0] = newWhiteKing;
+  std::unique_ptr<King> newWhiteKing (new King('K', 'w', true));
+  this->whiteKing = std::move(newWhiteKing);
+  this->currentBoard[4][0] = std::move(newWhiteKing);
   this->whiteKingPosition = std::make_pair('e', 1);
 
-  this->currentBoard[5][0] = new Bishop('B', 'w');
-  this->currentBoard[6][0] = new Knight('N', 'w');
-  this->currentBoard[7][0] = new Rook('R', 'w', true);
+  this->currentBoard[5][0] = std::unique_ptr<Bishop> (new Bishop('B', 'w'));
+  this->currentBoard[6][0] = std::unique_ptr<Knight> (new Knight('N', 'w'));
+  this->currentBoard[7][0] = std::unique_ptr<Rook> (new Rook('R', 'w', true));
 
   for (int i = 0; i < 8; i++) {
-    this->currentBoard[i][1] = new Pawn('P', 'w', true);
+    this->currentBoard[i][1] = std::unique_ptr<Pawn> (new Pawn('P', 'w', true));
   }
 
-  this->currentBoard[0][7] = new Rook('r', 'b', true);
-  this->currentBoard[1][7] = new Knight('n', 'b');
-  this->currentBoard[2][7] = new Bishop('b', 'b');
-  this->currentBoard[3][7] = new Queen('q', 'b');
+  this->currentBoard[0][7] = std::unique_ptr<Rook> (new Rook('r', 'b', true));
+  this->currentBoard[1][7] = std::unique_ptr<Knight> (new Knight('n', 'b'));
+  this->currentBoard[2][7] = std::unique_ptr<Bishop> (new Bishop('b', 'b'));
+  this->currentBoard[3][7] = std::unique_ptr<Queen> (new Queen('q', 'b'));
 
-  Piece *newBlackKing = new King('k', 'b', true);
-  this->blackKing = newBlackKing;
-  this->currentBoard[4][7] = newBlackKing;
-  this->blackKingPosition = std::make_pair('e', 8);
+  std::unique_ptr<King> newBlackKing (new King('k', 'b', true));
+  this->blackKing = std::move(newBlackKing);
+  this->currentBoard[4][7] = std::move(newBlackKing);
+  this->whiteKingPosition = std::make_pair('e', 8);
 
-  this->currentBoard[5][7] = new Bishop('b', 'b');
-  this->currentBoard[6][7] = new Knight('n', 'b');
-  this->currentBoard[7][7] = new Rook('r', 'b', true);
+  this->currentBoard[5][7] = std::unique_ptr<Bishop> (new Bishop('b', 'b'));
+  this->currentBoard[6][7] = std::unique_ptr<Knight> (new Knight('n', 'b'));
+  this->currentBoard[7][7] = std::unique_ptr<Rook> (new Rook('r', 'b', true));
 
   for (int i = 0; i < 8; i++) {
-    this->currentBoard[i][6] = new Pawn('p', 'b', true);
+    this->currentBoard[i][6] = std::unique_ptr<Pawn> (new Pawn('p', 'b', true));
   }
 
   this->generateCompleteMoves();
@@ -78,7 +78,7 @@ std::ostream &operator<<(std::ostream &out, std::unique_ptr<Board> myBoard) {
     out << y + 1 << " ";
 
     for (int x = 0; x < 8; x++) {
-      Piece *currentSpace = myBoard->currentBoard[x][y];
+      Piece* currentSpace = myBoard.get()->currentBoard[x][y].get();
 
       if (currentSpace->getName() != '*') {
         out << currentSpace->getName();
