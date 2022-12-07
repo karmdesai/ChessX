@@ -483,7 +483,9 @@ Result playGame(Board *b, Studio *s, bool defaultInit) {
         }
         bool movedSucessfully;
 
-        if (newY == 8 && b->getColourTurn() == 'w') {
+        if (newY == 8 && b->getColourTurn() == 'w' &&
+            b->getPieceAtPosition(std::make_pair(oldX, oldY))->getName() ==
+                'P') {
           char promote;
           std::cin >> promote;
 
@@ -493,7 +495,8 @@ Result playGame(Board *b, Studio *s, bool defaultInit) {
           }
           movedSucessfully =
               b->movePieceBase(oldPosition, newPosition, promote);
-        } else if (newY == 1 && b->getColourTurn() == 'b') {
+        } else if (newY == 1 && b->getColourTurn() == 'b' && b->getPieceAtPosition(
+            std::make_pair(oldX, oldY))->getName() == 'p') {
           char promote;
           std::cin >> promote;
 
