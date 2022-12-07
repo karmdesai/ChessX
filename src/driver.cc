@@ -59,13 +59,14 @@ void cleanup(Board &b, AbstractPlayer &whiteChecker,
 }
 
 // initializes a custom board setup according to how the user wants it
-void initializeBoard(Board *b, Studio *s) {
+bool initializeBoard(Board *b, Studio *s) {
   s->render(std::make_pair('o', 0), std::make_pair('o', 0), false);
 
   std::string setupCommand;
 
-  while (std::cin >> setupCommand) {
+  while (!std::cin.eof()) {
     bool choseWhoGoesFirst = false;
+    std::cin >> setupCommand;
 
     if (setupCommand == "=") {
       std::string color;
@@ -187,7 +188,7 @@ void initializeBoard(Board *b, Studio *s) {
           // set to white by default.
           b->setColourTurn('w');
         }
-        break;
+        return true;
       } else {
         std::cout << "You must fix the following errors before "
                      "exiting setup mode: "
@@ -201,18 +202,23 @@ void initializeBoard(Board *b, Studio *s) {
       }
     }
   }
+  return false;  // this means the user ctrl-d'd
 }
 
 // sets up the players for a game (human or computer)
-void setupPlayers(Board *b) {
+bool setupPlayers(Board *b) {
   std::string command, whitePlayer, blackPlayer;
 
-  while (!std::cin.eof()) {
+  while (true) {
     std::cout << "To start a new game, enter 'game white-player "
                  "black-player', where white-player and black-player are "
                  "either 'human' or one of 'computer[1-4]'."
               << std::endl;
     std::cin >> command >> whitePlayer >> blackPlayer;
+
+    if (std::cin.eof()) {
+      return false;
+    }
 
     if (command != "game") {
       std::cout << "Invalid command. Please follow the format "
@@ -262,6 +268,7 @@ void setupPlayers(Board *b) {
   } else if (blackPlayer == "computer4") {
     b->setBlackPlayer(new Computer4('b', b));
   }
+  return true;
 }
 
 // function to play a game of chess
@@ -543,6 +550,8 @@ Result playGame(Board *b, Studio *s, bool defaultInit) {
       b->setPlayerTurn(b->getWhitePlayer());
     }
   }
+  cleanup(*b, *whiteChecker, *blackChecker, *b->getWhitePlayer(),
+          *b->getBlackPlayer());
   // something bad happened, return draw
   return {'w', true};
 }
@@ -554,7 +563,7 @@ int main() {
   std::string firstCommand;
 
   Stats stats = {0, 0, 0, 0};
-  while (!std::cin.eof()) {
+  while (true) {
     bool defaultInit = true;
     Board *b = new Board();
     Studio s{b};
@@ -576,6 +585,14 @@ int main() {
     std::cout << std::endl;
 
     std::cin >> firstCommand;
+
+    if (std::cin.eof()) {
+      delete obs;
+      delete guiobs;
+      delete b;
+      break;
+    }
+
     if (firstCommand == "exit") {
       delete obs;
       delete guiobs;
@@ -583,13 +600,25 @@ int main() {
       break;
     }
     if (firstCommand == "setup") {
-      initializeBoard(b, &s);
+      bool success = initializeBoard(b, &s);
+      if (!success) {
+        delete obs;
+        delete guiobs;
+        delete b;
+        return 0;
+      }
       defaultInit = false;
     } else {
       b->defaultInitialization();
     }
 
-    setupPlayers(b);
+    bool success = setupPlayers(b);
+    if (!success) {
+      delete obs;
+      delete guiobs;
+      delete b;
+      return 0;
+    }
 
     // start the game.
     Result result = playGame(b, &s, defaultInit);
@@ -607,4 +636,5 @@ int main() {
     delete guiobs;
   }
   stats.printStats();
+  return 0;
 }
