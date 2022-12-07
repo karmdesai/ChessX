@@ -346,6 +346,12 @@ Result playGame(Board *b, Studio *s, bool defaultInit) {
 
     std::cin >> command;
 
+    if (!std::cin) {
+      std::cout << "got here" << std::endl;
+      cleanup(*b, *whiteChecker, *blackChecker, *b->getWhitePlayer(),
+              *b->getBlackPlayer());
+    }
+
     if (command == "move") {
       char oldX, newX;
       int oldY, newY;
